@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@mipmap/icon_main_nav_event"
+            android:title="我的日程" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@mipmap/icon_main_nav_sticker"
+            android:title="表情商店" />
+    </group>
+
+    <item android:title="其他">
+        <menu>
+            <item
+                android:id="@+id/nav_slideshow"
+                android:icon="@mipmap/icon_main_nav_share"
+                android:title="分享" />
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@mipmap/icon_main_nav_like"
+                android:title="点赞" />
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@mipmap/icon_main_nav_feedback"
+                android:title="反馈" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@mipmap/icon_main_nav_settings"
+                android:title="设置" />
+            <item
+                android:id="@+id/nav_app"
+                android:icon="@mipmap/icon_main_nav_friendsapp"
+                android:title="好礼" />
+        </menu>
+    </item>
+
+</menu>
