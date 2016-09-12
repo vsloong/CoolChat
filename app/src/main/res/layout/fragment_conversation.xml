@@ -5,6 +5,10 @@
     android:background="@color/white"
     tools:context="com.cooloongwu.coolchat.ConversationFragment">
 
-    <include layout="@layout/content_initiatechat" />
+    <include layout="@layout/content_recyclerview" />
+
+    <include
+        android:id="@+id/layout_initiatechat"
+        layout="@layout/content_initiatechat" />
 
 </FrameLayout>

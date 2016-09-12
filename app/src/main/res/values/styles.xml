@@ -17,4 +17,20 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MenuLabelsStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MenuButtonsStyle">
+        <item name="fab_size">mini</item>
+        <item name="fab_shadowColor">#888</item>
+        <item name="fab_colorNormal">#816e67</item>
+        <item name="fab_colorPressed">#816e67</item>
+        <item name="fab_colorRipple">#816e67</item>
+    </style>
+
 </resources>

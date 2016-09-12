@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 /**
+ * Fragment的适配器类
  * Created by CooLoongWu on 2016-9-10 16:20.
  */
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -20,11 +21,11 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ConversationFragment.newInstance(position);
+                return new ConversationFragment();
             case 1:
                 return new ContactFragment();
             default:
-                return ConversationFragment.newInstance(position);
+                return new ConversationFragment();
         }
     }
 

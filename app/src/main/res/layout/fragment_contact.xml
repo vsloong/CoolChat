@@ -18,6 +18,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:drawableLeft="@mipmap/main_contact_add_friends"
                 android:drawablePadding="16dp"
                 android:gravity="center_vertical"
@@ -32,6 +33,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:drawableLeft="@mipmap/main_contact_groups"
                 android:drawablePadding="16dp"
                 android:gravity="center_vertical"
@@ -46,6 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:drawableLeft="@mipmap/main_contact_official_accounts"
                 android:drawablePadding="16dp"
                 android:gravity="center_vertical"

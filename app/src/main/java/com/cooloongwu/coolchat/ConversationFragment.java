@@ -2,9 +2,18 @@ package com.cooloongwu.coolchat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import com.cooloongwu.coolchat.adapter.ConversationAdapter;
+import com.cooloongwu.coolchat.bean.ConversationBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -12,34 +21,58 @@ import android.view.ViewGroup;
  */
 public class ConversationFragment extends Fragment {
 
-    public static final String ARG = "ConversationFragment";
-    private int page;
 
-    public static ConversationFragment newInstance(int page) {
-        Bundle args = new Bundle();
+    private ConversationAdapter adapter;
+    private ArrayList<ConversationBean> listData = new ArrayList<>();
 
-        args.putInt(ARG, page);
-        ConversationFragment fragment = new ConversationFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    private RecyclerView recyclerView;
+    private LinearLayout layout_initiatechat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt(ARG);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_conversation, container, false);
-        initView(view);
+
+        initViews(view);
+        initData();
+
         return view;
     }
 
-    private void initView(View view) {
+    /**
+     * 加载聊天会话列表页的数据
+     */
+    private void initData() {
+        List<ConversationBean> conversationBeans = new ArrayList<>();
+        ConversationBean conversationBean = new ConversationBean();
+        conversationBean.setAvatar("");
+        conversationBean.setName("CooLoongWu");
+        conversationBean.setContent("龙隆蟀舞：加油，好好做哦！");
+        conversationBean.setTime("16:05");
+        conversationBeans.add(conversationBean);
+        listData.addAll(conversationBeans);
+        adapter.notifyDataSetChanged();
 
+        if (listData.isEmpty()) {
+            layout_initiatechat.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            layout_initiatechat.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initViews(View view) {
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        layout_initiatechat = (LinearLayout) view.findViewById(R.id.layout_initiatechat);
+
+        adapter = new ConversationAdapter(getActivity(), listData);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
     }
 }
