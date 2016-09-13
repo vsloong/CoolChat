@@ -3,6 +3,16 @@
 这是一款高仿“一块”App（英文名：yeeCall）的即时通讯的开源客户端，目前正在进行开发，并逐步完善。
 后期会将服务端等的源码也一并进行开源，敬请期待。
 
+##所有功能一览（未勾选的为待开发）
+- [ ] **页面开发**
+    - [x] 侧栏页面
+    - [x] 聊天会话列表页面
+    - [x] 联系人列表页面
+    - [x] 与好友对话页面
+- [ ] **功能开发**
+    -  [x] 给好友发送消息（本地，仍需改善）
+    -  [ ] 进行Socket通信
+
 ##已完成页面一览
 因为目前只有我一人在做，PS和AI能力也不强，所以图标素材什么的各位估计也清楚怎么来的。  
 如有侵权请告知，我会尽快删除并更换！  
@@ -10,6 +20,8 @@
 ![image](./pictures/main_drawer.jpg)
 ![image](./pictures/main_empty_conversation.jpg)
 ![image](./pictures/main_empty_contact.jpg)
+![image](./pictures/chat.jpg)
+![image](./pictures/chat_send.jpg)
 
 ##引用其他控件一览
 该app在开发中也引用了大量的第三方优秀控件，感谢这些开源的作者

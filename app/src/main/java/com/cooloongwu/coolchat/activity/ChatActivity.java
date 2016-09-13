@@ -35,6 +35,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private boolean isKeyboard = false;
 
     private ArrayList<ChatBean> listData = new ArrayList<>();
+    private RecyclerView recyclerView;
     private ChatAdapter adapter;
 
 
@@ -91,8 +92,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initViews() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
+        //layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
         adapter = new ChatAdapter(ChatActivity.this, listData);
         recyclerView.setAdapter(adapter);
         edit_input = (EditText) findViewById(R.id.edit_input);
@@ -176,6 +179,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，并关闭键盘
                 if (isSend) {
                     Toast.makeText(ChatActivity.this, "发送消息", Toast.LENGTH_SHORT).show();
+                    sendMessage();
                     edit_input.setText("");
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isSend = false;
@@ -187,6 +191,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    private void sendMessage() {
+        List<ChatBean> chatBeens = new ArrayList<>();
+        ChatBean chatBean = new ChatBean();
+        chatBean.setName("我自己");
+        chatBean.setType("self_text");
+        chatBean.setContent(edit_input.getText().toString().trim());
+        chatBeens.add(chatBean);
+        listData.addAll(chatBeens);
+        adapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 
     /**

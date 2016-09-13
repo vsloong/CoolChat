@@ -20,7 +20,8 @@
         </activity>
         <activity
             android:name=".activity.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>
