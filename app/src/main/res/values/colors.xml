@@ -6,5 +6,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="bg_chat">#ffe3e4e6</color>
     <color name="text_brown">#816e67</color>
+    <color name="transparent">@android:color/transparent</color>
 </resources>

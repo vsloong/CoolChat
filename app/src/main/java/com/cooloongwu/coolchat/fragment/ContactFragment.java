@@ -1,16 +1,18 @@
-package com.cooloongwu.coolchat;
+package com.cooloongwu.coolchat.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.BaseFragment;
 
 
 /**
  * 联系人界面
  */
-public class ContactFragment extends Fragment {
+public class ContactFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

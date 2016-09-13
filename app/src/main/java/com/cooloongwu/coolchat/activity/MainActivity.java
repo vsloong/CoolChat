@@ -1,4 +1,4 @@
-package com.cooloongwu.coolchat;
+package com.cooloongwu.coolchat.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -7,17 +7,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.adapter.MyFragmentPagerAdapter;
+import com.cooloongwu.coolchat.base.BaseActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private FloatingActionMenu fam;

@@ -15,7 +15,8 @@
 该app在开发中也引用了大量的第三方优秀控件，感谢这些开源的作者
 - [Clans/FloatingActionButton][3]
 - [square/picasso][4]
-- [greenrobot/EventBus][5]  
+- [greenrobot/EventBus][5]
+- [rockerhieu/emojicon][6]
 
 ##License
 ```
@@ -42,3 +43,4 @@ limitations under the License.
 [3]:https://github.com/Clans/FloatingActionButton
 [4]:https://github.com/square/picasso
 [5]:https://github.com/greenrobot/EventBus
+[6]:https://github.com/rockerhieu/emojicon

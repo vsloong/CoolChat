@@ -1,8 +1,11 @@
-package com.cooloongwu.coolchat;
+package com.cooloongwu.coolchat.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.cooloongwu.coolchat.fragment.ContactFragment;
+import com.cooloongwu.coolchat.fragment.ConversationFragment;
 
 /**
  * Fragment的适配器类

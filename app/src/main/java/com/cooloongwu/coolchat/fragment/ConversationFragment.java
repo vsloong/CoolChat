@@ -1,7 +1,6 @@
-package com.cooloongwu.coolchat;
+package com.cooloongwu.coolchat.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ConversationAdapter;
+import com.cooloongwu.coolchat.base.BaseFragment;
 import com.cooloongwu.coolchat.bean.ConversationBean;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * 对话列表界面
  */
-public class ConversationFragment extends Fragment {
+public class ConversationFragment extends BaseFragment {
 
 
     private ConversationAdapter adapter;

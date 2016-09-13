@@ -1,6 +1,7 @@
 package com.cooloongwu.coolchat.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.bean.ConversationBean;
 
 import java.util.ArrayList;
@@ -45,7 +47,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "点击了这一项", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setClass(context, ChatActivity.class);
+                intent.putExtra("name", listData.get(position).getName());
+                intent.putExtra("avatar", listData.get(position).getAvatar());
+                intent.putExtra("id", "userId或者roomId");
+                context.startActivity(intent);
             }
         });
 
