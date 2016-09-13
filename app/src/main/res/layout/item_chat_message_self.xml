@@ -21,24 +21,24 @@
             android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CooLoongWu"
-            android:textSize="12sp"
             android:textColor="@color/text_brown"
+            android:textSize="12sp"
             tools:text="CooLoongWu" />
 
         <TextView
+            android:id="@+id/text_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:background="@drawable/conversation_bkg_messages_text_self_normal"
             android:gravity="center"
-            android:text="你好啊哈哈哈"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="你好啊哈哈哈" />
     </LinearLayout>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_avatar"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@mipmap/avatar" />
+        android:src="@mipmap/ic_launcher" />
 </LinearLayout>

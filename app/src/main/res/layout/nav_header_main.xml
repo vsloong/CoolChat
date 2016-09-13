@@ -19,8 +19,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@mipmap/avatar" />

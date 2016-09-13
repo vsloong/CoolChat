@@ -17,6 +17,7 @@
 - [square/picasso][4]
 - [greenrobot/EventBus][5]
 - [rockerhieu/emojicon][6]
+- [hdodenhof/CircleImageView][7]
 
 ##License
 ```
@@ -44,3 +45,4 @@ limitations under the License.
 [4]:https://github.com/square/picasso
 [5]:https://github.com/greenrobot/EventBus
 [6]:https://github.com/rockerhieu/emojicon
+[7]:https://github.com/hdodenhof/CircleImageView

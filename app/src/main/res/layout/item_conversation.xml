@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingTop="8dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/conversation_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -50,11 +50,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:lines="1"
             android:textColor="@color/text_brown"
             android:textSize="14sp"
-            tools:text="最后聊天内容"
-            android:ellipsize="end"
-            android:lines="1" />
+            tools:text="最后聊天内容" />
     </LinearLayout>
 
 </LinearLayout>
