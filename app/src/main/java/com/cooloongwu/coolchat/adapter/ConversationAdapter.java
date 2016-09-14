@@ -14,6 +14,8 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.bean.ConversationBean;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 /**
@@ -62,7 +64,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 Toast.makeText(context, "长按了这一项", Toast.LENGTH_SHORT).show();
                 listData.remove(position);
                 notifyDataSetChanged();
-                return false;
+                EventBus.getDefault().post(new ConversationBean());
+                //return true 后就不会再触发setOnClickListener事件
+                return true;
             }
         });
     }

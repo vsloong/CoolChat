@@ -13,6 +13,9 @@ import com.cooloongwu.coolchat.adapter.ConversationAdapter;
 import com.cooloongwu.coolchat.base.BaseFragment;
 import com.cooloongwu.coolchat.bean.ConversationBean;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class ConversationFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class ConversationFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_conversation, container, false);
 
         initViews(view);
-        initData();
+        initListData();
 
         return view;
     }
@@ -48,7 +52,7 @@ public class ConversationFragment extends BaseFragment {
     /**
      * 加载聊天会话列表页的数据
      */
-    private void initData() {
+    private void initListData() {
         List<ConversationBean> conversationBeans = new ArrayList<>();
         ConversationBean conversationBean = new ConversationBean();
         conversationBean.setAvatar("");
@@ -68,6 +72,17 @@ public class ConversationFragment extends BaseFragment {
         }
     }
 
+    @Subscribe
+    public void onEventMainThread(ConversationBean event) {
+        if (listData.isEmpty()) {
+            layout_initiatechat.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            layout_initiatechat.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initViews(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layout_initiatechat = (LinearLayout) view.findViewById(R.id.layout_initiatechat);
@@ -75,5 +90,11 @@ public class ConversationFragment extends BaseFragment {
         adapter = new ConversationAdapter(getActivity(), listData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -59,6 +59,7 @@
                 android:layout_height="50dp"
                 android:background="@color/transparent"
                 android:src="@mipmap/conversation_btn_messages_more" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -66,8 +67,8 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_input"
             android:layout_below="@+id/appbar"
-            android:orientation="vertical"
-            android:background="@color/bg_chat">
+            android:background="@color/bg_chat"
+            android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

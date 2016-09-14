@@ -29,8 +29,13 @@
 - [Clans/FloatingActionButton][3]
 - [square/picasso][4]
 - [greenrobot/EventBus][5]
-- [rockerhieu/emojicon][6]
-- [hdodenhof/CircleImageView][7]
+- [greenrobot/greenDAO ][6]
+- [rockerhieu/emojicon][7]
+- [hdodenhof/CircleImageView][8]
+
+##已知Bug一览（带删除线的为已修复）
+~~自己发消息超过两行，文字会超出屏幕~~
+~~聊天列表页清空后没有展示空页面~~
 
 ##License
 ```
@@ -52,10 +57,11 @@ limitations under the License.
 [CooLoongWu][2]
 2016 年 09月 12日 
 
-[1]: https://cooloongwu.github.io/
-[2]: http://blog.csdn.net/u010976213
+[1]:https://cooloongwu.github.io/
+[2]:http://blog.csdn.net/u010976213
 [3]:https://github.com/Clans/FloatingActionButton
 [4]:https://github.com/square/picasso
 [5]:https://github.com/greenrobot/EventBus
-[6]:https://github.com/rockerhieu/emojicon
-[7]:https://github.com/hdodenhof/CircleImageView
+[6]:https://github.com/greenrobot/greenDAO
+[7]:https://github.com/rockerhieu/emojicon
+[8]:https://github.com/hdodenhof/CircleImageView

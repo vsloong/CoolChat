@@ -176,7 +176,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     isMore = true;
                     return;
                 }
-                //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，并关闭键盘
+                //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
                 if (isSend) {
                     Toast.makeText(ChatActivity.this, "发送消息", Toast.LENGTH_SHORT).show();
                     sendMessage();
@@ -184,7 +184,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isSend = false;
                     isMore = true;
-                    hideKeyboard();
                     return;
                 }
                 break;

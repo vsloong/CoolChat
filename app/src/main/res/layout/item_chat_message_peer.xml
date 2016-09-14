@@ -37,7 +37,7 @@
             android:background="@drawable/conversation_bkg_messages_text_peer_normal"
             android:gravity="center"
             android:textSize="14sp"
-            tools:text="你" />
+            tools:text="你好啊哈哈哈你好啊哈哈哈你好啊哈哈哈你好啊哈哈哈你好啊哈哈哈你好啊哈哈哈" />
     </LinearLayout>
 
 
