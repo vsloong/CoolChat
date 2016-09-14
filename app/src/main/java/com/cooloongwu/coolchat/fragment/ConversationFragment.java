@@ -10,8 +10,12 @@ import android.widget.LinearLayout;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ConversationAdapter;
+import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
-import com.cooloongwu.coolchat.bean.ConversationBean;
+import com.cooloongwu.coolchat.entity.Conversation;
+import com.cooloongwu.greendao.gen.ConversationDao;
+import com.cooloongwu.greendao.gen.DaoMaster;
+import com.cooloongwu.greendao.gen.DaoSession;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,7 +31,7 @@ public class ConversationFragment extends BaseFragment {
 
 
     private ConversationAdapter adapter;
-    private ArrayList<ConversationBean> listData = new ArrayList<>();
+    private ArrayList<Conversation> listData = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private LinearLayout layout_initiatechat;
@@ -53,14 +57,21 @@ public class ConversationFragment extends BaseFragment {
      * 加载聊天会话列表页的数据
      */
     private void initListData() {
-        List<ConversationBean> conversationBeans = new ArrayList<>();
-        ConversationBean conversationBean = new ConversationBean();
-        conversationBean.setAvatar("");
-        conversationBean.setName("CooLoongWu");
-        conversationBean.setContent("龙隆蟀舞：加油，好好做哦！");
-        conversationBean.setTime("16:05");
-        conversationBeans.add(conversationBean);
-        listData.addAll(conversationBeans);
+        //初始化数据库并操作
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.DB_NAME, null);
+        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
+        DaoSession daoSession = daoMaster.newSession();
+        ConversationDao conversationDao = daoSession.getConversationDao();
+
+        //插入一条数据
+        //Conversation conversation = new Conversation(null, "user742420210", "龙隆蟀舞", "", "你好", "12:34", "group");
+        //conversationDao.insert(conversation);
+        //删除一条数据
+        //conversationDao.deleteByKey(conversations.get(0).getId());
+
+        List<Conversation> conversations = conversationDao.queryBuilder().build().list();
+
+        listData.addAll(conversations);
         adapter.notifyDataSetChanged();
 
         if (listData.isEmpty()) {
@@ -73,14 +84,8 @@ public class ConversationFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onEventMainThread(ConversationBean event) {
-        if (listData.isEmpty()) {
-            layout_initiatechat.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            layout_initiatechat.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+    public void onEventMainThread(Conversation event) {
+        initListData();
     }
 
     private void initViews(View view) {

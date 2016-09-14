@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
-import com.cooloongwu.coolchat.bean.ConversationBean;
+import com.cooloongwu.coolchat.entity.Conversation;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,10 +25,10 @@ import java.util.ArrayList;
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<ConversationBean> listData;
+    private ArrayList<Conversation> listData;
     private LayoutInflater layoutInflater;
 
-    public ConversationAdapter(Context context, ArrayList<ConversationBean> listData) {
+    public ConversationAdapter(Context context, ArrayList<Conversation> listData) {
         this.context = context;
         this.listData = listData;
         this.layoutInflater = LayoutInflater.from(context);
@@ -64,7 +64,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 Toast.makeText(context, "长按了这一项", Toast.LENGTH_SHORT).show();
                 listData.remove(position);
                 notifyDataSetChanged();
-                EventBus.getDefault().post(new ConversationBean());
+                EventBus.getDefault().post(new Conversation());
                 //return true 后就不会再触发setOnClickListener事件
                 return true;
             }

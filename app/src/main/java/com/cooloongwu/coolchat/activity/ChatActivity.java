@@ -74,8 +74,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private void getData() {
         Intent intent = getIntent();
-        String title = intent.getStringExtra("name");
-        String avatar = intent.getStringExtra("avatar");
+        String id = intent.getStringExtra("id");            //好友或者群组的ID
+        String type = intent.getStringExtra("type");        //群组还是好友
+        String title = intent.getStringExtra("name");       //群组名或者好友名
+        String avatar = intent.getStringExtra("avatar");    //群组或者好友头像
         initToolbar(title);
     }
 

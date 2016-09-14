@@ -1,11 +1,14 @@
 package com.cooloongwu.coolchat.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.activity.UserProfileActivity;
 import com.cooloongwu.coolchat.base.BaseFragment;
 
 
@@ -29,6 +32,17 @@ public class ContactFragment extends BaseFragment {
     }
 
     private void initView(View view) {
+        LinearLayout layout_callme = (LinearLayout) view.findViewById(R.id.layout_callme);
+
+        layout_callme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), UserProfileActivity.class);
+                intent.putExtra("name", "CooLoongWu");
+                startActivity(intent);
+            }
+        });
     }
 
 }

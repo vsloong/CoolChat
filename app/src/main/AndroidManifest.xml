@@ -22,6 +22,9 @@
             android:name=".activity.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.UserProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

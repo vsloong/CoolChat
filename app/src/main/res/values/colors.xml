@@ -9,4 +9,5 @@
     <color name="bg_chat">#ffe3e4e6</color>
     <color name="text_brown">#816e67</color>
     <color name="transparent">@android:color/transparent</color>
+    <color name="divider">#e6e6e6</color>
 </resources>

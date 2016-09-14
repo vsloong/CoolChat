@@ -14,7 +14,7 @@ public class Conversation {
 
     @Id//通过这个注解标记的字段必须是Long类型的，这个字段在数据库中表示它就是主键，并且它默认就是自增的
     private Long id;
-    private String multiId; //群组或者好友或者其他ID
+    private long multiId; //群组或者好友或者其他ID
     private String name;    //用户名或者群组名
     private String avatar;  //用户或者群组等头像的url
     private String content; //最后聊天内容
@@ -24,8 +24,8 @@ public class Conversation {
     @Transient//表明这个字段不会被写入数据库，只是作为一个普通的java类字段，用来临时存储数据的，不会被持久化
     private int tempUsageCount; // not persisted
 
-    @Generated(hash = 2121406582)
-    public Conversation(Long id, String multiId, String name, String avatar,
+    @Generated(hash = 756651384)
+    public Conversation(Long id, long multiId, String name, String avatar,
                         String content, String time, String type) {
         this.id = id;
         this.multiId = multiId;
@@ -48,20 +48,20 @@ public class Conversation {
         this.id = id;
     }
 
+    public long getMultiId() {
+        return this.multiId;
+    }
+
+    public void setMultiId(long multiId) {
+        this.multiId = multiId;
+    }
+
     public String getName() {
         return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getMultiId() {
-        return this.multiId;
-    }
-
-    public void setMultiId(String multiId) {
-        this.multiId = multiId;
     }
 
     public String getAvatar() {
@@ -95,6 +95,5 @@ public class Conversation {
     public void setType(String type) {
         this.type = type;
     }
-
 
 }
