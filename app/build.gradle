@@ -1,5 +1,22 @@
 apply plugin: 'com.android.application'
 
+//=========================GreenDao所需=========================
+apply plugin: 'org.greenrobot.greendao'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.1.1'
+    }
+}
+greendao {
+    schemaVersion 1
+    daoPackage 'com.cooloongwu.greendao.gen'
+    targetGenDir 'src/main/java'
+}
+//=========================GreenDao所需=========================
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
@@ -30,4 +47,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'org.greenrobot:greendao:3.1.1'
+    compile 'org.greenrobot:greendao-generator:3.1.0'
 }
