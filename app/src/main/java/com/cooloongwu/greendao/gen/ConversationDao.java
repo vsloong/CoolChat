@@ -85,7 +85,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         if (avatar != null) {
             stmt.bindString(4, avatar);
         }
-
+ 
         String type = entity.getType();
         if (type != null) {
             stmt.bindString(5, type);
@@ -95,7 +95,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         if (content != null) {
             stmt.bindString(6, content);
         }
-
+ 
         String contentType = entity.getContentType();
         if (contentType != null) {
             stmt.bindString(7, contentType);
@@ -126,7 +126,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         if (avatar != null) {
             stmt.bindString(4, avatar);
         }
-
+ 
         String type = entity.getType();
         if (type != null) {
             stmt.bindString(5, type);
@@ -136,7 +136,7 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         if (content != null) {
             stmt.bindString(6, content);
         }
-
+ 
         String contentType = entity.getContentType();
         if (contentType != null) {
             stmt.bindString(7, contentType);

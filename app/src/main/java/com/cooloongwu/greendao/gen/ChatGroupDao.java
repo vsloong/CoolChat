@@ -48,7 +48,7 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CHAT_GROUP\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"USER_ID\" INTEGER NOT NULL ," + // 1: userId
@@ -60,9 +60,7 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
                 "\"TIME\" TEXT);"); // 7: time
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"CHAT_GROUP\"";
         db.execSQL(sql);
@@ -71,34 +69,34 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, ChatGroup entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getUserId());
         stmt.bindLong(3, entity.getToGroupId());
-
+ 
         String userName = entity.getUserName();
         if (userName != null) {
             stmt.bindString(4, userName);
         }
-
+ 
         String userAvatar = entity.getUserAvatar();
         if (userAvatar != null) {
             stmt.bindString(5, userAvatar);
         }
-
+ 
         String content = entity.getContent();
         if (content != null) {
             stmt.bindString(6, content);
         }
-
+ 
         String contentType = entity.getContentType();
         if (contentType != null) {
             stmt.bindString(7, contentType);
         }
-
+ 
         String time = entity.getTime();
         if (time != null) {
             stmt.bindString(8, time);
@@ -108,34 +106,34 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, ChatGroup entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getUserId());
         stmt.bindLong(3, entity.getToGroupId());
-
+ 
         String userName = entity.getUserName();
         if (userName != null) {
             stmt.bindString(4, userName);
         }
-
+ 
         String userAvatar = entity.getUserAvatar();
         if (userAvatar != null) {
             stmt.bindString(5, userAvatar);
         }
-
+ 
         String content = entity.getContent();
         if (content != null) {
             stmt.bindString(6, content);
         }
-
+ 
         String contentType = entity.getContentType();
         if (contentType != null) {
             stmt.bindString(7, contentType);
         }
-
+ 
         String time = entity.getTime();
         if (time != null) {
             stmt.bindString(8, time);
@@ -145,7 +143,7 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public ChatGroup readEntity(Cursor cursor, int offset) {
@@ -161,7 +159,7 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, ChatGroup entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -172,14 +170,14 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
         entity.setContent(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setContentType(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(ChatGroup entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(ChatGroup entity) {
         if (entity != null) {
@@ -198,5 +196,5 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
     protected final boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

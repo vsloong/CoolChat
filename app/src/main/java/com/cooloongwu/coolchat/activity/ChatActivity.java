@@ -131,9 +131,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_send);
                 isSend = true;
                 isMore = false;
+                isClose = false;
             } else {
                 imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                 isSend = false;
+                isMore = true;
+                isClose = false;
             }
         }
     };
@@ -168,6 +171,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_close);
                     isMore = false;
                     isClose = true;
+                    isSend = false;
                     return;
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
@@ -176,6 +180,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isClose = false;
                     isMore = true;
+                    isSend = false;
                     return;
                 }
                 //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
@@ -186,6 +191,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isSend = false;
                     isMore = true;
+                    isClose = false;
                     return;
                 }
                 break;
