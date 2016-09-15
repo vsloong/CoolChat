@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
-import com.cooloongwu.coolchat.bean.ChatBean;
+import com.cooloongwu.coolchat.entity.ChatFriend;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private ArrayList<ChatBean> listData;
+    private ArrayList<ChatFriend> listData;
 
     //建立枚举 2个item 类型
     public enum ITEM_TYPE {
@@ -29,7 +29,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         SELF_TEXT
     }
 
-    public ChatAdapter(Context context, ArrayList<ChatBean> listData) {
+    public ChatAdapter(Context context, ArrayList<ChatFriend> listData) {
         this.context = context;
         this.listData = listData;
         this.layoutInflater = LayoutInflater.from(context);
@@ -37,16 +37,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        String type = listData.get(position).getType();
-        switch (type) {
-            case "peer_text":
-                return ITEM_TYPE.PEER_TEXT.ordinal();
-            case "self_text":
-                return ITEM_TYPE.SELF_TEXT.ordinal();
-            default:
-                return 0x00;
+        long userId = listData.get(position).getUserId();
+        if (userId == 742420210) {
+            return ITEM_TYPE.SELF_TEXT.ordinal();
+        } else {
+            return ITEM_TYPE.PEER_TEXT.ordinal();
         }
-
     }
 
     @Override
@@ -66,10 +62,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PeerViewHolder) {
-            ((PeerViewHolder) holder).text_name.setText(listData.get(position).getName());
+            ((PeerViewHolder) holder).text_name.setText(listData.get(position).getUserName());
             ((PeerViewHolder) holder).text_content.setText(listData.get(position).getContent());
         } else if (holder instanceof SelfViewHolder) {
-            ((SelfViewHolder) holder).text_name.setText(listData.get(position).getName());
+            ((SelfViewHolder) holder).text_name.setText(listData.get(position).getUserName());
             ((SelfViewHolder) holder).text_content.setText(listData.get(position).getContent());
         }
     }

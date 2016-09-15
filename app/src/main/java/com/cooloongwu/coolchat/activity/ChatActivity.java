@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.BaseActivity;
-import com.cooloongwu.coolchat.bean.ChatBean;
+import com.cooloongwu.coolchat.entity.ChatFriend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private boolean isEmoji = true;
     private boolean isKeyboard = false;
 
-    private ArrayList<ChatBean> listData = new ArrayList<>();
+    private ArrayList<ChatFriend> listData = new ArrayList<>();
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
 
@@ -52,19 +52,19 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
      * 加载聊天会话页的数据
      */
     private void initData() {
-        List<ChatBean> chatBeens = new ArrayList<>();
+        List<ChatFriend> chatBeens = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             if (i % 2 == 0) {
-                ChatBean chatBean = new ChatBean();
-                chatBean.setType("self_text");
-                chatBean.setName("我自己");
+                ChatFriend chatBean = new ChatFriend();
+                chatBean.setUserId(742420210);
+                chatBean.setUserName("我自己");
                 chatBean.setContent("你好哇，哈哈");
                 chatBeens.add(chatBean);
             } else {
-                ChatBean chatBean = new ChatBean();
-                chatBean.setType("peer_text");
-                chatBean.setName("我朋友");
-                chatBean.setContent("你也好哇");
+                ChatFriend chatBean = new ChatFriend();
+                chatBean.setUserId(742420211);
+                chatBean.setUserName("我朋友");
+                chatBean.setContent("你也好");
                 chatBeens.add(chatBean);
             }
         }
@@ -195,10 +195,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void sendMessage() {
-        List<ChatBean> chatBeens = new ArrayList<>();
-        ChatBean chatBean = new ChatBean();
-        chatBean.setName("我自己");
-        chatBean.setType("self_text");
+        List<ChatFriend> chatBeens = new ArrayList<>();
+        ChatFriend chatBean = new ChatFriend();
+        chatBean.setUserId(742420210);
+        chatBean.setUserName("我自己");
         chatBean.setContent(edit_input.getText().toString().trim());
         chatBeens.add(chatBean);
         listData.addAll(chatBeens);
