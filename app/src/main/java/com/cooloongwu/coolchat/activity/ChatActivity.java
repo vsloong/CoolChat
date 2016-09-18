@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,6 +19,8 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.ChatFriend;
+import com.cooloongwu.coolchat.socket.SocketCallback;
+import com.cooloongwu.coolchat.socket.SocketConnect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
 
+    private SocketConnect socketConnect;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         getData();
         initViews();
         initData();
+        initSocket();
     }
 
     /**
@@ -107,6 +113,31 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         imgbtn_more_send_close = (ImageButton) findViewById(R.id.imgbtn_more_send_close);
         imgbtn_emoji_keyboard.setOnClickListener(this);
         imgbtn_more_send_close.setOnClickListener(this);
+    }
+
+    private void initSocket() {
+        socketConnect = new SocketConnect(new SocketCallback() {
+            @Override
+            public void connected() {
+                Log.e("Socket", "已连接");
+            }
+
+            @Override
+            public void receive(byte[] buffer) {
+                String strJson = new String(buffer);
+                Log.e("Socket", "获取的数据：" + strJson);
+            }
+
+            @Override
+            public void disconnect() {
+                Log.e("Socket", "已断开");
+            }
+        });
+        socketConnect.setRemoteAddress("192.168.18.74", 8282);
+        new Thread(socketConnect).start();
+
+        //发送数据示例
+        //socketConnect.write("你好".getBytes());
     }
 
     /**

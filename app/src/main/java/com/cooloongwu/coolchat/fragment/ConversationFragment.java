@@ -64,7 +64,7 @@ public class ConversationFragment extends BaseFragment {
         ConversationDao conversationDao = daoSession.getConversationDao();
 
         //插入一条数据
-        //Conversation conversation = new Conversation(null, "user742420210", "龙隆蟀舞", "", "你好", "12:34", "group");
+        //Conversation conversation = new Conversation(null, "742420210", "龙隆蟀舞", "", "你好", "12:34", "group");
         //conversationDao.insert(conversation);
         //删除一条数据
         //conversationDao.deleteByKey(conversations.get(0).getId());
