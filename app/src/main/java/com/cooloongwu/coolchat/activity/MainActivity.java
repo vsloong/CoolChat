@@ -1,6 +1,8 @@
 package com.cooloongwu.coolchat.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -69,6 +72,8 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ImageButton imgbtn_edit = (ImageButton) navigationView.getHeaderView(0).findViewById(R.id.imgbtn_edit);
+        imgbtn_edit.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(this);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -147,6 +152,19 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.fab_new_chat:
                 fam.close(true);
+                break;
+            case R.id.imgbtn_edit:
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(MainActivity.this, MyProfileActivity.class));
+                    }
+                };
+                Handler handler = new Handler();
+                handler.postDelayed(runnable, 500);
                 break;
             default:
                 break;

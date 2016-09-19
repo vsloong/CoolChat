@@ -45,4 +45,13 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/imgbtn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="16dp"
+        android:background="@color/transparent"
+        android:src="@mipmap/main_nav_edit" />
+
 </FrameLayout>
