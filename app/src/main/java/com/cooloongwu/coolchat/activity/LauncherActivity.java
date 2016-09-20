@@ -20,7 +20,7 @@ public class LauncherActivity extends BaseActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(LauncherActivity.this, MainActivity.class));
+                startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
                 finish();
             }
         };

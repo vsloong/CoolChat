@@ -25,6 +25,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activity.UserProfileActivity" />
         <activity android:name=".activity.MyProfileActivity" />
+        <activity android:name=".activity.LoginActivity" />
     </application>
 
 </manifest>
