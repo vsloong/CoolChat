@@ -26,6 +26,7 @@
             android:src="@mipmap/avatar" />
 
         <TextView
+            android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

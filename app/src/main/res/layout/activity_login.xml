@@ -78,6 +78,7 @@
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/edit_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -100,13 +101,15 @@
                 android:src="@mipmap/icon_login_key_gray" />
 
             <EditText
+                android:id="@+id/edit_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:hint="请输入至少6位密码"
                 android:shadowColor="@color/black"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:inputType="textPassword" />
         </LinearLayout>
 
         <Button

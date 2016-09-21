@@ -10,7 +10,7 @@
     - [x] 联系人列表页面
     - [x] 与好友对话页面
 - [x] **功能开发**
-    -  [x] 给好友发送消息（本地，仍需改善）
+    -  [x] 给好友发送消息
     -  [ ] 给群组发送消息
     -  [x] 按钮，item点击水波纹效果
     -  [ ] 本地存储消息内容
@@ -20,11 +20,10 @@
 因为目前只有我一人在做，PS和AI能力也不强，所以图标素材什么的各位估计也清楚怎么来的。  
 如有侵权请告知，我会尽快删除并更换！  
 
-![image](./pictures/main_drawer.jpg)
-![image](./pictures/main_empty_conversation.jpg)
-![image](./pictures/main_empty_contact.jpg)
-![image](./pictures/chat_send.jpg)
-![image](./pictures/chat.jpg)
+![image](./pictures/main_drawer.jpg)![image](./pictures/main_empty_conversation.jpg)
+![image](./pictures/main_empty_contact.jpg)![image](./pictures/chat_send.jpg)
+![image](./pictures/chat.jpg)![image](./pictures/profile_me.jpg)
+![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览
 该app在开发中也引用了大量的第三方优秀控件，感谢这些开源的作者
@@ -39,14 +38,15 @@
 - ~~自己发消息超过两行，文字会超出屏幕~~
 - ~~聊天列表页清空后没有展示空页面~~
 - ~~发送消息后点击“+”按钮则无法再发送消息~~
+- 弹出键盘时候聊天区域无法自动向上滚动
 
-##打赏我
-由于在开发中租用阿里云服务器产生了相关费用，该费用目前都是我一人承担，
+##随意打赏我
+由于在开发中租用阿里云服务器产生了相关费用，该费用目前都是我一人承担。
 所以如果您觉得该项目对您有帮助，请随意打赏我。
 
-| 支付宝打赏 | 微信打赏 |
-| -------- | -----:  |
-| ![image](./pictures/reward_alipay.jpg) | ![image](./pictures/reward_wechat.png) |
+|支付宝打赏|微信打赏|
+|:----:|:----:|
+|![image](./pictures/reward_alipay.jpg)|![image](./pictures/reward_wechat.png)|
 
 
 ##License

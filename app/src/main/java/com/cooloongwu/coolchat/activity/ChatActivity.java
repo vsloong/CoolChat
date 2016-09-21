@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
+import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.socket.SocketCallback;
@@ -217,11 +218,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //发送数据示例
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("userId", 742420210);
-            jsonObject.put("userName", "测试");
-            jsonObject.put("avatar", "");
+            jsonObject.put("userId", AppConfig.getUserId(ChatActivity.this));
+            jsonObject.put("userName", AppConfig.getUserName(ChatActivity.this));
+            jsonObject.put("avatar", AppConfig.getUserAvatar(ChatActivity.this));
             jsonObject.put("toWhich", "friend");
-            jsonObject.put("toId", 742420210);
+            if (1 == AppConfig.getUserId(ChatActivity.this)) {
+                jsonObject.put("toId", 2);
+            } else {
+                jsonObject.put("toId", 1);
+            }
             jsonObject.put("content", edit_input.getText().toString().trim());
             jsonObject.put("contentType", "text");
             socketConnect.write((jsonObject.toString() + "\n").getBytes());
