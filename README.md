@@ -44,11 +44,16 @@
 由于在开发中租用阿里云服务器产生了相关费用，该费用目前都是我一人承担，
 所以如果您觉得该项目对您有帮助，请随意打赏我。
 
-| 支付宝打赏                               | 微信打赏                                |
-| --------                               | -----:                                 |
-| ![image](./pictures/reward_alipay.jpg) | ![image](./pictures/reward_wechat.png) |
-
-
+<table>
+    <tr>
+        <th>支付宝打赏</th>
+        <th>微信打赏</th>
+    </tr>
+    <tr>
+        <td>![image](./pictures/reward_alipay.jpg)</td>
+        <td>![image](./pictures/reward_wechat.png)</td>
+    </tr>
+</table>
 
 ##License
 ```
