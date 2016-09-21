@@ -22,6 +22,9 @@ import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.socket.SocketCallback;
 import com.cooloongwu.coolchat.socket.SocketConnect;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +62,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
      */
     private void initData() {
         List<ChatFriend> chatBeens = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
                 ChatFriend chatBean = new ChatFriend();
                 chatBean.setUserId(742420210);
@@ -126,6 +129,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             public void receive(byte[] buffer) {
                 String strJson = new String(buffer);
                 Log.e("Socket", "获取的数据：" + strJson);
+                try {
+                    JSONObject jsonObject = new JSONObject(strJson);
+                    List<ChatFriend> chatBeens = new ArrayList<>();
+                    ChatFriend chatBean = new ChatFriend();
+                    chatBean.setUserId(jsonObject.getLong("userId"));
+                    chatBean.setUserName(jsonObject.getString("userName"));
+                    chatBean.setContent(jsonObject.getString("content"));
+                    chatBeens.add(chatBean);
+                    listData.addAll(chatBeens);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -133,44 +150,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 Log.e("Socket", "已断开");
             }
         });
-        socketConnect.setRemoteAddress("192.168.18.74", 8282);
+        socketConnect.setRemoteAddress("121.42.187.66", 8282);
         new Thread(socketConnect).start();
-
-        //发送数据示例
-        //socketConnect.write("你好".getBytes());
     }
-
-    /**
-     * 监听输入框的变化，根据字数变化切换按钮
-     */
-    private TextWatcher textWatcher = new TextWatcher() {
-        private CharSequence sequence;
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            sequence = charSequence;
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            if (sequence.length() > 0) {
-                imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_send);
-                isSend = true;
-                isMore = false;
-                isClose = false;
-            } else {
-                imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isSend = false;
-                isMore = true;
-                isClose = false;
-            }
-        }
-    };
 
     @Override
     public void onClick(View view) {
@@ -232,15 +214,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void sendMessage() {
-        List<ChatFriend> chatBeens = new ArrayList<>();
-        ChatFriend chatBean = new ChatFriend();
-        chatBean.setUserId(742420210);
-        chatBean.setUserName("我自己");
-        chatBean.setContent(edit_input.getText().toString().trim());
-        chatBeens.add(chatBean);
-        listData.addAll(chatBeens);
-        adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+        //发送数据示例
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", 742420210);
+            jsonObject.put("userName", "测试");
+            jsonObject.put("avatar", "");
+            jsonObject.put("toWhich", "friend");
+            jsonObject.put("toId", 742420210);
+            jsonObject.put("content", edit_input.getText().toString().trim());
+            jsonObject.put("contentType", "text");
+            socketConnect.write((jsonObject.toString() + "\n").getBytes());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -258,4 +245,36 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edit_input.getWindowToken(), 0);
     }
+
+    /**
+     * 监听输入框的变化，根据字数变化切换按钮
+     */
+    private TextWatcher textWatcher = new TextWatcher() {
+        private CharSequence sequence;
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            sequence = charSequence;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (sequence.length() > 0) {
+                imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_send);
+                isSend = true;
+                isMore = false;
+                isClose = false;
+            } else {
+                imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                isSend = false;
+                isMore = true;
+                isClose = false;
+            }
+        }
+    };
 }
