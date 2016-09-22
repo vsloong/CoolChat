@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <service android:name=".base.MyService" />
         <activity
             android:name=".activity.LauncherActivity"
             android:label="@string/app_name">

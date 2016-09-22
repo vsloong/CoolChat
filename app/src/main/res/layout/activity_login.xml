@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:hint="请输入你的手机号"
+                android:inputType="phone"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
         </LinearLayout>

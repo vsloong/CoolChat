@@ -70,10 +70,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             case R.id.imgbtn_message:
                 Intent intent = new Intent();
                 intent.setClass(UserProfileActivity.this, ChatActivity.class);
-                intent.putExtra("id", "742420210");
-                intent.putExtra("name", "CooLoongWu");
-                intent.putExtra("avatar", "");
-                intent.putExtra("type", "friend");
+                intent.putExtra("chatId", 2);
+                intent.putExtra("chatName", "CooLoongWu2");
+                intent.putExtra("chatType", "friend");
                 startActivity(intent);
                 break;
             default:

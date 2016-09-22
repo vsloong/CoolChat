@@ -1,8 +1,13 @@
 package com.cooloongwu.coolchat.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +24,11 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
-import com.cooloongwu.coolchat.socket.SocketCallback;
-import com.cooloongwu.coolchat.socket.SocketConnect;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,25 +51,30 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
 
-    private SocketConnect socketConnect;
+    private MyService.MyBinder myBinder;
 
+    private long chatId;
+    private String chatType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        EventBus.getDefault().register(this);
+        bindMyService();
+
         getData();
         initViews();
-        initSocket();
     }
 
     private void getData() {
         Intent intent = getIntent();
-        String id = intent.getStringExtra("id");            //好友或者群组的ID
-        String type = intent.getStringExtra("type");        //群组还是好友
-        String title = intent.getStringExtra("name");       //群组名或者好友名
-        String avatar = intent.getStringExtra("avatar");    //群组或者好友头像
-        initToolbar(title);
+        chatId = intent.getLongExtra("chatId", 0);                  //好友或者群组的ID
+        chatType = intent.getStringExtra("chatType");               //群组还是好友
+        String chatName = intent.getStringExtra("chatName");        //群组名或者好友名
+        Log.e("名字呢", chatName);
+        initToolbar(chatName);
     }
 
     private void initToolbar(String title) {
@@ -94,41 +105,36 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         imgbtn_more_send_close.setOnClickListener(this);
     }
 
-    private void initSocket() {
-        socketConnect = new SocketConnect(new SocketCallback() {
-            @Override
-            public void connected() {
-                Log.e("Socket", "已连接");
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                adapter.notifyDataSetChanged();
+                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
             }
+        }
+    };
 
-            @Override
-            public void receive(byte[] buffer) {
-                String strJson = new String(buffer);
-                Log.e("Socket", "获取的数据：" + strJson);
-                try {
-                    JSONObject jsonObject = new JSONObject(strJson);
-                    List<ChatFriend> chatBeens = new ArrayList<>();
-                    ChatFriend chatBean = new ChatFriend();
-                    chatBean.setUserId(jsonObject.getLong("userId"));
-                    chatBean.setUserAvatar(jsonObject.getString("avatar"));
-                    chatBean.setUserName(jsonObject.getString("userName"));
-                    chatBean.setContent(jsonObject.getString("content"));
-                    chatBeens.add(chatBean);
-                    listData.addAll(chatBeens);
-                    adapter.notifyDataSetChanged();
-                    recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void disconnect() {
-                Log.e("Socket", "已断开");
-            }
-        });
-        socketConnect.setRemoteAddress("121.42.187.66", 8282);
-        new Thread(socketConnect).start();
+    @Subscribe
+    public void onEventMainThread(JSONObject jsonObject) {
+        Log.e("聊天页面收到消息", jsonObject.toString());
+        try {
+            List<ChatFriend> chatBeens = new ArrayList<>();
+            ChatFriend chatBean = new ChatFriend();
+            chatBean.setUserId(jsonObject.getLong("fromId"));
+            chatBean.setUserAvatar(jsonObject.getString("fromAvatar"));
+            chatBean.setUserName(jsonObject.getString("fromName"));
+            chatBean.setContent(jsonObject.getString("content"));
+            chatBeens.add(chatBean);
+            listData.addAll(chatBeens);
+            Message msg = new Message();
+            msg.what = 0;
+            handler.sendMessage(msg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("Json解析", "出错了");
+        }
     }
 
     @Override
@@ -194,9 +200,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //发送数据示例
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("userId", AppConfig.getUserId(ChatActivity.this));
-            jsonObject.put("userName", AppConfig.getUserName(ChatActivity.this));
-            jsonObject.put("avatar", AppConfig.getUserAvatar(ChatActivity.this));
+            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
+            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
+            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
             jsonObject.put("toWhich", "friend");
             if (1 == AppConfig.getUserId(ChatActivity.this)) {
                 jsonObject.put("toId", 2);
@@ -205,7 +211,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             }
             jsonObject.put("content", edit_input.getText().toString().trim());
             jsonObject.put("contentType", "text");
-            socketConnect.write((jsonObject.toString() + "\n").getBytes());
+
+            myBinder.sendMessage(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -258,4 +265,33 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             }
         }
     };
+
+    /**
+     * 绑定服务
+     */
+    private void bindMyService() {
+        Intent bindIntent = new Intent(ChatActivity.this, MyService.class);
+        bindService(bindIntent, connection, BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            myBinder = (MyService.MyBinder) iBinder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        unbindService(connection);
+    }
+
+
 }

@@ -14,15 +14,15 @@
     -  [ ] 给群组发送消息
     -  [x] 按钮，item点击水波纹效果
     -  [ ] 本地存储消息内容
-    -  [ ] 进行Socket通信
+    -  [x] 进行Socket通信
 
 ##已完成页面一览
 因为目前只有我一人在做，PS和AI能力也不强，所以图标素材什么的各位估计也清楚怎么来的。  
 如有侵权请告知，我会尽快删除并更换！  
 
-![image](./pictures/main_drawer.jpg)![image](./pictures/main_empty_conversation.jpg)
-![image](./pictures/main_empty_contact.jpg)![image](./pictures/chat_send.jpg)
-![image](./pictures/chat.jpg)![image](./pictures/profile_me.jpg)
+![image](./pictures/main_drawer.jpg)     ![image](./pictures/main_empty_conversation.jpg)
+![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/chat_send.jpg)
+![image](./pictures/chat.jpg)     ![image](./pictures/profile_me.jpg)
 ![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览

@@ -39,7 +39,7 @@ public class ContactFragment extends BaseFragment {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), UserProfileActivity.class);
-                intent.putExtra("name", "CooLoongWu");
+                intent.putExtra("name", "CooLoongWu2");
                 startActivity(intent);
             }
         });

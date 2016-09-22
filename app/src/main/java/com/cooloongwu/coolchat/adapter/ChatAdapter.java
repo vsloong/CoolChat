@@ -26,7 +26,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<ChatFriend> listData;
 
     //建立枚举 2个item 类型
-    public enum ITEM_TYPE {
+    private enum ITEM_TYPE {
         PEER_TEXT,
         SELF_TEXT
     }
@@ -90,13 +90,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return listData.size();
     }
 
-    public class PeerViewHolder extends RecyclerView.ViewHolder {
+    private class PeerViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView img_avatar;
         private TextView text_name;
         private TextView text_content;
 
-        public PeerViewHolder(View itemView) {
+        PeerViewHolder(View itemView) {
             super(itemView);
             img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
@@ -105,13 +105,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public class SelfViewHolder extends RecyclerView.ViewHolder {
+    private class SelfViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView img_avatar;
         private TextView text_name;
         private TextView text_content;
 
-        public SelfViewHolder(View itemView) {
+        SelfViewHolder(View itemView) {
             super(itemView);
             img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
             text_name = (TextView) itemView.findViewById(R.id.text_name);

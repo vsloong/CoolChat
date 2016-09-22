@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
+import com.cooloongwu.coolchat.base.MyService;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -87,5 +88,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
+
+        Intent intent = new Intent(LoginActivity.this, MyService.class);
+        startService(intent);
     }
 }
