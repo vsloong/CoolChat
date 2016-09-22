@@ -54,32 +54,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_chat);
         getData();
         initViews();
-        initData();
         initSocket();
-    }
-
-    /**
-     * 加载聊天会话页的数据
-     */
-    private void initData() {
-        List<ChatFriend> chatBeens = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            if (i % 2 == 0) {
-                ChatFriend chatBean = new ChatFriend();
-                chatBean.setUserId(742420210);
-                chatBean.setUserName("我自己");
-                chatBean.setContent("你好哇，哈哈");
-                chatBeens.add(chatBean);
-            } else {
-                ChatFriend chatBean = new ChatFriend();
-                chatBean.setUserId(742420211);
-                chatBean.setUserName("我朋友");
-                chatBean.setContent("你也好");
-                chatBeens.add(chatBean);
-            }
-        }
-        listData.addAll(chatBeens);
-        adapter.notifyDataSetChanged();
     }
 
     private void getData() {
@@ -135,6 +110,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     List<ChatFriend> chatBeens = new ArrayList<>();
                     ChatFriend chatBean = new ChatFriend();
                     chatBean.setUserId(jsonObject.getLong("userId"));
+                    chatBean.setUserAvatar(jsonObject.getString("avatar"));
                     chatBean.setUserName(jsonObject.getString("userName"));
                     chatBean.setContent(jsonObject.getString("content"));
                     chatBeens.add(chatBean);

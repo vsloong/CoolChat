@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.ChatFriend;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -38,7 +40,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         long userId = listData.get(position).getUserId();
-        if (userId == 742420210) {
+        if (userId == AppConfig.getUserId(context)) {
             return ITEM_TYPE.SELF_TEXT.ordinal();
         } else {
             return ITEM_TYPE.PEER_TEXT.ordinal();
@@ -64,9 +66,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof PeerViewHolder) {
             ((PeerViewHolder) holder).text_name.setText(listData.get(position).getUserName());
             ((PeerViewHolder) holder).text_content.setText(listData.get(position).getContent());
+            String url = listData.get(position).getUserAvatar();
+            if (!url.isEmpty()) {
+                Picasso.with(context)
+                        .load(listData.get(position).getUserAvatar())
+                        .into(((PeerViewHolder) holder).img_avatar);
+            }
         } else if (holder instanceof SelfViewHolder) {
             ((SelfViewHolder) holder).text_name.setText(listData.get(position).getUserName());
             ((SelfViewHolder) holder).text_content.setText(listData.get(position).getContent());
+            String url = listData.get(position).getUserAvatar();
+            if (!url.isEmpty()) {
+                Picasso.with(context)
+                        .load(listData.get(position).getUserAvatar())
+                        .into(((SelfViewHolder) holder).img_avatar);
+            }
+
         }
     }
 

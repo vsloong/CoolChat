@@ -77,12 +77,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if ("1".equals(str)) {
             AppConfig.setUserId(LoginActivity.this, 1);
             AppConfig.setUserName(LoginActivity.this, "CooLoongWu1");
-            AppConfig.setUserAvatar(LoginActivity.this, "");
+            AppConfig.setUserAvatar(LoginActivity.this, "http://www.qqzhi.com/uploadpic/2015-01-11/130629886.jpg");
             AppConfig.setUserSex(LoginActivity.this, "男");
         } else {
             AppConfig.setUserId(LoginActivity.this, 2);
             AppConfig.setUserName(LoginActivity.this, "CooLoongWu2");
-            AppConfig.setUserAvatar(LoginActivity.this, "");
+            AppConfig.setUserAvatar(LoginActivity.this, "http://img4.duitang.com/uploads/item/201402/26/20140226221725_XrJyt.thumb.200_0.jpeg");
             AppConfig.setUserSex(LoginActivity.this, "女");
         }
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
