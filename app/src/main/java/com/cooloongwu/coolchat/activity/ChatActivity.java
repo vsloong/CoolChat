@@ -241,7 +241,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 }
                 //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
                 if (isSend) {
-                    Toast.makeText(ChatActivity.this, "发送消息", Toast.LENGTH_SHORT).show();
                     sendMessage();
                     edit_input.setText("");
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
@@ -263,12 +262,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
             jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
             jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
-            jsonObject.put("toWhich", "friend");
-            if (1 == AppConfig.getUserId(ChatActivity.this)) {
-                jsonObject.put("toId", 2);
-            } else {
-                jsonObject.put("toId", 1);
-            }
+            jsonObject.put("toWhich", chatType);
+            jsonObject.put("toId", chatId);
             jsonObject.put("content", edit_input.getText().toString().trim());
             jsonObject.put("contentType", "text");
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.AppConfig;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,7 +71,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             case R.id.imgbtn_message:
                 Intent intent = new Intent();
                 intent.setClass(UserProfileActivity.this, ChatActivity.class);
-                intent.putExtra("chatId", String.valueOf(2));
+                intent.putExtra("chatId", String.valueOf(AppConfig.getUserId(UserProfileActivity.this)));
                 intent.putExtra("chatName", "CooLoongWu2");
                 intent.putExtra("chatType", "friend");
                 startActivity(intent);
