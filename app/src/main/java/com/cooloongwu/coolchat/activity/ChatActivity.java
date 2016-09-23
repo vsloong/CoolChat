@@ -70,10 +70,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private void getData() {
         Intent intent = getIntent();
-        chatId = intent.getLongExtra("chatId", 0);                  //好友或者群组的ID
+        chatId = Long.parseLong(intent.getStringExtra("chatId"));                 //好友或者群组的ID
         chatType = intent.getStringExtra("chatType");               //群组还是好友
         String chatName = intent.getStringExtra("chatName");        //群组名或者好友名
-        Log.e("名字呢", chatName);
+        Log.e("聊天信息", "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");
         initToolbar(chatName);
     }
 
@@ -108,11 +108,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 0) {
-                adapter.notifyDataSetChanged();
-                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+            switch (msg.what) {
+                case 0:
+                    adapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                    break;
+                case 1:
+                    Bundle bundle = msg.getData();
+                    String otherMsg = bundle.getString("otherMsg");
+                    Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
             }
+            super.handleMessage(msg);
         }
     };
 
@@ -120,21 +129,72 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     public void onEventMainThread(JSONObject jsonObject) {
         Log.e("聊天页面收到消息", jsonObject.toString());
         try {
-            List<ChatFriend> chatBeens = new ArrayList<>();
-            ChatFriend chatBean = new ChatFriend();
-            chatBean.setUserId(jsonObject.getLong("fromId"));
-            chatBean.setUserAvatar(jsonObject.getString("fromAvatar"));
-            chatBean.setUserName(jsonObject.getString("fromName"));
-            chatBean.setContent(jsonObject.getString("content"));
-            chatBeens.add(chatBean);
-            listData.addAll(chatBeens);
-            Message msg = new Message();
-            msg.what = 0;
-            handler.sendMessage(msg);
+
+            /**
+             * 如果toWhich是friend，那么toId可能是自己的ID（朋友发的消息）或者朋友的Id（自己发的消息）
+             *                    那么fromId可能是自己的ID（自己发的消息）或者朋友的ID（朋友发的消息）
+             *
+             * 如果toWhich是group，那么toId就是群组的Id
+             *                   那么fromId可能是自己的ID（自己发的消息）或者群组中其他人的ID（群组中其他人发的消息）
+             */
+            String toWhich = jsonObject.getString("toWhich");   //可能是friend或者group
+            long toId = jsonObject.getLong("toId");             //可能是我自己的ID或者对方的ID
+            long fromId = jsonObject.getLong("fromId");         //可能是我自己的ID或者对方的ID
+
+            String fromAvatar = jsonObject.getString("fromAvatar");
+            String fromName = jsonObject.getString("fromName");
+            String content = jsonObject.getString("content");
+
+            if (chatType.equals(toWhich)) {
+                //跟当前聊天类型匹配，是群组或者好友的消息
+                if ("friend".equals(toWhich)) {
+                    //当前在跟好友聊天，需判断是不是当前好友的消息
+                    if ((toId == chatId && fromId == AppConfig.getUserId(ChatActivity.this)) //我发给当前朋友的消息
+                            || (toId == AppConfig.getUserId(ChatActivity.this) && fromId == chatId)//朋友发给我的消息
+                            ) {
+                        //是跟当前好友的聊天消息
+                        List<ChatFriend> chatBeens = new ArrayList<>();
+                        ChatFriend chatBean = new ChatFriend();
+                        chatBean.setUserId(fromId);
+                        chatBean.setUserAvatar(fromAvatar);
+                        chatBean.setUserName(fromName);
+                        chatBean.setContent(content);
+                        chatBeens.add(chatBean);
+                        listData.addAll(chatBeens);
+
+                        Message msg = new Message();
+                        msg.what = 0;
+                        handler.sendMessage(msg);
+                    } else {
+                        //不是跟当前好友的聊天消息，提示来消息了即可
+                        showOtherMsg(fromName + "：" + content);
+                    }
+                } else {
+                    //当前在跟群组聊天，需判断是不是当前群组的消息
+                    if (chatId == toId) {
+                        //是当前群组的聊天消息
+                    } else {
+                        //不是当前群组的聊天消息，提示来消息了即可
+                        showOtherMsg(fromName + "：" + content);
+                    }
+                }
+            } else {
+                //跟当前聊天类型不匹配，比如当前在跟好友聊天，来的是群组消息
+                showOtherMsg(fromName + "：" + content);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e("Json解析", "出错了");
         }
+    }
+
+    private void showOtherMsg(String str) {
+        Message msg = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putString("otherMsg", str);
+        msg.setData(bundle);
+        msg.what = 1;
+        handler.sendMessage(msg);
     }
 
     @Override
