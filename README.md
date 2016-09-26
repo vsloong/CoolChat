@@ -1,11 +1,15 @@
 #CoolChat
-
 这是一款高仿“一块”App（英文名：yeeCall）的即时通讯的开源客户端，目前正在进行开发，并逐步完善。
 后期会将服务端等的源码也一并进行开源，敬请期待。
+由于涉及到即时通讯，所以客户端需要跟服务器端建立Socket连接，服务端用的是我自己搭建的阿里云服务器，如需测试
+请在工作日时间09:00-18:00的时间段内进行测试，其他时间服务器暂时不提供Socket连接服务。
 
 ##功能一览（未勾选的为待开发）
-Android端项目做到后面越来越觉得没有一个服务端的话简直无法正常进行下去，所以现在服务端使用了ThinkPHP框架来进行
-简单的Api的开发。
+Android端项目做到后面越来越觉得没有一个服务端的话简直无法正常进行下去，所以现在服务端使用了Laravel框架来进行
+简单的Api的开发。（说明：其实我对PHP框架并没有多少了解，一开始打算使用ThinkPHP5的框架来写，毕竟国人开发，文档看起来相对也轻松点，
+但是部署后由于路由那一块搞得比较头大，于是就放弃TP5转而选择了目前国外比较流行的Laravel框架。就目前而言，路由、控制器、
+数据库用起来都非常顺手，所以目前就暂定使用该框架了。）
+
 ###Android端
 - [x] **页面开发**
     - [x] 侧栏页面
@@ -40,6 +44,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [greenrobot/greenDAO ][6]
 - [rockerhieu/emojicon][7]
 - [hdodenhof/CircleImageView][8]
+- [loopj/android-async-http ][9]
 
 ##已知Bug一览（带删除线的为已修复）
 - ~~自己发消息超过两行，文字会超出屏幕~~
@@ -84,3 +89,4 @@ limitations under the License.
 [6]:https://github.com/greenrobot/greenDAO
 [7]:https://github.com/rockerhieu/emojicon
 [8]:https://github.com/hdodenhof/CircleImageView
+[9]:https://github.com/loopj/android-async-http
