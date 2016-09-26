@@ -24,6 +24,7 @@ import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -79,6 +80,9 @@ public class MainActivity extends BaseActivity
         ImageView img_avatar = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.img_avatar);
         TextView text_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.text_name);
         text_name.setText(AppConfig.getUserName(MainActivity.this));
+        Picasso.with(MainActivity.this)
+                .load(AppConfig.getUserAvatar(MainActivity.this))
+                .into(img_avatar);
 
         imgbtn_edit.setOnClickListener(this);
         navigationView.setNavigationItemSelectedListener(this);

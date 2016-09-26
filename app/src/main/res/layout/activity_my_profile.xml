@@ -34,8 +34,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:background="@color/white"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <TextView
@@ -63,6 +63,7 @@
                         android:textSize="16sp" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_img_avatar"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@mipmap/avatar" />
@@ -90,6 +91,7 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/profile_text_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -184,6 +186,7 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/profile_text_sex"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"

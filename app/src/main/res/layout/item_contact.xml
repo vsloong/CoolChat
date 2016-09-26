@@ -13,14 +13,14 @@
     android:paddingTop="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/contact_avatar"
+        android:id="@+id/contact_img_avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
         android:src="@mipmap/avatar" />
 
     <TextView
-        android:id="@+id/conversation_name"
+        android:id="@+id/contact_text_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"

@@ -10,13 +10,22 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.MyService;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edit_phone;
     private EditText edit_password;
+
+    private Button btn_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initViews() {
-        Button btn_login = (Button) findViewById(R.id.btn_login);
+        btn_login = (Button) findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
 
         edit_phone = (EditText) findViewById(R.id.edit_phone);
@@ -67,29 +76,65 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        if ("1".equals(phone)) {
-            saveUserProfile("1");
-        } else {
-            saveUserProfile("2");
-        }
+        Api.login(LoginActivity.this, phone, password, new JsonHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                btn_login.setText("登录中...");
+                btn_login.setClickable(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                try {
+                    int status = response.getInt("status");
+                    String msg = response.getString("msg");
+                    switch (status) {
+                        case -1:
+                            showToast(msg);
+                            btn_login.setText("登录");
+                            btn_login.setClickable(true);
+                            break;
+                        case 0:
+                            showToast(msg);
+                            btn_login.setText("登录");
+                            btn_login.setClickable(true);
+                            break;
+                        case 1:
+                            AppConfig.setUserId(LoginActivity.this, response.getInt("userId"));
+                            AppConfig.setUserName(LoginActivity.this, response.getString("name"));
+                            AppConfig.setUserAvatar(LoginActivity.this, response.getString("avatar"));
+                            AppConfig.setUserSex(LoginActivity.this, response.getString("sex"));
+
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+
+                            Intent intent = new Intent(LoginActivity.this, MyService.class);
+                            startService(intent);
+                            break;
+                        default:
+                            showToast("未知错误");
+                            btn_login.setText("登录");
+                            btn_login.setClickable(true);
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                btn_login.setText("登录");
+                btn_login.setClickable(true);
+            }
+        });
     }
 
-    private void saveUserProfile(String str) {
-        if ("1".equals(str)) {
-            AppConfig.setUserId(LoginActivity.this, 1);
-            AppConfig.setUserName(LoginActivity.this, "CooLoongWu1");
-            AppConfig.setUserAvatar(LoginActivity.this, "http://www.qqzhi.com/uploadpic/2015-01-11/130629886.jpg");
-            AppConfig.setUserSex(LoginActivity.this, "男");
-        } else {
-            AppConfig.setUserId(LoginActivity.this, 2);
-            AppConfig.setUserName(LoginActivity.this, "CooLoongWu2");
-            AppConfig.setUserAvatar(LoginActivity.this, "http://img4.duitang.com/uploads/item/201402/26/20140226221725_XrJyt.thumb.200_0.jpeg");
-            AppConfig.setUserSex(LoginActivity.this, "女");
-        }
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        finish();
-
-        Intent intent = new Intent(LoginActivity.this, MyService.class);
-        startService(intent);
+    private void showToast(String msg) {
+        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 }

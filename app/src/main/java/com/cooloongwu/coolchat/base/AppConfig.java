@@ -15,7 +15,7 @@ public class AppConfig {
      * 存储修改用户id，默认为空
      */
     public static final String USER_ID = "user_id";
-    public static final long defaultUserId = 0;
+    public static final int defaultUserId = 0;
 
     /**
      * 存储修改用户昵称，默认为空
@@ -42,14 +42,14 @@ public class AppConfig {
      * @param context 上下文
      * @param userId  userId
      */
-    public static void setUserId(Context context, long userId) {
+    public static void setUserId(Context context, int userId) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putLong(USER_ID, userId).apply();
+        preferences.edit().putInt(USER_ID, userId).apply();
     }
 
-    public static long getUserId(Context context) {
+    public static int getUserId(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getLong(USER_ID, defaultUserId);
+        return preferences.getInt(USER_ID, defaultUserId);
     }
 
     /**

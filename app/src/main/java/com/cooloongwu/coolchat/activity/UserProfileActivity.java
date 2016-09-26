@@ -10,11 +10,16 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.cooloongwu.coolchat.R;
-import com.cooloongwu.coolchat.base.AppConfig;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String chatId;
+    private String chatName;
+    private String chatType;
+    private String avatar;
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
@@ -25,8 +30,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     private void initData() {
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        initToolbar(name);
+        chatName = intent.getStringExtra("name");
+        avatar = intent.getStringExtra("avatar");
+        chatId = intent.getStringExtra("id");
+        chatType = intent.getStringExtra("type");
+        String sex = intent.getStringExtra("sex");
+
+        initToolbar(chatName);
     }
 
     private void initToolbar(String name) {
@@ -71,8 +81,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             case R.id.imgbtn_message:
                 Intent intent = new Intent();
                 intent.setClass(UserProfileActivity.this, ChatActivity.class);
-                intent.putExtra("chatId", String.valueOf(AppConfig.getUserId(UserProfileActivity.this)));
-                intent.putExtra("chatName", "CooLoongWu2");
+                intent.putExtra("chatId", chatId);
+                intent.putExtra("chatName", chatName);
                 intent.putExtra("chatType", "friend");
                 startActivity(intent);
                 break;

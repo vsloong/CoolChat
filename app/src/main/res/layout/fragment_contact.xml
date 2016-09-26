@@ -64,44 +64,22 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/contact_text_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="好友(1)"
                 android:textSize="13sp" />
 
-            <LinearLayout
-                android:id="@+id/layout_callme"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_ripple"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp">
+                android:layout_height="match_parent">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/contact_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@mipmap/avatar" />
+                <include layout="@layout/content_recyclerview" />
 
-                <TextView
-                    android:id="@+id/conversation_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="CooLoongWu"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                <include layout="@layout/content_addfriend" />
+            </FrameLayout>
 
-            </LinearLayout>
-
-            <include layout="@layout/content_addfriend" />
         </LinearLayout>
 
     </ScrollView>
