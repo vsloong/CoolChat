@@ -46,7 +46,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CONTACT\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"USER_ID\" INTEGER NOT NULL ," + // 1: userId
@@ -56,9 +56,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
                 "\"PHONE\" TEXT);"); // 5: phone
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"CONTACT\"";
         db.execSQL(sql);
@@ -67,28 +65,28 @@ public class ContactDao extends AbstractDao<Contact, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Contact entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getUserId());
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
         }
-
+ 
         String avatar = entity.getAvatar();
         if (avatar != null) {
             stmt.bindString(4, avatar);
         }
-
+ 
         String sex = entity.getSex();
         if (sex != null) {
             stmt.bindString(5, sex);
         }
-
+ 
         String phone = entity.getPhone();
         if (phone != null) {
             stmt.bindString(6, phone);
@@ -98,28 +96,28 @@ public class ContactDao extends AbstractDao<Contact, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Contact entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getUserId());
-
+ 
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(3, name);
         }
-
+ 
         String avatar = entity.getAvatar();
         if (avatar != null) {
             stmt.bindString(4, avatar);
         }
-
+ 
         String sex = entity.getSex();
         if (sex != null) {
             stmt.bindString(5, sex);
         }
-
+ 
         String phone = entity.getPhone();
         if (phone != null) {
             stmt.bindString(6, phone);
@@ -129,7 +127,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public Contact readEntity(Cursor cursor, int offset) {
@@ -143,7 +141,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, Contact entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -152,14 +150,14 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         entity.setAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setSex(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setPhone(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(Contact entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Contact entity) {
         if (entity != null) {
@@ -178,5 +176,5 @@ public class ContactDao extends AbstractDao<Contact, Long> {
     protected final boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

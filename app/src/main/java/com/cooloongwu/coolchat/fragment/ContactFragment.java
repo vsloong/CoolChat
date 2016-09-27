@@ -16,6 +16,9 @@ import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
 import com.cooloongwu.coolchat.entity.Contact;
+import com.cooloongwu.greendao.gen.ContactDao;
+import com.cooloongwu.greendao.gen.DaoMaster;
+import com.cooloongwu.greendao.gen.DaoSession;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -41,6 +44,8 @@ public class ContactFragment extends BaseFragment {
 
     private TextView contact_text_num;
 
+    private ContactDao contactDao;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,7 @@ public class ContactFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         initViews(view);
-
+        initContactDB();
         getFriendsList();
         return view;
     }
@@ -88,7 +93,7 @@ public class ContactFragment extends BaseFragment {
                             JSONArray jsonArray = response.getJSONArray("friends");
                             List<Contact> contacts = new ArrayList<>();
                             int friendsNum = jsonArray.length();
-                            contact_text_num.setText(String.valueOf(friendsNum));
+                            contact_text_num.setText("好友（" + friendsNum + "）");
                             for (int i = 0; i < friendsNum; i++) {
                                 JSONObject user = jsonArray.getJSONObject(i);
                                 Contact contact = new Contact();
@@ -97,6 +102,9 @@ public class ContactFragment extends BaseFragment {
                                 contact.setAvatar(user.getString("avatar"));
                                 contact.setSex(user.getString("sex"));
                                 contacts.add(contact);
+
+                                //插入数据库
+                                contactDao.insert(contact);
                             }
                             listData.addAll(contacts);
                             adapter.notifyDataSetChanged();
@@ -118,4 +126,10 @@ public class ContactFragment extends BaseFragment {
         });
     }
 
+    private void initContactDB() {
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.DB_NAME, null);
+        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
+        DaoSession daoSession = daoMaster.newSession();
+        contactDao = daoSession.getContactDao();
+    }
 }

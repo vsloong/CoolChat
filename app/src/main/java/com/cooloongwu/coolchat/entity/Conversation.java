@@ -2,7 +2,6 @@ package com.cooloongwu.coolchat.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
@@ -14,7 +13,7 @@ public class Conversation {
 
     @Id//通过这个注解标记的字段必须是Long类型的，这个字段在数据库中表示它就是主键，并且它默认就是自增的
     private Long id;
-    private long multiId;           //群组或者好友或者其他ID
+    private int multiId;           //群组或者好友或者其他ID
     private String name;            //用户名或者群组名
     private String avatar;          //用户或者群组等头像的url
     private String type;            //群组或者朋友或者其他的
@@ -22,11 +21,8 @@ public class Conversation {
     private String contentType;     //群组或者朋友或者其他的
     private String time;            //群组或者朋友或者其他的
 
-    @Transient//表明这个字段不会被写入数据库，只是作为一个普通的java类字段，用来临时存储数据的，不会被持久化
-    private int tempUsageCount; // not persisted
-
-    @Generated(hash = 839502616)
-    public Conversation(Long id, long multiId, String name, String avatar,
+    @Generated(hash = 55106140)
+    public Conversation(Long id, int multiId, String name, String avatar,
                         String type, String content, String contentType, String time) {
         this.id = id;
         this.multiId = multiId;
@@ -37,73 +33,59 @@ public class Conversation {
         this.contentType = contentType;
         this.time = time;
     }
-
     @Generated(hash = 1893991898)
     public Conversation() {
     }
-
     public Long getId() {
         return this.id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public long getMultiId() {
+    public int getMultiId() {
         return this.multiId;
     }
 
-    public void setMultiId(long multiId) {
+    public void setMultiId(int multiId) {
         this.multiId = multiId;
     }
-
     public String getName() {
         return this.name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getAvatar() {
         return this.avatar;
     }
-
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-
     public String getType() {
         return this.type;
     }
-
     public void setType(String type) {
         this.type = type;
     }
-
     public String getContent() {
         return this.content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
-
     public String getContentType() {
         return this.contentType;
     }
-
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-
     public String getTime() {
         return this.time;
     }
-
     public void setTime(String time) {
         this.time = time;
     }
+
 
 }
