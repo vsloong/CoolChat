@@ -126,7 +126,7 @@ public class ContactFragment extends BaseFragment {
     }
 
     private void initContactDB() {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.DB_NAME, null);
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.getUserDB(getActivity()), null);
         DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
         DaoSession daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();

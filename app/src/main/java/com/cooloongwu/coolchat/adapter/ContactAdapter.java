@@ -13,10 +13,7 @@ import android.widget.Toast;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.UserProfileActivity;
 import com.cooloongwu.coolchat.entity.Contact;
-import com.cooloongwu.coolchat.entity.Conversation;
 import com.squareup.picasso.Picasso;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -56,7 +53,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 intent.setClass(context, UserProfileActivity.class);
                 intent.putExtra("name", listData.get(position).getName());
                 intent.putExtra("avatar", listData.get(position).getAvatar());
-                intent.putExtra("id", listData.get(position).getUserId() + "");
+                intent.putExtra("id", listData.get(position).getUserId());
                 intent.putExtra("sex", listData.get(position).getSex());
                 intent.putExtra("phone", listData.get(position).getPhone());
                 intent.putExtra("type", "friend");
@@ -68,9 +65,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(context, "长按了这一项", Toast.LENGTH_SHORT).show();
-                listData.remove(position);
-                notifyDataSetChanged();
-                EventBus.getDefault().post(new Conversation());
                 //return true 后就不会再触发setOnClickListener事件
                 return true;
             }

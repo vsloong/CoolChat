@@ -9,32 +9,43 @@ import android.preference.PreferenceManager;
  * Created by CooLoongWu on 2016-9-14 13:50.
  */
 public class AppConfig {
-    public static String DB_NAME = "CoolChat";
+    private static final String defaultDB = "CoolChat";
 
     /**
      * 存储修改用户id，默认为空
      */
-    public static final String USER_ID = "user_id";
-    public static final int defaultUserId = 0;
+    private static final String USER_ID = "user_id";
+    private static final int defaultUserId = 0;
 
     /**
      * 存储修改用户昵称，默认为空
      */
-    public static final String USER_NAME = "user_name";
-    public static final String defaultUserName = "";
+    private static final String USER_NAME = "user_name";
+    private static final String defaultUserName = "";
 
     /**
      * 存储修改用户性别，默认为空
      */
-    public static final String USER_SEX = "user_sex";
-    public static final String defaultUserSex = "";
+    private static final String USER_SEX = "user_sex";
+    private static final String defaultUserSex = "";
 
     /**
      * 存储修改用户头像，默认为空
      */
-    public static final String USER_AVATAR = "user_avatar";
-    public static final String defaultUserAvatar = "";
+    private static final String USER_AVATAR = "user_avatar";
+    private static final String defaultUserAvatar = "";
 
+    /**
+     * 获取用户的数据库（为每一个用户建立一个数据库）
+     *
+     * @param context 上下文
+     * @return 数据库名
+     */
+    public static String getUserDB(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int userId = preferences.getInt(USER_ID, defaultUserId);
+        return defaultDB + userId;
+    }
 
     /**
      * 存储获取用户的ID

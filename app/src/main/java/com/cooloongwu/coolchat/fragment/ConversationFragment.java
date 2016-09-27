@@ -103,7 +103,7 @@ public class ConversationFragment extends BaseFragment {
      * 初始化GreenDAO的一些操作
      */
     private void initGreenDAO() {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.DB_NAME, null);
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.getUserDB(getActivity()), null);
         DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
         daoSession = daoMaster.newSession();
 
@@ -133,7 +133,8 @@ public class ConversationFragment extends BaseFragment {
      * 将数据从数据库删除
      */
     private void deleteFromDB(Conversation conversation) {
-        conversationDao.deleteByKey(conversation.getId());
+        Log.e("要删除的ID", conversation.getId() + "");
+        conversationDao.delete(conversation);
         //更新页面
         handleConversation.sendEmptyMessage(0);
     }

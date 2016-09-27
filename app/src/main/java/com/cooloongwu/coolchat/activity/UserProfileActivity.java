@@ -13,7 +13,7 @@ import com.cooloongwu.coolchat.R;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String chatId;
+    private int chatId;
     private String chatName;
     private String chatType;
     private String avatar;
@@ -32,7 +32,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         chatName = intent.getStringExtra("name");
         avatar = intent.getStringExtra("avatar");
-        chatId = intent.getStringExtra("id");
+        chatId = intent.getIntExtra("id", 0);
         chatType = intent.getStringExtra("type");
         String sex = intent.getStringExtra("sex");
 

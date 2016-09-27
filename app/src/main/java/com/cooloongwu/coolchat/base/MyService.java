@@ -57,6 +57,7 @@ public class MyService extends Service {
             @Override
             public void connected() {
                 Log.e("Service Socket", "已连接");
+                sendLoginMsg();
             }
 
             @Override
@@ -92,6 +93,21 @@ public class MyService extends Service {
     public class MyBinder extends Binder {
         public void sendMessage(JSONObject jsonObject) {
             socketConnect.write((jsonObject.toString() + "\n").getBytes());
+        }
+    }
+
+    /**
+     * 告诉服务器我上线了
+     */
+    private void sendLoginMsg() {
+        //发送数据示例
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("fromId", AppConfig.getUserId(this));
+            jsonObject.put("toWhich", "server");
+            myBinder.sendMessage(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
