@@ -53,7 +53,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private MyService.MyBinder myBinder;
 
-    private long chatId;
+    private int chatId;
     private String chatType;
 
     @Override
@@ -70,7 +70,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private void getData() {
         Intent intent = getIntent();
-        chatId = Long.parseLong(intent.getStringExtra("chatId"));                 //好友或者群组的ID
+        chatId = intent.getIntExtra("chatId", 0);                 //好友或者群组的ID
         chatType = intent.getStringExtra("chatType");               //群组还是好友
         String chatName = intent.getStringExtra("chatName");        //群组名或者好友名
         Log.e("聊天信息", "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");

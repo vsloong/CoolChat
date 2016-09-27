@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.entity.Conversation;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -45,15 +46,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.name.setText(listData.get(position).getName());
         holder.content.setText(listData.get(position).getContent());
         holder.time.setText(listData.get(position).getTime());
+        Picasso.with(context)
+                .load(listData.get(position).getAvatar())
+                .into(holder.avatar);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setClass(context, ChatActivity.class);
-                intent.putExtra("name", listData.get(position).getName());
-                intent.putExtra("avatar", listData.get(position).getAvatar());
-                intent.putExtra("id", "userId或者roomId");
+                intent.putExtra("chatName", listData.get(position).getName());
+                intent.putExtra("chatType", listData.get(position).getType());  //朋友还是群组
+                intent.putExtra("chatId", listData.get(position).getMultiId());
                 context.startActivity(intent);
             }
         });
@@ -82,7 +86,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private TextView content;
         private TextView time;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             avatar = (ImageView) itemView.findViewById(R.id.conversation_avatar);
             name = (TextView) itemView.findViewById(R.id.conversation_name);

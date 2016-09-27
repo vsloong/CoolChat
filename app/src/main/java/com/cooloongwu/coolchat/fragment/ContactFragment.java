@@ -103,8 +103,7 @@ public class ContactFragment extends BaseFragment {
                                 contact.setSex(user.getString("sex"));
                                 contacts.add(contact);
 
-                                //插入数据库
-                                contactDao.insert(contact);
+                                insertOrUpdateContactDB(contact);
                             }
                             listData.addAll(contacts);
                             adapter.notifyDataSetChanged();
@@ -131,5 +130,27 @@ public class ContactFragment extends BaseFragment {
         DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
         DaoSession daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();
+    }
+
+    /**
+     * 插入或者更新数据
+     *
+     * @param contact 实体类
+     */
+    private void insertOrUpdateContactDB(Contact contact) {
+        Contact result = contactDao.queryBuilder()
+                .where(ContactDao.Properties.UserId.eq(contact.getUserId()))        //判断是否有该ID
+                .build()
+                .unique();
+        if (result != null) {
+            //如果有该用户
+            result.setSex(contact.getSex());
+            result.setName(contact.getName());
+            result.setAvatar(contact.getAvatar());
+            result.setPhone(contact.getPhone());
+            contactDao.update(result);
+        } else {
+            contactDao.insert(contact);
+        }
     }
 }
