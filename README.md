@@ -37,6 +37,7 @@
             <td>√</td>
             <td>√</td>
             <td>√</td>
+            <td></td>
         </tr>
         <tr>
             <td>朽木露琪亚</td>
@@ -44,6 +45,7 @@
             <td></td>
             <td></td>
             <td>√</td>
+            <td></td>
             <td></td>
             <td></td>
         </tr>
@@ -55,11 +57,13 @@
             <td></td>
             <td></td>
             <td>√</td>
+            <td></td>
         </tr>
         <tr>
             <td>朽木白哉</td>
             <td>√</td>
             <td>√</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -73,6 +77,7 @@
             <td></td>
             <td></td>
             <td>√</td>
+            <td></td>
         </tr>
         <tr>
             <td>松本乱菊</td>
@@ -82,9 +87,11 @@
             <td></td>
             <td>√</td>
             <td></td>
+            <td></td>
         </tr>
         <tr>
             <td>乌尔奇奥拉·西法</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
