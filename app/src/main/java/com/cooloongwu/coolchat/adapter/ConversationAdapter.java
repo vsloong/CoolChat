@@ -46,7 +46,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.name.setText(listData.get(position).getName());
         holder.content.setText(listData.get(position).getContent());
-        holder.time.setText(listData.get(position).getTime());
+        holder.time.setText(listData.get(position).getTime().substring(11, 16));
+        int unRead = listData.get(position).getUnReadNum();
+        if (unRead > 0) {
+            holder.num.setText(String.valueOf(unRead));
+            holder.num.setVisibility(View.VISIBLE);
+        } else {
+            holder.num.setVisibility(View.GONE);
+        }
+
         Picasso.with(context)
                 .load(listData.get(position).getAvatar())
                 .into(holder.avatar);
@@ -95,6 +103,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private TextView name;
         private TextView content;
         private TextView time;
+        private TextView num;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -102,6 +111,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             name = (TextView) itemView.findViewById(R.id.conversation_name);
             content = (TextView) itemView.findViewById(R.id.conversation_content);
             time = (TextView) itemView.findViewById(R.id.conversation_time);
+            num = (TextView) itemView.findViewById(R.id.conversation_unread);
         }
     }
 }

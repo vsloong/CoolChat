@@ -13,25 +13,27 @@ public class ChatFriend {
 
     @Id
     private Long id;
-    private long userId;            //用户ID
-    private long toFriendId;        //要发送给朋友的ID
-    private String userName;        //用户昵称
-    private String userAvatar;      //用户头像
+    private int fromId;             //用户ID
+    private int toId;               //要发送给朋友的ID
+    private String fromName;        //用户昵称
+    private String fromAvatar;      //用户头像
     private String content;         //发送内容
     private String contentType;     //发送内容的类型
     private String time;            //发送时间
+    private boolean isRead;         //消息是否已读
 
-    @Generated(hash = 1123296186)
-    public ChatFriend(Long id, long userId, long toFriendId, String userName,
-                      String userAvatar, String content, String contentType, String time) {
+    @Generated(hash = 1724872627)
+    public ChatFriend(Long id, int fromId, int toId, String fromName, String fromAvatar,
+                      String content, String contentType, String time, boolean isRead) {
         this.id = id;
-        this.userId = userId;
-        this.toFriendId = toFriendId;
-        this.userName = userName;
-        this.userAvatar = userAvatar;
+        this.fromId = fromId;
+        this.toId = toId;
+        this.fromName = fromName;
+        this.fromAvatar = fromAvatar;
         this.content = content;
         this.contentType = contentType;
         this.time = time;
+        this.isRead = isRead;
     }
 
     @Generated(hash = 230513170)
@@ -46,36 +48,36 @@ public class ChatFriend {
         this.id = id;
     }
 
-    public long getUserId() {
-        return this.userId;
+    public int getFromId() {
+        return this.fromId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setFromId(int fromId) {
+        this.fromId = fromId;
     }
 
-    public long getToFriendId() {
-        return this.toFriendId;
+    public int getToId() {
+        return this.toId;
     }
 
-    public void setToFriendId(long toFriendId) {
-        this.toFriendId = toFriendId;
+    public void setToId(int toId) {
+        this.toId = toId;
     }
 
-    public String getUserName() {
-        return this.userName;
+    public String getFromName() {
+        return this.fromName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setFromName(String fromName) {
+        this.fromName = fromName;
     }
 
-    public String getUserAvatar() {
-        return this.userAvatar;
+    public String getFromAvatar() {
+        return this.fromAvatar;
     }
 
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setFromAvatar(String fromAvatar) {
+        this.fromAvatar = fromAvatar;
     }
 
     public String getContent() {
@@ -101,5 +103,14 @@ public class ChatFriend {
     public void setTime(String time) {
         this.time = time;
     }
+
+    public boolean getIsRead() {
+        return this.isRead;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
 
 }

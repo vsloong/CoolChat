@@ -24,8 +24,13 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
+import com.cooloongwu.coolchat.entity.ChatGroup;
+import com.cooloongwu.coolchat.utils.TimeUtils;
+import com.cooloongwu.greendao.gen.ChatFriendDao;
+import com.cooloongwu.greendao.gen.ChatGroupDao;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,6 +61,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private int chatId;
     private String chatType;
 
+    private ChatFriendDao chatFriendDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +73,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         getData();
         initViews();
+        initRecentChatData();
     }
 
     private void getData() {
@@ -105,6 +113,39 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         imgbtn_more_send_close.setOnClickListener(this);
     }
 
+    /**
+     * 加载最近的聊天消息，默认15条（QQ就是这样）
+     */
+    private void initRecentChatData() {
+        Log.e("加载聊天数据", "");
+        if ("friend".equals(chatType)) {
+            //如果是和好友聊天
+            Log.e("加载和好友聊天数据", "");
+            chatFriendDao = GreenDAO.getChatFriendDao();
+            List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
+                    .where(ChatFriendDao.Properties.FromId.eq(chatId))
+                    .where(ChatFriendDao.Properties.ToId.eq(chatId))
+                    .orderAsc(ChatFriendDao.Properties.Time)
+                    .limit(15)
+                    .build()
+                    .list();
+            for (int i = 0; i < chatFriends.size(); i++) {
+                Log.e("保存的聊天的数据", chatFriends.get(i).getContent());
+            }
+
+            listData.addAll(chatFriends);
+            adapter.notifyDataSetChanged();
+        } else {
+            //如果是和群组聊天
+            Log.e("加载和群组聊天数据", "");
+        }
+    }
+
+    /**
+     * 处理消息事件
+     * 0：刷新数据
+     * 1：提醒其他好友或群组来消息
+     */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -138,12 +179,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
              *                   那么fromId可能是自己的ID（自己发的消息）或者群组中其他人的ID（群组中其他人发的消息）
              */
             String toWhich = jsonObject.getString("toWhich");   //可能是friend或者group
-            long toId = jsonObject.getLong("toId");             //可能是我自己的ID或者对方的ID
-            long fromId = jsonObject.getLong("fromId");         //可能是我自己的ID或者对方的ID
+            int toId = jsonObject.getInt("toId");             //可能是我自己的ID或者对方的ID
+            int fromId = jsonObject.getInt("fromId");         //可能是我自己的ID或者对方的ID
 
             String fromAvatar = jsonObject.getString("fromAvatar");
             String fromName = jsonObject.getString("fromName");
             String content = jsonObject.getString("content");
+            String contentType = jsonObject.getString("contentType");
+            String time = jsonObject.getString("time");
 
             if (chatType.equals(toWhich)) {
                 //跟当前聊天类型匹配，是群组或者好友的消息
@@ -153,20 +196,40 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                             || (toId == AppConfig.getUserId(ChatActivity.this) && fromId == chatId)//朋友发给我的消息
                             ) {
                         //是跟当前好友的聊天消息
-                        List<ChatFriend> chatBeens = new ArrayList<>();
-                        ChatFriend chatBean = new ChatFriend();
-                        chatBean.setUserId(fromId);
-                        chatBean.setUserAvatar(fromAvatar);
-                        chatBean.setUserName(fromName);
-                        chatBean.setContent(content);
-                        chatBeens.add(chatBean);
-                        listData.addAll(chatBeens);
+                        List<ChatFriend> chatFriends = new ArrayList<>();
+                        ChatFriend chatFriend = new ChatFriend();
+                        chatFriend.setFromId(fromId);
+                        chatFriend.setFromAvatar(fromAvatar);
+                        chatFriend.setFromName(fromName);
+                        chatFriend.setContent(content);
+                        chatFriend.setContentType(contentType);
+                        chatFriend.setToId(toId);
+                        chatFriend.setTime(time);
+                        chatFriend.setIsRead(true);             //消息已读
+
+                        chatFriends.add(chatFriend);
+                        listData.addAll(chatFriends);
 
                         Message msg = new Message();
                         msg.what = 0;
                         handler.sendMessage(msg);
+
+                        //保存聊天数据到本地数据库
+                        saveChatFriendData(chatFriend);
                     } else {
                         //不是跟当前好友的聊天消息，提示来消息了即可
+                        ChatFriend chatFriend = new ChatFriend();
+                        chatFriend.setFromId(fromId);
+                        chatFriend.setFromAvatar(fromAvatar);
+                        chatFriend.setFromName(fromName);
+                        chatFriend.setContent(content);
+                        chatFriend.setContentType(contentType);
+                        chatFriend.setToId(toId);
+                        chatFriend.setTime(time);
+                        chatFriend.setIsRead(false);            //消息未读
+                        //保存聊天数据到本地数据库
+                        saveChatFriendData(chatFriend);
+
                         showOtherMsg(fromName + "：" + content);
                     }
                 } else {
@@ -188,6 +251,22 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+
+    private void saveChatFriendData(ChatFriend chatFriend) {
+        chatFriendDao = GreenDAO.getChatFriendDao();
+        chatFriendDao.insert(chatFriend);
+    }
+
+    private void saveChatGroupData(ChatGroup chatGroup) {
+        ChatGroupDao chatGroupDao = GreenDAO.getChatGroupDao();
+        chatGroupDao.insert(chatGroup);
+    }
+
+    /**
+     * 提醒其他好友或者群组来消息了
+     *
+     * @param str 消息内容
+     */
     private void showOtherMsg(String str) {
         Message msg = new Message();
         Bundle bundle = new Bundle();
@@ -255,6 +334,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 发送消息
+     */
     private void sendMessage() {
         //发送数据示例
         JSONObject jsonObject = new JSONObject();
@@ -266,6 +348,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             jsonObject.put("toId", chatId);
             jsonObject.put("content", edit_input.getText().toString().trim());
             jsonObject.put("contentType", "text");
+            jsonObject.put("time", TimeUtils.getCurrentTime());
 
             myBinder.sendMessage(jsonObject);
         } catch (JSONException e) {

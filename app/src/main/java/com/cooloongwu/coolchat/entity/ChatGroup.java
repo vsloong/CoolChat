@@ -13,25 +13,28 @@ public class ChatGroup {
 
     @Id
     private Long id;
-    private long userId;            //用户ID
-    private long toGroupId;         //要发送给群组的ID
-    private String userName;        //用户昵称
-    private String userAvatar;      //用户头像
+    private int fromId;             //用户ID
+    private int toGroupId;          //要发送给群组的ID
+    private String fromName;        //用户昵称
+    private String fromAvatar;      //用户头像
     private String content;         //发送内容
     private String contentType;     //发送内容的类型
     private String time;            //发送时间
+    private boolean isRead;         //消息是否已读
 
-    @Generated(hash = 1965504198)
-    public ChatGroup(Long id, long userId, long toGroupId, String userName,
-                     String userAvatar, String content, String contentType, String time) {
+    @Generated(hash = 1344739701)
+    public ChatGroup(Long id, int fromId, int toGroupId, String fromName,
+                     String fromAvatar, String content, String contentType, String time,
+                     boolean isRead) {
         this.id = id;
-        this.userId = userId;
+        this.fromId = fromId;
         this.toGroupId = toGroupId;
-        this.userName = userName;
-        this.userAvatar = userAvatar;
+        this.fromName = fromName;
+        this.fromAvatar = fromAvatar;
         this.content = content;
         this.contentType = contentType;
         this.time = time;
+        this.isRead = isRead;
     }
 
     @Generated(hash = 266793083)
@@ -46,36 +49,36 @@ public class ChatGroup {
         this.id = id;
     }
 
-    public long getUserId() {
-        return this.userId;
+    public int getFromId() {
+        return this.fromId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setFromId(int fromId) {
+        this.fromId = fromId;
     }
 
-    public long getToGroupId() {
+    public int getToGroupId() {
         return this.toGroupId;
     }
 
-    public void setToGroupId(long toGroupId) {
+    public void setToGroupId(int toGroupId) {
         this.toGroupId = toGroupId;
     }
 
-    public String getUserName() {
-        return this.userName;
+    public String getFromName() {
+        return this.fromName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setFromName(String fromName) {
+        this.fromName = fromName;
     }
 
-    public String getUserAvatar() {
-        return this.userAvatar;
+    public String getFromAvatar() {
+        return this.fromAvatar;
     }
 
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setFromAvatar(String fromAvatar) {
+        this.fromAvatar = fromAvatar;
     }
 
     public String getContent() {
@@ -101,4 +104,14 @@ public class ChatGroup {
     public void setTime(String time) {
         this.time = time;
     }
+
+    public boolean getIsRead() {
+        return this.isRead;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
+
 }

@@ -39,7 +39,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        long userId = listData.get(position).getUserId();
+        int userId = listData.get(position).getFromId();
         if (userId == AppConfig.getUserId(context)) {
             return ITEM_TYPE.SELF_TEXT.ordinal();
         } else {
@@ -64,21 +64,23 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PeerViewHolder) {
-            ((PeerViewHolder) holder).text_name.setText(listData.get(position).getUserName());
+            //朋友或者其他发送的
+            ((PeerViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             ((PeerViewHolder) holder).text_content.setText(listData.get(position).getContent());
-            String url = listData.get(position).getUserAvatar();
+            String url = listData.get(position).getFromAvatar();
             if (!url.isEmpty()) {
                 Picasso.with(context)
-                        .load(listData.get(position).getUserAvatar())
+                        .load(url)
                         .into(((PeerViewHolder) holder).img_avatar);
             }
         } else if (holder instanceof SelfViewHolder) {
-            ((SelfViewHolder) holder).text_name.setText(listData.get(position).getUserName());
+            //自己发送的
+            ((SelfViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             ((SelfViewHolder) holder).text_content.setText(listData.get(position).getContent());
-            String url = listData.get(position).getUserAvatar();
+            String url = listData.get(position).getFromAvatar();
             if (!url.isEmpty()) {
                 Picasso.with(context)
-                        .load(listData.get(position).getUserAvatar())
+                        .load(url)
                         .into(((SelfViewHolder) holder).img_avatar);
             }
 

@@ -27,12 +27,13 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property MultiId = new Property(1, int.class, "multiId", false, "MULTI_ID");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Avatar = new Property(3, String.class, "avatar", false, "AVATAR");
-        public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
-        public final static Property Content = new Property(5, String.class, "content", false, "CONTENT");
-        public final static Property ContentType = new Property(6, String.class, "contentType", false, "CONTENT_TYPE");
-        public final static Property Time = new Property(7, String.class, "time", false, "TIME");
+        public final static Property UnReadNum = new Property(2, int.class, "unReadNum", false, "UN_READ_NUM");
+        public final static Property Name = new Property(3, String.class, "name", false, "NAME");
+        public final static Property Avatar = new Property(4, String.class, "avatar", false, "AVATAR");
+        public final static Property Type = new Property(5, String.class, "type", false, "TYPE");
+        public final static Property Content = new Property(6, String.class, "content", false, "CONTENT");
+        public final static Property ContentType = new Property(7, String.class, "contentType", false, "CONTENT_TYPE");
+        public final static Property Time = new Property(8, String.class, "time", false, "TIME");
     }
 
 
@@ -52,12 +53,13 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"CONVERSATION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"MULTI_ID\" INTEGER NOT NULL ," + // 1: multiId
-                "\"NAME\" TEXT," + // 2: name
-                "\"AVATAR\" TEXT," + // 3: avatar
-                "\"TYPE\" TEXT," + // 4: type
-                "\"CONTENT\" TEXT," + // 5: content
-                "\"CONTENT_TYPE\" TEXT," + // 6: contentType
-                "\"TIME\" TEXT);"); // 7: time
+                "\"UN_READ_NUM\" INTEGER NOT NULL ," + // 2: unReadNum
+                "\"NAME\" TEXT," + // 3: name
+                "\"AVATAR\" TEXT," + // 4: avatar
+                "\"TYPE\" TEXT," + // 5: type
+                "\"CONTENT\" TEXT," + // 6: content
+                "\"CONTENT_TYPE\" TEXT," + // 7: contentType
+                "\"TIME\" TEXT);"); // 8: time
     }
 
     /** Drops the underlying database table. */
@@ -75,35 +77,36 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getMultiId());
+        stmt.bindLong(3, entity.getUnReadNum());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(3, name);
+            stmt.bindString(4, name);
         }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
-            stmt.bindString(4, avatar);
+            stmt.bindString(5, avatar);
         }
  
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(5, type);
+            stmt.bindString(6, type);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(6, content);
+            stmt.bindString(7, content);
         }
  
         String contentType = entity.getContentType();
         if (contentType != null) {
-            stmt.bindString(7, contentType);
+            stmt.bindString(8, contentType);
         }
  
         String time = entity.getTime();
         if (time != null) {
-            stmt.bindString(8, time);
+            stmt.bindString(9, time);
         }
     }
 
@@ -116,35 +119,36 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getMultiId());
+        stmt.bindLong(3, entity.getUnReadNum());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(3, name);
+            stmt.bindString(4, name);
         }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
-            stmt.bindString(4, avatar);
+            stmt.bindString(5, avatar);
         }
  
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(5, type);
+            stmt.bindString(6, type);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(6, content);
+            stmt.bindString(7, content);
         }
  
         String contentType = entity.getContentType();
         if (contentType != null) {
-            stmt.bindString(7, contentType);
+            stmt.bindString(8, contentType);
         }
  
         String time = entity.getTime();
         if (time != null) {
-            stmt.bindString(8, time);
+            stmt.bindString(9, time);
         }
     }
 
@@ -158,12 +162,13 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
         Conversation entity = new Conversation( //
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.getInt(offset + 1), // multiId
-                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
-                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // type
-                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // content
-                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // contentType
-                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // time
+                cursor.getInt(offset + 2), // unReadNum
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // name
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avatar
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // type
+                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // content
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // contentType
+                cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // time
         );
         return entity;
     }
@@ -172,12 +177,13 @@ public class ConversationDao extends AbstractDao<Conversation, Long> {
     public void readEntity(Cursor cursor, Conversation entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMultiId(cursor.getInt(offset + 1));
-        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setType(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setContent(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setContentType(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setUnReadNum(cursor.getInt(offset + 2));
+        entity.setName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setType(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setContent(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setContentType(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setTime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override

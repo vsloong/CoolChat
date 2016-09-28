@@ -15,13 +15,12 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ConversationAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
+import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
-import com.cooloongwu.greendao.gen.DaoMaster;
-import com.cooloongwu.greendao.gen.DaoSession;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,7 +43,6 @@ public class ConversationFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private LinearLayout layout_initiatechat;
 
-    private DaoSession daoSession;
     private ConversationDao conversationDao;
 
     @Override
@@ -59,7 +57,6 @@ public class ConversationFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_conversation, container, false);
 
         initViews(view);
-        initGreenDAO();
         initListData();
         return view;
     }
@@ -69,11 +66,11 @@ public class ConversationFragment extends BaseFragment {
      */
     private void initListData() {
         //加载聊天列表数据
-        conversationDao = daoSession.getConversationDao();
+        conversationDao = GreenDAO.getConversationDao();
         List<Conversation> conversations = conversationDao.queryBuilder().build().list();
         listData.clear();
         listData.addAll(conversations);
-        adapter.notifyDataSetChanged();     //为什么更新数据经常报错
+        adapter.notifyDataSetChanged();
 
         if (listData.isEmpty()) {
             layout_initiatechat.setVisibility(View.VISIBLE);
@@ -100,20 +97,10 @@ public class ConversationFragment extends BaseFragment {
     }
 
     /**
-     * 初始化GreenDAO的一些操作
-     */
-    private void initGreenDAO() {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.getUserDB(getActivity()), null);
-        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
-        daoSession = daoMaster.newSession();
-
-    }
-
-    /**
      * 将数据插入数据库
      */
     private void insertOrUpdateConversationDB(Conversation conversation) {
-        conversationDao = daoSession.getConversationDao();
+        conversationDao = GreenDAO.getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.MultiId.eq(conversation.getMultiId()))
                 .build()
@@ -175,7 +162,7 @@ public class ConversationFragment extends BaseFragment {
                 chatId = fromId;
             }
             //根据ID去查询好友的其他信息
-            ContactDao contactDao = daoSession.getContactDao();
+            ContactDao contactDao = GreenDAO.getContactDao();
             Contact contact = contactDao.queryBuilder()
                     .where(ContactDao.Properties.UserId.eq(chatId))
                     .build()
@@ -188,7 +175,7 @@ public class ConversationFragment extends BaseFragment {
             chatId = toId;
             chatType = "group";
         }
-        Conversation conversation = new Conversation(null, chatId, chatName, chatAvatar, chatType, content, contentType, TimeUtils.getCurrentTime());
+        Conversation conversation = new Conversation(null, chatId, 0, chatName, chatAvatar, chatType, content, contentType, TimeUtils.getCurrentTime());
 
         insertOrUpdateConversationDB(conversation);
     }

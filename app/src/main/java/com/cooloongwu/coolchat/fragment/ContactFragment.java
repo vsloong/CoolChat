@@ -15,10 +15,9 @@ import com.cooloongwu.coolchat.adapter.ContactAdapter;
 import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
+import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.greendao.gen.ContactDao;
-import com.cooloongwu.greendao.gen.DaoMaster;
-import com.cooloongwu.greendao.gen.DaoSession;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -44,8 +43,6 @@ public class ContactFragment extends BaseFragment {
 
     private TextView contact_text_num;
 
-    private ContactDao contactDao;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +54,6 @@ public class ContactFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         initViews(view);
-        initContactDB();
         getFriendsList();
         return view;
     }
@@ -125,19 +121,13 @@ public class ContactFragment extends BaseFragment {
         });
     }
 
-    private void initContactDB() {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(getActivity(), AppConfig.getUserDB(getActivity()), null);
-        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
-        DaoSession daoSession = daoMaster.newSession();
-        contactDao = daoSession.getContactDao();
-    }
-
     /**
      * 插入或者更新数据
      *
      * @param contact 实体类
      */
     private void insertOrUpdateContactDB(Contact contact) {
+        ContactDao contactDao = GreenDAO.getContactDao();
         Contact result = contactDao.queryBuilder()
                 .where(ContactDao.Properties.UserId.eq(contact.getUserId()))        //判断是否有该ID
                 .build()

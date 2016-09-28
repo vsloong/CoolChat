@@ -25,13 +25,14 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property UserId = new Property(1, long.class, "userId", false, "USER_ID");
-        public final static Property ToFriendId = new Property(2, long.class, "toFriendId", false, "TO_FRIEND_ID");
-        public final static Property UserName = new Property(3, String.class, "userName", false, "USER_NAME");
-        public final static Property UserAvatar = new Property(4, String.class, "userAvatar", false, "USER_AVATAR");
+        public final static Property FromId = new Property(1, int.class, "fromId", false, "FROM_ID");
+        public final static Property ToId = new Property(2, int.class, "toId", false, "TO_ID");
+        public final static Property FromName = new Property(3, String.class, "fromName", false, "FROM_NAME");
+        public final static Property FromAvatar = new Property(4, String.class, "fromAvatar", false, "FROM_AVATAR");
         public final static Property Content = new Property(5, String.class, "content", false, "CONTENT");
         public final static Property ContentType = new Property(6, String.class, "contentType", false, "CONTENT_TYPE");
         public final static Property Time = new Property(7, String.class, "time", false, "TIME");
+        public final static Property IsRead = new Property(8, boolean.class, "isRead", false, "IS_READ");
     }
 
 
@@ -48,13 +49,14 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CHAT_FRIEND\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"USER_ID\" INTEGER NOT NULL ," + // 1: userId
-                "\"TO_FRIEND_ID\" INTEGER NOT NULL ," + // 2: toFriendId
-                "\"USER_NAME\" TEXT," + // 3: userName
-                "\"USER_AVATAR\" TEXT," + // 4: userAvatar
+                "\"FROM_ID\" INTEGER NOT NULL ," + // 1: fromId
+                "\"TO_ID\" INTEGER NOT NULL ," + // 2: toId
+                "\"FROM_NAME\" TEXT," + // 3: fromName
+                "\"FROM_AVATAR\" TEXT," + // 4: fromAvatar
                 "\"CONTENT\" TEXT," + // 5: content
                 "\"CONTENT_TYPE\" TEXT," + // 6: contentType
-                "\"TIME\" TEXT);"); // 7: time
+                "\"TIME\" TEXT," + // 7: time
+                "\"IS_READ\" INTEGER NOT NULL );"); // 8: isRead
     }
 
     /** Drops the underlying database table. */
@@ -71,17 +73,17 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getUserId());
-        stmt.bindLong(3, entity.getToFriendId());
- 
-        String userName = entity.getUserName();
-        if (userName != null) {
-            stmt.bindString(4, userName);
+        stmt.bindLong(2, entity.getFromId());
+        stmt.bindLong(3, entity.getToId());
+
+        String fromName = entity.getFromName();
+        if (fromName != null) {
+            stmt.bindString(4, fromName);
         }
- 
-        String userAvatar = entity.getUserAvatar();
-        if (userAvatar != null) {
-            stmt.bindString(5, userAvatar);
+
+        String fromAvatar = entity.getFromAvatar();
+        if (fromAvatar != null) {
+            stmt.bindString(5, fromAvatar);
         }
  
         String content = entity.getContent();
@@ -98,6 +100,7 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         if (time != null) {
             stmt.bindString(8, time);
         }
+        stmt.bindLong(9, entity.getIsRead() ? 1L : 0L);
     }
 
     @Override
@@ -108,17 +111,17 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getUserId());
-        stmt.bindLong(3, entity.getToFriendId());
- 
-        String userName = entity.getUserName();
-        if (userName != null) {
-            stmt.bindString(4, userName);
+        stmt.bindLong(2, entity.getFromId());
+        stmt.bindLong(3, entity.getToId());
+
+        String fromName = entity.getFromName();
+        if (fromName != null) {
+            stmt.bindString(4, fromName);
         }
- 
-        String userAvatar = entity.getUserAvatar();
-        if (userAvatar != null) {
-            stmt.bindString(5, userAvatar);
+
+        String fromAvatar = entity.getFromAvatar();
+        if (fromAvatar != null) {
+            stmt.bindString(5, fromAvatar);
         }
  
         String content = entity.getContent();
@@ -135,6 +138,7 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         if (time != null) {
             stmt.bindString(8, time);
         }
+        stmt.bindLong(9, entity.getIsRead() ? 1L : 0L);
     }
 
     @Override
@@ -146,13 +150,14 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
     public ChatFriend readEntity(Cursor cursor, int offset) {
         ChatFriend entity = new ChatFriend( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getLong(offset + 1), // userId
-            cursor.getLong(offset + 2), // toFriendId
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // userName
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // userAvatar
+                cursor.getInt(offset + 1), // fromId
+                cursor.getInt(offset + 2), // toId
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // fromName
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // fromAvatar
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // content
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // contentType
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // time
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // time
+                cursor.getShort(offset + 8) != 0 // isRead
         );
         return entity;
     }
@@ -160,13 +165,14 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
     @Override
     public void readEntity(Cursor cursor, ChatFriend entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setUserId(cursor.getLong(offset + 1));
-        entity.setToFriendId(cursor.getLong(offset + 2));
-        entity.setUserName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setUserAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setFromId(cursor.getInt(offset + 1));
+        entity.setToId(cursor.getInt(offset + 2));
+        entity.setFromName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setFromAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setContent(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setContentType(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setIsRead(cursor.getShort(offset + 8) != 0);
      }
     
     @Override
