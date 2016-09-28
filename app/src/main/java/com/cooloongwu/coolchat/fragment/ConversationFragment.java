@@ -66,7 +66,7 @@ public class ConversationFragment extends BaseFragment {
      */
     private void initListData() {
         //加载聊天列表数据
-        conversationDao = GreenDAO.getConversationDao();
+        conversationDao = new GreenDAO(getActivity()).getConversationDao();
         List<Conversation> conversations = conversationDao.queryBuilder().build().list();
         listData.clear();
         listData.addAll(conversations);
@@ -100,7 +100,7 @@ public class ConversationFragment extends BaseFragment {
      * 将数据插入数据库
      */
     private void insertOrUpdateConversationDB(Conversation conversation) {
-        conversationDao = GreenDAO.getConversationDao();
+        conversationDao = new GreenDAO(getActivity()).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.MultiId.eq(conversation.getMultiId()))
                 .build()
@@ -162,7 +162,7 @@ public class ConversationFragment extends BaseFragment {
                 chatId = fromId;
             }
             //根据ID去查询好友的其他信息
-            ContactDao contactDao = GreenDAO.getContactDao();
+            ContactDao contactDao = new GreenDAO(getActivity()).getContactDao();
             Contact contact = contactDao.queryBuilder()
                     .where(ContactDao.Properties.UserId.eq(chatId))
                     .build()

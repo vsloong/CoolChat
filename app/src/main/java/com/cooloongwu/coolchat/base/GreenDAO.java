@@ -1,6 +1,7 @@
 package com.cooloongwu.coolchat.base;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.cooloongwu.greendao.gen.ChatGroupDao;
@@ -16,15 +17,11 @@ import com.cooloongwu.greendao.gen.DaoSession;
 
 public class GreenDAO {
 
-    private static DaoMaster.DevOpenHelper devOpenHelper;
+    private DaoMaster.DevOpenHelper devOpenHelper;
 
-    /**
-     * 初始化OpenHelper
-     *
-     * @param context      上下文
-     * @param dataBaseName 数据库名
-     */
-    static void initOpenHelper(Context context, String dataBaseName) {
+    public GreenDAO(Context context) {
+        String dataBaseName = AppConfig.getUserDB(context);
+        Log.e("加载的用户的数据库", dataBaseName);
         devOpenHelper = getOpenHelper(context, dataBaseName);
     }
 
@@ -32,23 +29,23 @@ public class GreenDAO {
         return new DaoMaster.DevOpenHelper(context, dataBaseName, null);
     }
 
-    private static DaoSession getDaoSession() {
+    private DaoSession getDaoSession() {
         return new DaoMaster(devOpenHelper.getWritableDb()).newSession();
     }
 
-    public static ContactDao getContactDao() {
+    public ContactDao getContactDao() {
         return getDaoSession().getContactDao();
     }
 
-    public static ConversationDao getConversationDao() {
+    public ConversationDao getConversationDao() {
         return getDaoSession().getConversationDao();
     }
 
-    public static ChatFriendDao getChatFriendDao() {
+    public ChatFriendDao getChatFriendDao() {
         return getDaoSession().getChatFriendDao();
     }
 
-    public static ChatGroupDao getChatGroupDao() {
+    public ChatGroupDao getChatGroupDao() {
         return getDaoSession().getChatGroupDao();
     }
 }

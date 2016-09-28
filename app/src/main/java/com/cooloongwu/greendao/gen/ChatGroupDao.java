@@ -78,12 +78,12 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
         }
         stmt.bindLong(2, entity.getFromId());
         stmt.bindLong(3, entity.getToGroupId());
-
+ 
         String fromName = entity.getFromName();
         if (fromName != null) {
             stmt.bindString(4, fromName);
         }
-
+ 
         String fromAvatar = entity.getFromAvatar();
         if (fromAvatar != null) {
             stmt.bindString(5, fromAvatar);
@@ -116,12 +116,12 @@ public class ChatGroupDao extends AbstractDao<ChatGroup, Long> {
         }
         stmt.bindLong(2, entity.getFromId());
         stmt.bindLong(3, entity.getToGroupId());
-
+ 
         String fromName = entity.getFromName();
         if (fromName != null) {
             stmt.bindString(4, fromName);
         }
-
+ 
         String fromAvatar = entity.getFromAvatar();
         if (fromAvatar != null) {
             stmt.bindString(5, fromAvatar);

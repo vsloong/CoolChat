@@ -127,7 +127,7 @@ public class ContactFragment extends BaseFragment {
      * @param contact 实体类
      */
     private void insertOrUpdateContactDB(Contact contact) {
-        ContactDao contactDao = GreenDAO.getContactDao();
+        ContactDao contactDao = new GreenDAO(getActivity()).getContactDao();
         Contact result = contactDao.queryBuilder()
                 .where(ContactDao.Properties.UserId.eq(contact.getUserId()))        //判断是否有该ID
                 .build()

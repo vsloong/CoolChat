@@ -27,10 +27,8 @@ import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
-import com.cooloongwu.coolchat.entity.ChatGroup;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
-import com.cooloongwu.greendao.gen.ChatGroupDao;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChatActivity extends BaseActivity implements View.OnClickListener {
@@ -60,8 +59,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private int chatId;
     private String chatType;
-
-    private ChatFriendDao chatFriendDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,30 +111,30 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 加载最近的聊天消息，默认15条（QQ就是这样）
+     * 加载最近的聊天消息，默认5条（QQ是15条）
      */
     private void initRecentChatData() {
-        Log.e("加载聊天数据", "");
         if ("friend".equals(chatType)) {
             //如果是和好友聊天
-            Log.e("加载和好友聊天数据", "");
-            chatFriendDao = GreenDAO.getChatFriendDao();
+            Log.e("加载聊天数据", "好友");
+            ChatFriendDao chatFriendDao = new GreenDAO(ChatActivity.this).getChatFriendDao();
             List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
-                    .where(ChatFriendDao.Properties.FromId.eq(chatId))
-                    .where(ChatFriendDao.Properties.ToId.eq(chatId))
-                    .orderAsc(ChatFriendDao.Properties.Time)
-                    .limit(15)
+                    .whereOr(ChatFriendDao.Properties.FromId.eq(chatId), ChatFriendDao.Properties.ToId.eq(chatId))
+                    .limit(5)
+                    .orderDesc(ChatFriendDao.Properties.Time)
                     .build()
                     .list();
-            for (int i = 0; i < chatFriends.size(); i++) {
-                Log.e("保存的聊天的数据", chatFriends.get(i).getContent());
-            }
-
+            //倒序排列下
+            Collections.reverse(chatFriends);
             listData.addAll(chatFriends);
             adapter.notifyDataSetChanged();
+            int itemCount = adapter.getItemCount() - 1;
+            if (itemCount > 0) {
+                recyclerView.smoothScrollToPosition(itemCount);
+            }
         } else {
             //如果是和群组聊天
-            Log.e("加载和群组聊天数据", "");
+            Log.e("加载聊天数据", "群组");
         }
     }
 
@@ -213,23 +210,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         Message msg = new Message();
                         msg.what = 0;
                         handler.sendMessage(msg);
-
-                        //保存聊天数据到本地数据库
-                        saveChatFriendData(chatFriend);
                     } else {
-                        //不是跟当前好友的聊天消息，提示来消息了即可
-                        ChatFriend chatFriend = new ChatFriend();
-                        chatFriend.setFromId(fromId);
-                        chatFriend.setFromAvatar(fromAvatar);
-                        chatFriend.setFromName(fromName);
-                        chatFriend.setContent(content);
-                        chatFriend.setContentType(contentType);
-                        chatFriend.setToId(toId);
-                        chatFriend.setTime(time);
-                        chatFriend.setIsRead(false);            //消息未读
-                        //保存聊天数据到本地数据库
-                        saveChatFriendData(chatFriend);
-
                         showOtherMsg(fromName + "：" + content);
                     }
                 } else {
@@ -249,17 +230,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             e.printStackTrace();
             Log.e("Json解析", "出错了");
         }
-    }
-
-
-    private void saveChatFriendData(ChatFriend chatFriend) {
-        chatFriendDao = GreenDAO.getChatFriendDao();
-        chatFriendDao.insert(chatFriend);
-    }
-
-    private void saveChatGroupData(ChatGroup chatGroup) {
-        ChatGroupDao chatGroupDao = GreenDAO.getChatGroupDao();
-        chatGroupDao.insert(chatGroup);
     }
 
     /**

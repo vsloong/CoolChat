@@ -2,7 +2,6 @@ package com.cooloongwu.coolchat.base;
 
 import android.app.Application;
 
-import com.cooloongwu.greendao.gen.DaoSession;
 import com.loopj.android.http.AsyncHttpClient;
 
 /**
@@ -12,13 +11,10 @@ import com.loopj.android.http.AsyncHttpClient;
 
 public class MyApplication extends Application {
 
-    private DaoSession daoSession;
-
     @Override
     public void onCreate() {
         super.onCreate();
         initClient();
-        initGreenDAO();
     }
 
     /**
@@ -28,10 +24,4 @@ public class MyApplication extends Application {
         Client.setClientGeneral(new AsyncHttpClient());
     }
 
-    /**
-     * 初始化全局GreenDAO操作
-     */
-    private void initGreenDAO() {
-        GreenDAO.initOpenHelper(this, AppConfig.getUserDB(this));
-    }
 }
