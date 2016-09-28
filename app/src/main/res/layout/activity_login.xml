@@ -51,6 +51,7 @@
                 android:focusableInTouchMode="false"
                 android:text="中国"
                 android:textColor="@color/black"
+                android:drawableRight="@mipmap/ic_arrow_drop_down_black"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -110,6 +111,7 @@
                 android:shadowColor="@color/black"
                 android:textColor="@color/black"
                 android:textSize="16sp"
+                android:text="12345"
                 android:inputType="textPassword" />
         </LinearLayout>
 
