@@ -11,6 +11,7 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.squareup.picasso.Picasso;
 
+
 public class MyProfileActivity extends AppCompatActivity {
 
     @Override
@@ -19,6 +20,7 @@ public class MyProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_profile);
         initToolbar();
         initViews();
+        test();
     }
 
     private void initToolbar() {
@@ -43,5 +45,31 @@ public class MyProfileActivity extends AppCompatActivity {
                 .into(profile_img_avatar);
         profile_text_name.setText(AppConfig.getUserName(MyProfileActivity.this));
         profile_text_sex.setText(AppConfig.getUserSex(MyProfileActivity.this));
+    }
+
+    /**
+     * 获取token 本地生成
+     *
+     * @return
+     */
+    //图片地址 /storage/emulated/0/Pictures/Screenshots/S60929-131618.jpg
+    private void test() {
+        // 重用uploadManager。一般地，只需要创建一个uploadManager对象
+//        String bucketName = "coolchat";
+//        UploadManager uploadManager = new UploadManager();
+//        Auth auth = Auth.create(accessKey, secretKey);
+//        String token = auth.uploadToken(bucketName);
+//
+////        UploadManager uploadManager = new UploadManager();
+//        String key = "hello";
+////        String token = null;
+//        uploadManager.put(new File("/storage/emulated/0/Pictures/Screenshots/S60929-131618.jpg"), key, token,
+//                new UpCompletionHandler() {
+//                    @Override
+//                    public void complete(String key, ResponseInfo info, JSONObject res) {
+//                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
+//                        Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
+//                    }
+//                }, null);
     }
 }
