@@ -80,7 +80,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         private ImageView avatar;
         private TextView name;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             avatar = (ImageView) itemView.findViewById(R.id.contact_img_avatar);
             name = (TextView) itemView.findViewById(R.id.contact_text_name);

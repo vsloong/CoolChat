@@ -120,6 +120,8 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
     -  [x] 聊天列表功能完成（实时刷新用户聊天内容）
     -  [x] 本地存储消息内容
     -  [ ] 给群组发送消息
+    -  [ ] 添加、创建群组
+    -  [ ] 添加好友
 
 ###服务端
 - [x] 用户、好友列表、群组等数据库
@@ -133,9 +135,9 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 如有侵权请告知，我会尽快删除并更换！  
 
 ![image](./pictures/main_drawer.jpg)     ![image](./pictures/main_empty_conversation.jpg)
-![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/chat_send.jpg)
-![image](./pictures/chat.jpg)     ![image](./pictures/profile_me.jpg)
-![image](./pictures/profile_other.jpg)
+![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/main_conversation.jpg)
+![image](./pictures/main_contact.jpg)     ![image](./pictures/chat_send.jpg)
+![image](./pictures/profile_me.jpg)     ![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览
 该app在开发中也引用了大量的第三方优秀控件，感谢这些开源的作者
