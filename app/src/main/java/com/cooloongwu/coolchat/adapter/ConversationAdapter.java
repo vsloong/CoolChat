@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
+import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.entity.Conversation;
+import com.cooloongwu.greendao.gen.ConversationDao;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,6 +51,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.content.setText(listData.get(position).getContent());
         holder.time.setText(listData.get(position).getTime().substring(11, 16));
         int unRead = listData.get(position).getUnReadNum();
+        Log.e("得不到未读数量么", "" + unRead);
         if (unRead > 0) {
             holder.num.setText(String.valueOf(unRead));
             holder.num.setVisibility(View.VISIBLE);
@@ -68,6 +72,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 intent.putExtra("chatType", listData.get(position).getType());  //朋友还是群组
                 intent.putExtra("chatId", listData.get(position).getMultiId());
                 context.startActivity(intent);
+
+                //将未读消息数置为0
+                updateConversationDB(listData.get(position).getId());
             }
         });
 
@@ -112,6 +119,24 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             content = (TextView) itemView.findViewById(R.id.conversation_content);
             time = (TextView) itemView.findViewById(R.id.conversation_time);
             num = (TextView) itemView.findViewById(R.id.conversation_unread);
+        }
+    }
+
+    /**
+     * 点击后将未读消息置为0
+     *
+     * @param id Conversation表的主键
+     */
+    private void updateConversationDB(long id) {
+        ConversationDao conversationDao = new GreenDAO(context).getConversationDao();
+        Conversation result = conversationDao.queryBuilder()
+                .where(ConversationDao.Properties.Id.eq(id))
+                .build()
+                .unique();
+        if (result != null) {
+            result.setUnReadNum(0);
+            conversationDao.update(result);
+            EventBus.getDefault().post(new Conversation());
         }
     }
 }

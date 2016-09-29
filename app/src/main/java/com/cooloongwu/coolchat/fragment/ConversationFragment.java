@@ -18,7 +18,6 @@ import com.cooloongwu.coolchat.base.BaseFragment;
 import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
-import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 
@@ -97,7 +96,7 @@ public class ConversationFragment extends BaseFragment {
     }
 
     /**
-     * 将数据插入数据库
+     * 将数据插入或者更新数据库
      */
     private void insertOrUpdateConversationDB(Conversation conversation) {
         conversationDao = new GreenDAO(getActivity()).getConversationDao();
@@ -108,6 +107,7 @@ public class ConversationFragment extends BaseFragment {
         if (result != null) {
             result.setContent(conversation.getContent());
             result.setContentType(conversation.getContentType());
+            result.setUnReadNum(conversation.getUnReadNum());
             conversationDao.update(result);
         } else {
             conversationDao.insert(conversation);
@@ -134,8 +134,13 @@ public class ConversationFragment extends BaseFragment {
      */
     @Subscribe
     public void onEventMainThread(Conversation event) {
-        //更新页面
-        deleteFromDB(event);
+        if (event.getId() == null) {
+            //只更新页面，主要是处理未读消息
+            handleConversation.sendEmptyMessage(0);
+        } else {
+            //删除该数据，并更新页面
+            deleteFromDB(event);
+        }
     }
 
     /**
@@ -154,6 +159,7 @@ public class ConversationFragment extends BaseFragment {
         int toId = jsonObject.getInt("toId");
         String content = jsonObject.getString("content");
         String contentType = jsonObject.getString("contentType");
+        String time = jsonObject.getString("time");
         if ("friend".equals(chatType)) {
             //如果是好友发来的那么要判断好友ID是fromId还是toId
             if (fromId == AppConfig.getUserId(getActivity())) {
@@ -175,8 +181,30 @@ public class ConversationFragment extends BaseFragment {
             chatId = toId;
             chatType = "group";
         }
-        Conversation conversation = new Conversation(null, chatId, 0, chatName, chatAvatar, chatType, content, contentType, TimeUtils.getCurrentTime());
 
+        int unReadNum;
+        if (chatId == AppConfig.getUserCurrentChatId(getActivity())
+                && chatType.equals(AppConfig.getUserCurrentChatType(getActivity()))) {
+            //来的是跟当前好友或者群组的聊天消息，则未读消息数变为0
+            unReadNum = 0;
+            Log.e("未读消息无", "" + unReadNum);
+        } else {
+            //来的不是跟当前好友或者群组的聊天消息，则展示新消息的未读数
+            unReadNum = getConversationUnread(chatId, chatType) + 1;
+            Log.e("未读消息有", "" + unReadNum);
+        }
+
+        Conversation conversation = new Conversation(null,
+                chatId,             //聊天对象的ID
+                unReadNum,          //未读消息数量
+                chatName,           //聊天对象的名称
+                chatAvatar,         //聊天对象的头像
+                chatType,           //聊天对象的类型（好友还是群组）
+                content,            //聊天内容
+                contentType,        //聊天内容类型（文字图片等）
+                time                //聊天消息的时间
+        );
+        //将当前聊天信息插入到数据库
         insertOrUpdateConversationDB(conversation);
     }
 
@@ -190,4 +218,25 @@ public class ConversationFragment extends BaseFragment {
             initListData();
         }
     };
+
+    /**
+     * 得到未读消息数
+     *
+     * @param chatId   聊天对象ID
+     * @param chatType 聊天类型
+     * @return 未读消息数
+     */
+    private int getConversationUnread(int chatId, String chatType) {
+        ConversationDao conversationDao = new GreenDAO(getActivity()).getConversationDao();
+        Conversation result = conversationDao.queryBuilder()
+                .where(ConversationDao.Properties.MultiId.eq(chatId), ConversationDao.Properties.Type.eq(chatType))
+                //.and(ConversationDao.Properties.Type.eq(chatType),ConversationDao.Properties.MultiId.eq(chatId))
+                .build()
+                .unique();
+        if (result != null) {
+            return result.getUnReadNum();
+        } else {
+            return 0;
+        }
+    }
 }

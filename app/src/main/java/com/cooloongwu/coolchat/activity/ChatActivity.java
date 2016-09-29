@@ -80,6 +80,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         String chatName = intent.getStringExtra("chatName");        //群组名或者好友名
         Log.e("聊天信息", "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");
         initToolbar(chatName);
+
+        //保存当前聊天对象的信息
+        AppConfig.setUserCurrentChatId(ChatActivity.this, chatId);
+        AppConfig.setUserCurrentChatType(ChatActivity.this, chatType);
     }
 
     private void initToolbar(String title) {
@@ -399,7 +403,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         unbindService(connection);
+
+        //设置当前聊天对象，表示没有
+        AppConfig.setUserCurrentChatId(ChatActivity.this, 0);
+        AppConfig.setUserCurrentChatType(ChatActivity.this, "");
     }
-
-
 }

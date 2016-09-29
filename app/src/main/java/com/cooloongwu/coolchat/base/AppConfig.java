@@ -36,6 +36,18 @@ public class AppConfig {
     private static final String defaultUserAvatar = "";
 
     /**
+     * 存储修改用户当前聊天对象的ID
+     */
+    private static final String USER_CURRENT_CHAT_ID = "user_current_chat_id";
+    private static final int defaultUserCurrentChatId = 0;
+
+    /**
+     * 存储修改用户当前聊天对象的类型（群组还是好友）
+     */
+    private static final String USER_CURRENT_CHAT_TYPE = "user_current_chat_type";
+    private static final String defaultUserCurrentChatType = "";
+
+    /**
      * 获取用户的数据库（为每一个用户建立一个数据库）
      *
      * @param context 上下文
@@ -109,6 +121,38 @@ public class AppConfig {
     public static String getUserAvatar(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(USER_AVATAR, defaultUserAvatar);
+    }
+
+    /**
+     * 存储获取用户当前聊天好友或者群组的ID
+     *
+     * @param context 上下文
+     * @param chatId  好友或者群组ID
+     */
+    public static void setUserCurrentChatId(Context context, int chatId) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putInt(USER_CURRENT_CHAT_ID, chatId).apply();
+    }
+
+    public static int getUserCurrentChatId(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getInt(USER_CURRENT_CHAT_ID, defaultUserCurrentChatId);
+    }
+
+    /**
+     * 存储获取用户当前聊天好友或者群组的类型
+     *
+     * @param context  上下文
+     * @param chatType 好友或者群组
+     */
+    public static void setUserCurrentChatType(Context context, String chatType) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putString(USER_CURRENT_CHAT_TYPE, chatType).apply();
+    }
+
+    public static String getUserCurrentChatType(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(USER_CURRENT_CHAT_TYPE, defaultUserCurrentChatType);
     }
 
     /**

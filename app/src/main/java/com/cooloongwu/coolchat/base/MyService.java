@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -32,8 +31,6 @@ public class MyService extends Service {
 
     private MyBinder myBinder = new MyBinder();
     private SocketConnect socketConnect;
-
-    private Vibrator vibrator;
 
     //只在第一次创建时调用
     @Override
@@ -73,6 +70,7 @@ public class MyService extends Service {
                 Log.e("Service Socket", "获取的数据：" + strJson);
                 try {
                     JSONObject jsonObject = new JSONObject(strJson);
+                    //广播到主页面以及聊天页面更新信息
                     EventBus.getDefault().post(jsonObject);
 
                     /**
