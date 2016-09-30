@@ -29,12 +29,16 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -281,6 +285,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     isMore = false;
                     isClose = true;
                     isSend = false;
+                    //sendImageMessage();
                     return;
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
@@ -294,7 +299,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 }
                 //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
                 if (isSend) {
-                    sendMessage();
+                    sendTextMessage();
                     edit_input.setText("");
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isSend = false;
@@ -309,9 +314,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 发送消息
+     * 发送文字消息
      */
-    private void sendMessage() {
+    private void sendTextMessage() {
         //发送数据示例
         JSONObject jsonObject = new JSONObject();
         try {
@@ -328,6 +333,43 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 发送图片消息
+     */
+    private void sendImageMessage() {
+        UploadManager uploadManager = new UploadManager();
+        File file = new File("/storage/emulated/0/Pictures/Screenshots/S60930-111330.jpg");
+        uploadManager.put(
+                file, //文件
+                null, //文件名
+                AppConfig.getUserToken(ChatActivity.this),//token
+                new UpCompletionHandler() {
+                    @Override
+                    public void complete(String key, ResponseInfo info, JSONObject res) {
+                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
+                        Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
+
+
+                        //发送数据示例
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
+                            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
+                            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
+                            jsonObject.put("toWhich", chatType);
+                            jsonObject.put("toId", chatId);
+                            jsonObject.put("content", "http://oe98z0mhz.bkt.clouddn.com/" + res.getString("key"));
+                            jsonObject.put("contentType", "image");
+                            jsonObject.put("time", TimeUtils.getCurrentTime());
+
+                            myBinder.sendMessage(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, null);
     }
 
     /**

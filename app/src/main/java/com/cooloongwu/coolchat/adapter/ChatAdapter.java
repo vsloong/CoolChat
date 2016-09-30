@@ -28,7 +28,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //建立枚举 2个item 类型
     private enum ITEM_TYPE {
         PEER_TEXT,
-        SELF_TEXT
+        SELF_TEXT,
+        PEER_IMAGE,
+        SELF_IMAGE
     }
 
     public ChatAdapter(Context context, ArrayList<ChatFriend> listData) {
@@ -40,10 +42,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         int userId = listData.get(position).getFromId();
+        String contentType = listData.get(position).getContentType();
+
         if (userId == AppConfig.getUserId(context)) {
-            return ITEM_TYPE.SELF_TEXT.ordinal();
+            if ("text".equals(contentType)) {
+                return ITEM_TYPE.SELF_TEXT.ordinal();
+            } else if ("image".equals(contentType)) {
+                return ITEM_TYPE.SELF_IMAGE.ordinal();
+            } else {
+                return 0;
+            }
         } else {
-            return ITEM_TYPE.PEER_TEXT.ordinal();
+            if ("text".equals(contentType)) {
+                return ITEM_TYPE.PEER_TEXT.ordinal();
+            } else if ("image".equals(contentType)) {
+                return ITEM_TYPE.PEER_IMAGE.ordinal();
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -51,11 +67,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
         if (viewType == ITEM_TYPE.PEER_TEXT.ordinal()) {
-            itemView = layoutInflater.inflate(R.layout.item_chat_message_peer, parent, false);
-            return new PeerViewHolder(itemView);
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_peer_text, parent, false);
+            return new PeerTextViewHolder(itemView);
         } else if (viewType == ITEM_TYPE.SELF_TEXT.ordinal()) {
-            itemView = layoutInflater.inflate(R.layout.item_chat_message_self, parent, false);
-            return new SelfViewHolder(itemView);
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_self_text, parent, false);
+            return new SelfTextViewHolder(itemView);
+        } else if (viewType == ITEM_TYPE.PEER_IMAGE.ordinal()) {
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_peer_image, parent, false);
+            return new PeerImageViewHolder(itemView);
+        } else if (viewType == ITEM_TYPE.SELF_IMAGE.ordinal()) {
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_self_image, parent, false);
+            return new SelfImageViewHolder(itemView);
         } else {
             return null;
         }
@@ -63,27 +85,36 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof PeerViewHolder) {
-            //朋友或者其他发送的
-            ((PeerViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            ((PeerViewHolder) holder).text_content.setText(listData.get(position).getContent());
+        if (holder instanceof PeerTextViewHolder) {
+            //朋友或者其他发送的 文字
+            ((PeerTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
+            ((PeerTextViewHolder) holder).text_content.setText(listData.get(position).getContent());
             String url = listData.get(position).getFromAvatar();
             if (!url.isEmpty()) {
                 Picasso.with(context)
                         .load(url)
-                        .into(((PeerViewHolder) holder).img_avatar);
+                        .into(((PeerTextViewHolder) holder).img_avatar);
             }
-        } else if (holder instanceof SelfViewHolder) {
-            //自己发送的
-            ((SelfViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            ((SelfViewHolder) holder).text_content.setText(listData.get(position).getContent());
+        } else if (holder instanceof SelfTextViewHolder) {
+            //自己发送的 文字
+            ((SelfTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
+            ((SelfTextViewHolder) holder).text_content.setText(listData.get(position).getContent());
             String url = listData.get(position).getFromAvatar();
             if (!url.isEmpty()) {
                 Picasso.with(context)
                         .load(url)
-                        .into(((SelfViewHolder) holder).img_avatar);
+                        .into(((SelfTextViewHolder) holder).img_avatar);
             }
-
+        } else if (holder instanceof PeerImageViewHolder) {
+            //朋友或者其他发送的 图片
+            ((PeerImageViewHolder) holder).text_name.setText(listData.get(position).getFromName());
+            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerImageViewHolder) holder).img_avatar);
+            Picasso.with(context).load(listData.get(position).getContent()).into(((PeerImageViewHolder) holder).image_content);
+        } else if (holder instanceof SelfImageViewHolder) {
+            //自己发送的 图片
+            ((SelfImageViewHolder) holder).text_name.setText(listData.get(position).getFromName());
+            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfImageViewHolder) holder).img_avatar);
+            Picasso.with(context).load(listData.get(position).getContent()).into(((SelfImageViewHolder) holder).image_content);
         }
     }
 
@@ -92,13 +123,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return listData.size();
     }
 
-    private class PeerViewHolder extends RecyclerView.ViewHolder {
+    private class PeerTextViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView img_avatar;
         private TextView text_name;
         private TextView text_content;
 
-        PeerViewHolder(View itemView) {
+        PeerTextViewHolder(View itemView) {
             super(itemView);
             img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
@@ -107,13 +138,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private class SelfViewHolder extends RecyclerView.ViewHolder {
+    private class PeerImageViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView img_avatar;
+        private TextView text_name;
+        private ImageView image_content;
+
+        PeerImageViewHolder(View itemView) {
+            super(itemView);
+            img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
+            text_name = (TextView) itemView.findViewById(R.id.text_name);
+            image_content = (ImageView) itemView.findViewById(R.id.image_content);
+        }
+    }
+
+
+    private class SelfTextViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView img_avatar;
         private TextView text_name;
         private TextView text_content;
 
-        SelfViewHolder(View itemView) {
+        SelfTextViewHolder(View itemView) {
             super(itemView);
             img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
@@ -121,4 +167,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    private class SelfImageViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView img_avatar;
+        private TextView text_name;
+        private ImageView image_content;
+
+        SelfImageViewHolder(View itemView) {
+            super(itemView);
+            img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
+            text_name = (TextView) itemView.findViewById(R.id.text_name);
+            image_content = (ImageView) itemView.findViewById(R.id.image_content);
+        }
+    }
 }

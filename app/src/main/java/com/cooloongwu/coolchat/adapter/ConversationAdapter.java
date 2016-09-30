@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +47,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.name.setText(listData.get(position).getName());
-        holder.content.setText(listData.get(position).getContent());
+        if ("image".equals(listData.get(position).getContentType())) {
+            holder.content.setText("[图片]");
+        } else {
+            holder.content.setText(listData.get(position).getContent());
+        }
         holder.time.setText(listData.get(position).getTime().substring(11, 16));
         int unRead = listData.get(position).getUnReadNum();
-        Log.e("得不到未读数量么", "" + unRead);
         if (unRead > 0) {
             holder.num.setText(String.valueOf(unRead));
             holder.num.setVisibility(View.VISIBLE);
