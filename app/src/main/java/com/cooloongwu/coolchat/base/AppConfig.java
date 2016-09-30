@@ -36,6 +36,18 @@ public class AppConfig {
     private static final String defaultUserAvatar = "";
 
     /**
+     * 存储修改用户Token默认为空
+     */
+    private static final String USER_TOKEN = "user_token";
+    private static final String defaultUserToken = "";
+
+    /**
+     * 存储修改用户Token默认为空
+     */
+    private static final String USER_LOGIN_TIME = "user_login_time";
+    private static final long defaultUserLoginTime = 0;
+
+    /**
      * 存储修改用户当前聊天对象的ID
      */
     private static final String USER_CURRENT_CHAT_ID = "user_current_chat_id";
@@ -121,6 +133,38 @@ public class AppConfig {
     public static String getUserAvatar(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(USER_AVATAR, defaultUserAvatar);
+    }
+
+    /**
+     * 存储获取用户的token
+     *
+     * @param context 上下文
+     * @param token   token
+     */
+    public static void setUserToken(Context context, String token) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putString(USER_TOKEN, token).apply();
+    }
+
+    public static String getUserToken(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(USER_TOKEN, defaultUserToken);
+    }
+
+    /**
+     * 存储获取用户的登录时间
+     *
+     * @param context 上下文
+     * @param time    token
+     */
+    public static void setUserLoginTime(Context context, long time) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putLong(USER_LOGIN_TIME, time).apply();
+    }
+
+    public static long getUserLoginTime(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getLong(USER_LOGIN_TIME, defaultUserLoginTime);
     }
 
     /**

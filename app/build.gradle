@@ -53,5 +53,4 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.qiniu:happy-dns:0.2.10'
-    compile 'com.qiniu:qiniu-java-sdk:7.1.3'
 }

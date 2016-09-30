@@ -3,13 +3,21 @@ package com.cooloongwu.coolchat.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.io.File;
 
 
 public class MyProfileActivity extends AppCompatActivity {
@@ -20,7 +28,7 @@ public class MyProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_profile);
         initToolbar();
         initViews();
-        test();
+        //test();
     }
 
     private void initToolbar() {
@@ -48,28 +56,21 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * 获取token 本地生成
-     *
-     * @return
+     * 上传图片等到千牛云
      */
-    //图片地址 /storage/emulated/0/Pictures/Screenshots/S60929-131618.jpg
     private void test() {
-        // 重用uploadManager。一般地，只需要创建一个uploadManager对象
-//        String bucketName = "coolchat";
-//        UploadManager uploadManager = new UploadManager();
-//        Auth auth = Auth.create(accessKey, secretKey);
-//        String token = auth.uploadToken(bucketName);
-//
-////        UploadManager uploadManager = new UploadManager();
-//        String key = "hello";
-////        String token = null;
-//        uploadManager.put(new File("/storage/emulated/0/Pictures/Screenshots/S60929-131618.jpg"), key, token,
-//                new UpCompletionHandler() {
-//                    @Override
-//                    public void complete(String key, ResponseInfo info, JSONObject res) {
-//                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
-//                        Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
-//                    }
-//                }, null);
+        UploadManager uploadManager = new UploadManager();
+        File file = new File("/storage/emulated/0/Pictures/Screenshots/S60930-111330.jpg");
+        uploadManager.put(
+                file, //文件
+                null, //文件名
+                AppConfig.getUserToken(MyProfileActivity.this),//token
+                new UpCompletionHandler() {
+                    @Override
+                    public void complete(String key, ResponseInfo info, JSONObject res) {
+                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
+                        Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
+                    }
+                }, null);
     }
 }
