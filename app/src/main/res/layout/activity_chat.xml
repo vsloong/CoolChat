@@ -53,6 +53,12 @@
                 android:background="@color/transparent"
                 android:src="@mipmap/conversation_btn_messages_emoji" />
 
+            <Button
+                android:id="@+id/btn_audio"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/conversation_btn_messages_emoji" />
+
             <ImageButton
                 android:id="@+id/imgbtn_more_send_close"
                 android:layout_width="50dp"

@@ -14,8 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.GreenDAO;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
+import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.qiniu.android.http.ResponseInfo;
@@ -47,6 +50,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageButton imgbtn_emoji_keyboard;
     private ImageButton imgbtn_more_send_close;
+    private Button btn_audio;
     private EditText edit_input;
 
     private boolean isSend = false;
@@ -60,6 +64,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private ChatAdapter adapter;
 
     private MyService.MyBinder myBinder;
+    private AudioRecorderUtils audioRecorderUtils;
 
     private int chatId;
     private String chatType;
@@ -114,8 +119,26 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         imgbtn_emoji_keyboard = (ImageButton) findViewById(R.id.imgbtn_emoji_keyboard);
         imgbtn_more_send_close = (ImageButton) findViewById(R.id.imgbtn_more_send_close);
+        btn_audio = (Button) findViewById(R.id.btn_audio);
         imgbtn_emoji_keyboard.setOnClickListener(this);
         imgbtn_more_send_close.setOnClickListener(this);
+
+        initAudioListener();
+        btn_audio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        audioRecorderUtils.startRecord();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        audioRecorderUtils.stopRecord();        //结束录音（保存录音文件）
+                        //audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     /**
@@ -351,7 +374,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
                         Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
 
-
                         //发送数据示例
                         JSONObject jsonObject = new JSONObject();
                         try {
@@ -370,6 +392,60 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         }
                     }
                 }, null);
+    }
+
+    /**
+     * 发送语音消息
+     */
+    private void sendAudioMessage(File file) {
+        UploadManager uploadManager = new UploadManager();
+        uploadManager.put(
+                file, //文件
+                null, //文件名
+                AppConfig.getUserToken(ChatActivity.this),//token
+                new UpCompletionHandler() {
+                    @Override
+                    public void complete(String key, ResponseInfo info, JSONObject res) {
+                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
+                        Log.e("七牛云，语音", key + ",\r\n " + info + ",\r\n " + res);
+
+                        //发送数据示例
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
+                            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
+                            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
+                            jsonObject.put("toWhich", chatType);
+                            jsonObject.put("toId", chatId);
+                            jsonObject.put("content", "http://oe98z0mhz.bkt.clouddn.com/" + res.getString("key"));
+                            jsonObject.put("contentType", "audio");
+                            jsonObject.put("time", TimeUtils.getCurrentTime());
+
+                            myBinder.sendMessage(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, null);
+    }
+
+    /**
+     * 发送语音消息
+     */
+    private void initAudioListener() {
+        audioRecorderUtils = new AudioRecorderUtils(ChatActivity.this);
+        audioRecorderUtils.setOnAudioStatusUpdateListener(new AudioRecorderUtils.OnAudioStatusUpdateListener() {
+            @Override
+            public void onUpdate(double db, long time) {
+
+            }
+
+            @Override
+            public void onStop(String filePath) {
+                Toast.makeText(ChatActivity.this, "录音结束：" + filePath, Toast.LENGTH_SHORT).show();
+                sendAudioMessage(new File(filePath));
+            }
+        });
     }
 
     /**

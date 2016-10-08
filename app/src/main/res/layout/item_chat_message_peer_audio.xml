@@ -29,14 +29,15 @@
             android:textSize="12sp"
             tools:text="CooLoongWu" />
 
-        <ImageView
-            android:id="@+id/image_content"
+        <TextView
+            android:id="@+id/text_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:background="@drawable/conversation_bkg_messages_text_peer_normal"
             android:gravity="center"
-            android:src="@mipmap/avatar" />
+            android:textSize="14sp"
+            tools:text="2''" />
     </LinearLayout>
 
 
