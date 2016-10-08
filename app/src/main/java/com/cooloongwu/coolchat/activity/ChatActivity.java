@@ -216,6 +216,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             String contentType = jsonObject.getString("contentType");
             String time = jsonObject.getString("time");
 
+            Log.e("消息类型", contentType);
+
             if (chatType.equals(toWhich)) {
                 //跟当前聊天类型匹配，是群组或者好友的消息
                 if ("friend".equals(toWhich)) {
