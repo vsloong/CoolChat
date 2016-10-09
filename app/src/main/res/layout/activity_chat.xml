@@ -27,6 +27,7 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.AppBarLayout>
 
+
         <LinearLayout
             android:id="@+id/layout_input"
             android:layout_width="match_parent"
@@ -36,6 +37,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <ImageButton
+                android:id="@+id/imgbtn_voice_keyboard"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/transparent"
+                android:src="@mipmap/conversation_btn_messages_voice" />
+
             <EditText
                 android:id="@+id/edit_input"
                 android:layout_width="0dp"
@@ -43,21 +51,30 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:hint="输入消息..."
-                android:paddingLeft="16dp"
                 android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_audio"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="按住录音"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/imgbtn_emoji_keyboard"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@color/transparent"
-                android:src="@mipmap/conversation_btn_messages_emoji" />
+                android:src="@mipmap/conversation_btn_messages_emoji"
+                android:visibility="gone" />
 
-            <Button
-                android:id="@+id/btn_audio"
+            <ImageButton
+                android:id="@+id/imgbtn_gallery"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@mipmap/conversation_btn_messages_emoji" />
+                android:background="@color/transparent"
+                android:src="@mipmap/conversation_btn_messages_gallery" />
 
             <ImageButton
                 android:id="@+id/imgbtn_more_send_close"

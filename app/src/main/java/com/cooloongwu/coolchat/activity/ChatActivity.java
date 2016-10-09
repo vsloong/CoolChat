@@ -49,10 +49,11 @@ import java.util.List;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener {
 
     private ImageButton imgbtn_emoji_keyboard;
     private ImageButton imgbtn_more_send_close;
+    private ImageButton imgbtn_voice_keyboard;
     private Button btn_audio;
     private EditText edit_input;
 
@@ -61,6 +62,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private boolean isClose = false;
     private boolean isEmoji = true;
     private boolean isKeyboard = false;
+    private boolean isVoice = true;
 
     private ArrayList<ChatFriend> listData = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -71,6 +73,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private int chatId;
     private String chatType;
+
+    private long startTime = 0;
 
     private final int REQUEST_IMAGE = 0x01;
 
@@ -124,26 +128,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         imgbtn_emoji_keyboard = (ImageButton) findViewById(R.id.imgbtn_emoji_keyboard);
         imgbtn_more_send_close = (ImageButton) findViewById(R.id.imgbtn_more_send_close);
+        imgbtn_voice_keyboard = (ImageButton) findViewById(R.id.imgbtn_voice_keyboard);
+        ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         btn_audio = (Button) findViewById(R.id.btn_audio);
+
         imgbtn_emoji_keyboard.setOnClickListener(this);
         imgbtn_more_send_close.setOnClickListener(this);
-
-        initAudioListener();
-        btn_audio.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        audioRecorderUtils.startRecord();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        audioRecorderUtils.stopRecord();        //结束录音（保存录音文件）
-                        //audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                        break;
-                }
-                return true;
-            }
-        });
+        imgbtn_voice_keyboard.setOnClickListener(this);
+        imgbtn_gallery.setOnClickListener(this);
+        btn_audio.setOnTouchListener(this);
     }
 
     /**
@@ -173,31 +166,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             Log.e("加载聊天数据", "群组");
         }
     }
-
-    /**
-     * 处理消息事件
-     * 0：刷新数据
-     * 1：提醒其他好友或群组来消息
-     */
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    adapter.notifyDataSetChanged();
-                    recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-                    break;
-                case 1:
-                    Bundle bundle = msg.getData();
-                    String otherMsg = bundle.getString("otherMsg");
-                    Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     @Subscribe
     public void onEventMainThread(JSONObject jsonObject) {
@@ -254,7 +222,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 } else {
                     //当前在跟群组聊天，需判断是不是当前群组的消息
                     if (chatId == toId) {
-                        //是当前群组的聊天消息
+                        // TODO 是当前群组的聊天消息
                     } else {
                         //不是当前群组的聊天消息，提示来消息了即可
                         showOtherMsg(fromName + "：" + content);
@@ -284,66 +252,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         handler.sendMessage(msg);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.imgbtn_emoji_keyboard:
-                //如果是“展示表情”的状态，那么点击后展示表情，按钮状态改变为“显示键盘”，并关闭键盘
-                if (isEmoji) {
-                    Toast.makeText(ChatActivity.this, "展示表情,隐藏键盘", Toast.LENGTH_SHORT).show();
-                    imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_keyboard);
-                    isEmoji = false;
-                    isKeyboard = true;
-                    hideKeyboard();
-                    return;
-                }
-                //如果是“展示键盘”的状态，那么点击后展示键盘，按钮状态改为“展示表情”，并展示键盘
-                if (isKeyboard) {
-                    Toast.makeText(ChatActivity.this, "展示键盘，隐藏表情", Toast.LENGTH_SHORT).show();
-                    imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_emoji);
-                    isKeyboard = false;
-                    isEmoji = true;
-                    showKeyboard();
-                    return;
-                }
-                break;
-            case R.id.imgbtn_more_send_close:
-                //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
-                if (isMore) {
-                    Toast.makeText(ChatActivity.this, "展示更多", Toast.LENGTH_SHORT).show();
-                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_close);
-                    isMore = false;
-                    isClose = true;
-                    isSend = false;
-                    //sendImageMessage();
-                    openImageGallery();
-                    return;
-                }
-                //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
-                if (isClose) {
-                    Toast.makeText(ChatActivity.this, "关闭更多", Toast.LENGTH_SHORT).show();
-                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                    isClose = false;
-                    isMore = true;
-                    isSend = false;
-                    return;
-                }
-                //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
-                if (isSend) {
-                    sendTextMessage();
-                    edit_input.setText("");
-                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                    isSend = false;
-                    isMore = true;
-                    isClose = false;
-                    return;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * 发送文字消息
      */
@@ -369,9 +277,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 发送图片消息
      */
-    private void sendImageMessage() {
+    private void sendImageMessage(File file) {
         UploadManager uploadManager = new UploadManager();
-        File file = new File("/storage/emulated/0/Pictures/Screenshots/S60930-111330.jpg");
         uploadManager.put(
                 file, //文件
                 null, //文件名
@@ -405,7 +312,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 发送语音消息
      */
-    private void sendAudioMessage(File file) {
+    private void sendAudioMessage(File file, final String audioLength) {
         UploadManager uploadManager = new UploadManager();
         uploadManager.put(
                 file, //文件
@@ -427,6 +334,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                             jsonObject.put("toId", chatId);
                             jsonObject.put("content", "http://oe98z0mhz.bkt.clouddn.com/" + res.getString("key"));
                             jsonObject.put("contentType", "audio");
+                            jsonObject.put("audioLength", audioLength);
                             jsonObject.put("time", TimeUtils.getCurrentTime());
 
                             myBinder.sendMessage(jsonObject);
@@ -449,12 +357,186 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             }
 
             @Override
-            public void onStop(String filePath) {
-                Toast.makeText(ChatActivity.this, "录音结束：" + filePath, Toast.LENGTH_SHORT).show();
-                sendAudioMessage(new File(filePath));
+            public void onStop(String filePath, String audioLength) {
+                Log.e("录音结束", "文件位置：" + filePath + "；录音长度：" + audioLength);
+                sendAudioMessage(new File(filePath), audioLength);
             }
         });
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.imgbtn_voice_keyboard:
+                //如果是“展示键盘”的状态，那么点击后展示录音按钮，并关闭键盘
+                if (isVoice) {
+                    imgbtn_voice_keyboard.setImageResource(R.mipmap.conversation_btn_messages_keyboard);
+                    edit_input.setVisibility(View.GONE);
+                    btn_audio.setVisibility(View.VISIBLE);
+                    isKeyboard = true;
+                    isVoice = false;
+                    hideKeyboard();
+                    initAudioListener();
+                    return;
+                }
+                if (isKeyboard) {
+                    imgbtn_voice_keyboard.setImageResource(R.mipmap.conversation_btn_messages_voice);
+                    edit_input.setVisibility(View.VISIBLE);
+                    btn_audio.setVisibility(View.GONE);
+                    isKeyboard = false;
+                    isVoice = true;
+                    showKeyboard();
+                    return;
+                }
+                break;
+            case R.id.imgbtn_emoji_keyboard:
+                //如果是“展示表情”的状态，那么点击后展示表情，按钮状态改变为“显示键盘”，并关闭键盘
+                if (isEmoji) {
+                    Toast.makeText(ChatActivity.this, "展示表情,隐藏键盘", Toast.LENGTH_SHORT).show();
+                    imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_keyboard);
+                    isEmoji = false;
+                    isKeyboard = true;
+                    hideKeyboard();
+                    return;
+                }
+                //如果是“展示键盘”的状态，那么点击后展示键盘，按钮状态改为“展示表情”，并展示键盘
+                if (isKeyboard) {
+                    Toast.makeText(ChatActivity.this, "展示键盘，隐藏表情", Toast.LENGTH_SHORT).show();
+                    imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_emoji);
+                    isKeyboard = false;
+                    isEmoji = true;
+                    showKeyboard();
+                    return;
+                }
+                break;
+
+            case R.id.imgbtn_gallery:
+                openImageGallery();
+                break;
+            case R.id.imgbtn_more_send_close:
+                //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
+                if (isMore) {
+                    Toast.makeText(ChatActivity.this, "展示更多", Toast.LENGTH_SHORT).show();
+                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_close);
+                    isMore = false;
+                    isClose = true;
+                    isSend = false;
+
+                    hideKeyboard();
+                    return;
+                }
+                //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
+                if (isClose) {
+                    Toast.makeText(ChatActivity.this, "关闭更多", Toast.LENGTH_SHORT).show();
+                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                    isClose = false;
+                    isMore = true;
+                    isSend = false;
+
+                    return;
+                }
+                //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
+                if (isSend) {
+                    sendTextMessage();
+                    edit_input.setText("");
+                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                    isSend = false;
+                    isMore = true;
+                    isClose = false;
+                    return;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 处理图片的发送
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                for (String path : paths) {
+                    sendImageMessage(new File(path));
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId()) {
+            case R.id.btn_audio:
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        audioRecorderUtils.startRecord();
+                        Log.e("录音开始时间", TimeUtils.getCurrentTime());
+                        startTime = System.currentTimeMillis();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.e("录音结束时间", TimeUtils.getCurrentTime());
+                        long endTime = System.currentTimeMillis();
+                        long audioLength = endTime - startTime;
+                        if (audioLength < 1000) {
+                            //如果录制时间大于1秒可以发送
+                            audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
+                            Toast.makeText(ChatActivity.this, "录音时间不得少于1秒", Toast.LENGTH_SHORT).show();
+                        } else if (audioLength > 1000 * 60) {
+                            //如果录制时间大于一分钟禁止发送
+                            audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
+                            Toast.makeText(ChatActivity.this, "录音时间不得多于1分钟", Toast.LENGTH_SHORT).show();
+                        } else {
+                            audioRecorderUtils.stopRecord();        //结束录音（保存录音文件），并发送
+                            Log.e("录音时间长度", audioLength / 6000 + "秒");
+                        }
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        unbindService(connection);
+
+        //设置当前聊天对象，表示没有
+        AppConfig.setUserCurrentChatId(ChatActivity.this, 0);
+        AppConfig.setUserCurrentChatType(ChatActivity.this, "");
+    }
+
+    /**
+     * 处理消息事件
+     * 0：刷新数据
+     * 1：提醒其他好友或群组来消息
+     */
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    adapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                    break;
+                case 1:
+                    Bundle bundle = msg.getData();
+                    String otherMsg = bundle.getString("otherMsg");
+                    Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     /**
      * 显示键盘
@@ -470,6 +552,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edit_input.getWindowToken(), 0);
+
     }
 
     /**
@@ -524,17 +607,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         }
     };
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        unbindService(connection);
-
-        //设置当前聊天对象，表示没有
-        AppConfig.setUserCurrentChatId(ChatActivity.this, 0);
-        AppConfig.setUserCurrentChatType(ChatActivity.this, "");
-    }
-
     /**
      * 打开图片库
      */
@@ -544,18 +616,5 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 .count(9) // max select image size, 9 by default. used width #.multi()
                 .multi() // multi、single mode, default mode is multi;
                 .start(this, REQUEST_IMAGE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE) {
-            if (resultCode == RESULT_OK) {
-                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                for (String path : paths) {
-                    Log.e("图片的路径", path);
-                }
-            }
-        }
     }
 }

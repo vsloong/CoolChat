@@ -1,8 +1,8 @@
 package com.cooloongwu.coolchat.adapter;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -25,6 +26,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private LayoutInflater layoutInflater;
     private ArrayList<ChatFriend> listData;
+
+    private MediaPlayer mediaPlayer; // 媒体播放器
 
     //建立枚举 2个item 类型
     private enum ITEM_TYPE {
@@ -96,9 +99,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.e("消息类型", listData.get(position).getContentType());
-        Log.e("消息内容", listData.get(position).getContent());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof PeerTextViewHolder) {
             //朋友或者其他发送的 文字
             ((PeerTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
@@ -124,11 +125,34 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((PeerAudioViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             ((PeerAudioViewHolder) holder).text_content.setText(listData.get(position).getContent());
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerAudioViewHolder) holder).img_avatar);
+            ((PeerAudioViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    playSound(listData.get(position).getContent());
+                }
+            });
         } else if (holder instanceof SelfAudioViewHolder) {
             //自己发送的 语音
             ((SelfAudioViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             ((SelfAudioViewHolder) holder).text_content.setText(listData.get(position).getContent());
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfAudioViewHolder) holder).img_avatar);
+            ((SelfAudioViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    playSound(listData.get(position).getContent());
+                }
+            });
+        }
+    }
+
+    private void playSound(String path) {
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

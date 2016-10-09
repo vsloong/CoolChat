@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_more"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="16dp"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -13,6 +16,7 @@
         android:orientation="vertical">
 
         <ImageButton
+            android:id="@+id/imgbtn_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/conversation_btn_mip_pictures_normal" />
@@ -33,6 +37,7 @@
         android:orientation="vertical">
 
         <ImageButton
+            android:id="@+id/imgbtn_takephotos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/conversation_btn_mip_camera_normal" />
@@ -53,6 +58,7 @@
         android:orientation="vertical">
 
         <ImageButton
+            android:id="@+id/imgbtn_schedule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/conversation_btn_mip_event_normal" />
@@ -73,6 +79,7 @@
         android:orientation="vertical">
 
         <ImageButton
+            android:id="@+id/imgbtn_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/conversation_btn_mip_namecard_normal" />

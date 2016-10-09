@@ -120,7 +120,7 @@ public class MyService extends Service {
 
                     //展示通知
                     if (!(fromId == AppConfig.getUserId(MyService.this))) {
-                        showNotification("", fromName, content);
+                        //showNotification("", fromName, content);
                     }
 
                 } catch (JSONException e) {

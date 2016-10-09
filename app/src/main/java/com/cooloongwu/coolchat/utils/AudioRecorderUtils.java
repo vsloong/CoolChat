@@ -24,14 +24,14 @@ public class AudioRecorderUtils {
     private String TAG = "AudioRecorderUtils";
 
     private MediaRecorder mMediaRecorder;
-    public static final int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
+    private static final int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
 
     private OnAudioStatusUpdateListener audioStatusUpdateListener;
 
     /**
      * 文件存储默认sdcard/record
      */
-    public AudioRecorderUtils() {
+    private AudioRecorderUtils() {
         //默认保存路径为/sdcard/record/下
         this(Environment.getExternalStorageDirectory() + "/CoolChat/record/");
     }
@@ -41,7 +41,7 @@ public class AudioRecorderUtils {
         this.context = context;
     }
 
-    public AudioRecorderUtils(String filePath) {
+    private AudioRecorderUtils(String filePath) {
         File path = new File(filePath);
         if (!path.exists())
             path.mkdirs();
@@ -54,8 +54,6 @@ public class AudioRecorderUtils {
     /**
      * 开始录音 使用amr格式
      * 录音文件
-     *
-     * @return
      */
     public void startRecord() {
         // 开始录音
@@ -84,7 +82,7 @@ public class AudioRecorderUtils {
             /* 获取开始时间* */
             startTime = System.currentTimeMillis();
             updateMicStatus();
-            Log.e("fan", "startTime" + startTime);
+            Log.e("录音开始时间", "startTime" + startTime);
         } catch (IllegalStateException e) {
             Log.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
         } catch (IOException e) {
@@ -104,9 +102,10 @@ public class AudioRecorderUtils {
         mMediaRecorder.release();
         mMediaRecorder = null;
 
-        audioStatusUpdateListener.onStop(filePath);
+        long time = endTime - startTime;
+        audioStatusUpdateListener.onStop(filePath, (time / 1000) + "");
         filePath = "";
-        return endTime - startTime;
+        return time;
     }
 
     /**
@@ -168,6 +167,6 @@ public class AudioRecorderUtils {
          *
          * @param filePath 保存路径
          */
-        public void onStop(String filePath);
+        public void onStop(String filePath, String audioLength);
     }
 }
