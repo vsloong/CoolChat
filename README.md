@@ -119,8 +119,8 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
     -  [x] 给好友发送消息
     -  [x] 聊天列表功能完成（实时刷新用户聊天内容）
     -  [x] 本地存储消息内容
-    -  [ ] 发送接受图片
-    -  [ ] 发送接受音频
+    -  [x] 发送接受图片
+    -  [x] 发送接受音频
     -  [ ] 发送接受视频
     -  [ ] 给群组发送消息
     -  [ ] 添加、创建群组
@@ -150,13 +150,15 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [greenrobot/greenDAO ][6]
 - [rockerhieu/emojicon][7]
 - [hdodenhof/CircleImageView][8]
-- [loopj/android-async-http ][9]
+- [loopj/android-async-http][9]
+- [lovetuzitong/MultiImageSelector][10]
 
 ##已知Bug一览（带删除线的为已修复）
 - ~~自己发消息超过两行，文字会超出屏幕~~
 - ~~聊天列表页清空后没有展示空页面~~
 - ~~发送消息后点击“+”按钮则无法再发送消息~~
 - 弹出键盘时候聊天区域无法自动向上滚动
+- 多图选择在魅蓝3手机中无法显示DCIM下的图片
 
 ##随意打赏我
 由于在开发中租用阿里云服务器产生了相关费用，该费用目前都是我一人承担。
@@ -196,3 +198,4 @@ limitations under the License.
 [7]:https://github.com/rockerhieu/emojicon
 [8]:https://github.com/hdodenhof/CircleImageView
 [9]:https://github.com/loopj/android-async-http
+[10]:https://github.com/lovetuzitong/MultiImageSelector

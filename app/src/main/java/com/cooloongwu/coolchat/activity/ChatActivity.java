@@ -46,6 +46,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+
 public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageButton imgbtn_emoji_keyboard;
@@ -68,6 +71,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private int chatId;
     private String chatType;
+
+    private final int REQUEST_IMAGE = 0x01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,6 +316,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     isClose = true;
                     isSend = false;
                     //sendImageMessage();
+                    openImageGallery();
                     return;
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
@@ -527,5 +533,29 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //设置当前聊天对象，表示没有
         AppConfig.setUserCurrentChatId(ChatActivity.this, 0);
         AppConfig.setUserCurrentChatType(ChatActivity.this, "");
+    }
+
+    /**
+     * 打开图片库
+     */
+    private void openImageGallery() {
+        MultiImageSelector.create()
+                .showCamera(true) // show camera or not. true by default
+                .count(9) // max select image size, 9 by default. used width #.multi()
+                .multi() // multi、single mode, default mode is multi;
+                .start(this, REQUEST_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                for (String path : paths) {
+                    Log.e("图片的路径", path);
+                }
+            }
+        }
     }
 }

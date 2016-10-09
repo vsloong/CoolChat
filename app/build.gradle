@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.greenrobot:greendao-gradle-plugin:3.1.1'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.0'
     }
 }
 greendao {
@@ -19,7 +19,7 @@ greendao {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.cooloongwu.coolchat"
@@ -36,21 +36,26 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
-    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
     compile 'com.github.clans:fab:1.6.4'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'org.greenrobot:greendao:3.1.1'
+    compile 'org.greenrobot:greendao:3.2.0'
     compile 'org.greenrobot:greendao-generator:3.1.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.qiniu:qiniu-android-sdk:7.2.3'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.qiniu:happy-dns:0.2.10'
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
 }

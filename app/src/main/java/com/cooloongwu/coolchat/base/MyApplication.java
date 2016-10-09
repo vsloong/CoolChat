@@ -23,5 +23,4 @@ public class MyApplication extends Application {
     private void initClient() {
         Client.setClientGeneral(new AsyncHttpClient());
     }
-
 }
