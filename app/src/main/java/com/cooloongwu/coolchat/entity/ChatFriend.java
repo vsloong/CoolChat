@@ -19,12 +19,14 @@ public class ChatFriend {
     private String fromAvatar;      //用户头像
     private String content;         //发送内容
     private String contentType;     //发送内容的类型
+    private String audioLength;     //发送内容的类型
     private String time;            //发送时间
     private boolean isRead;         //消息是否已读
 
-    @Generated(hash = 1724872627)
+    @Generated(hash = 1915527495)
     public ChatFriend(Long id, int fromId, int toId, String fromName, String fromAvatar,
-                      String content, String contentType, String time, boolean isRead) {
+                      String content, String contentType, String audioLength, String time,
+                      boolean isRead) {
         this.id = id;
         this.fromId = fromId;
         this.toId = toId;
@@ -32,6 +34,7 @@ public class ChatFriend {
         this.fromAvatar = fromAvatar;
         this.content = content;
         this.contentType = contentType;
+        this.audioLength = audioLength;
         this.time = time;
         this.isRead = isRead;
     }
@@ -110,6 +113,14 @@ public class ChatFriend {
 
     public void setIsRead(boolean isRead) {
         this.isRead = isRead;
+    }
+
+    public String getAudioLength() {
+        return this.audioLength;
+    }
+
+    public void setAudioLength(String audioLength) {
+        this.audioLength = audioLength;
     }
 
 

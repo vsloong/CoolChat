@@ -31,8 +31,9 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         public final static Property FromAvatar = new Property(4, String.class, "fromAvatar", false, "FROM_AVATAR");
         public final static Property Content = new Property(5, String.class, "content", false, "CONTENT");
         public final static Property ContentType = new Property(6, String.class, "contentType", false, "CONTENT_TYPE");
-        public final static Property Time = new Property(7, String.class, "time", false, "TIME");
-        public final static Property IsRead = new Property(8, boolean.class, "isRead", false, "IS_READ");
+        public final static Property AudioLength = new Property(7, String.class, "audioLength", false, "AUDIO_LENGTH");
+        public final static Property Time = new Property(8, String.class, "time", false, "TIME");
+        public final static Property IsRead = new Property(9, boolean.class, "isRead", false, "IS_READ");
     }
 
 
@@ -55,8 +56,9 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
                 "\"FROM_AVATAR\" TEXT," + // 4: fromAvatar
                 "\"CONTENT\" TEXT," + // 5: content
                 "\"CONTENT_TYPE\" TEXT," + // 6: contentType
-                "\"TIME\" TEXT," + // 7: time
-                "\"IS_READ\" INTEGER NOT NULL );"); // 8: isRead
+                "\"AUDIO_LENGTH\" TEXT," + // 7: audioLength
+                "\"TIME\" TEXT," + // 8: time
+                "\"IS_READ\" INTEGER NOT NULL );"); // 9: isRead
     }
 
     /** Drops the underlying database table. */
@@ -95,12 +97,17 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         if (contentType != null) {
             stmt.bindString(7, contentType);
         }
+
+        String audioLength = entity.getAudioLength();
+        if (audioLength != null) {
+            stmt.bindString(8, audioLength);
+        }
  
         String time = entity.getTime();
         if (time != null) {
-            stmt.bindString(8, time);
+            stmt.bindString(9, time);
         }
-        stmt.bindLong(9, entity.getIsRead() ? 1L : 0L);
+        stmt.bindLong(10, entity.getIsRead() ? 1L : 0L);
     }
 
     @Override
@@ -133,12 +140,17 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         if (contentType != null) {
             stmt.bindString(7, contentType);
         }
+
+        String audioLength = entity.getAudioLength();
+        if (audioLength != null) {
+            stmt.bindString(8, audioLength);
+        }
  
         String time = entity.getTime();
         if (time != null) {
-            stmt.bindString(8, time);
+            stmt.bindString(9, time);
         }
-        stmt.bindLong(9, entity.getIsRead() ? 1L : 0L);
+        stmt.bindLong(10, entity.getIsRead() ? 1L : 0L);
     }
 
     @Override
@@ -156,8 +168,9 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
                 cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // fromAvatar
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // content
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // contentType
-                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // time
-                cursor.getShort(offset + 8) != 0 // isRead
+                cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // audioLength
+                cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // time
+                cursor.getShort(offset + 9) != 0 // isRead
         );
         return entity;
     }
@@ -171,8 +184,9 @@ public class ChatFriendDao extends AbstractDao<ChatFriend, Long> {
         entity.setFromAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setContent(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setContentType(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setTime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setIsRead(cursor.getShort(offset + 8) != 0);
+        entity.setAudioLength(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setTime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setIsRead(cursor.getShort(offset + 9) != 0);
      }
     
     @Override

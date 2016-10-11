@@ -101,6 +101,9 @@ public class MyService extends Service {
                         chatFriend.setToId(toId);
                         chatFriend.setTime(time);
                         //chatFriend.setIsRead(false);            //消息是否已读
+                        if ("audio".equals(contentType)) {
+                            chatFriend.setAudioLength(jsonObject.getString("audioLength"));
+                        }
                         //保存聊天数据到本地数据库
                         saveChatFriendData(chatFriend);
                     } else {

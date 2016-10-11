@@ -155,6 +155,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     .list();
             //倒序排列下
             Collections.reverse(chatFriends);
+            for (ChatFriend chatFriend : chatFriends) {
+                Log.e("聊天内容", chatFriend.getContent());
+                Log.e("聊天内容类型", chatFriend.getContentType());
+                if ("audio".equals(chatFriend.getContentType())) {
+                    Log.e("聊天语音长度", chatFriend.getAudioLength() + "");
+                }
+            }
             listData.addAll(chatFriends);
             adapter.notifyDataSetChanged();
             int itemCount = adapter.getItemCount() - 1;
@@ -209,6 +216,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         chatFriend.setToId(toId);
                         chatFriend.setTime(time);
                         chatFriend.setIsRead(true);             //消息已读
+                        if ("audio".equals(contentType)) {
+                            chatFriend.setAudioLength(jsonObject.getString("audioLength"));
+                        }
 
                         chatFriends.add(chatFriend);
                         listData.addAll(chatFriends);
@@ -349,7 +359,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * 发送语音消息
      */
     private void initAudioListener() {
-        audioRecorderUtils = new AudioRecorderUtils(ChatActivity.this);
+        if (audioRecorderUtils == null) {
+            audioRecorderUtils = new AudioRecorderUtils(ChatActivity.this);
+        }
         audioRecorderUtils.setOnAudioStatusUpdateListener(new AudioRecorderUtils.OnAudioStatusUpdateListener() {
             @Override
             public void onUpdate(double db, long time) {
@@ -358,7 +370,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
             @Override
             public void onStop(String filePath, String audioLength) {
-                Log.e("录音结束", "文件位置：" + filePath + "；录音长度：" + audioLength);
+                Log.e("录音结束", "文件位置：" + filePath + "\n录音长度：" + audioLength);
                 sendAudioMessage(new File(filePath), audioLength);
             }
         });
