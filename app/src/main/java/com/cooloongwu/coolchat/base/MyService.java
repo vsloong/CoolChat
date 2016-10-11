@@ -4,11 +4,16 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.ChatFriend;
@@ -17,6 +22,8 @@ import com.cooloongwu.coolchat.socket.SocketCallback;
 import com.cooloongwu.coolchat.socket.SocketConnect;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.cooloongwu.greendao.gen.ChatGroupDao;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -121,9 +128,20 @@ public class MyService extends Service {
                     }
 
 
-                    //展示通知
-                    if (!(fromId == AppConfig.getUserId(MyService.this))) {
-                        //showNotification("", fromName, content);
+                    //展示通知(如果不是自己发的也不是当前聊天的人或群组发的就提示)
+                    if (!(fromId == AppConfig.getUserId(MyService.this)
+                            || fromId == AppConfig.getUserCurrentChatId(MyService.this))) {
+                        switch (contentType) {
+                            case "text":
+                                showNotification(fromAvatar, fromName, content);
+                                break;
+                            case "image":
+                                showNotification(fromAvatar, fromName, "[图片]");
+                                break;
+                            case "audio":
+                                showNotification(fromAvatar, fromName, "[语音]");
+                                break;
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -169,18 +187,31 @@ public class MyService extends Service {
      * @param content 内容
      */
     private void showNotification(String avatar, String title, String content) {
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        Log.e("通知栏提示", content);
+
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.item_conversation);
+        remoteViews.setImageViewResource(R.id.conversation_avatar, R.mipmap.ic_launcher);
+
+        final int NOTIFICATION_ID = 1993;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher) // Needed for the notification to work/show!!
                 .setContentTitle(title)
                 .setContentText(content)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
-                .setDefaults(Notification.DEFAULT_ALL)//向通知添加声音、闪灯和振动等效果的最简单，requires VIBRATE permission
-                //Notification.DEFAULT_SOUND    添加声音
-                //Notification.DEFAULT_VIBRATE    添加震动
-                .setTicker(title + "：" + content); //通知首次出现在通知栏，带上升动画效果
+                //.setContent(remoteViews)
+                .setDefaults(Notification.DEFAULT_ALL);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(100, builder.build());
+//        if (Build.VERSION.SDK_INT > 16) {
+//            notification.bigContentView = remoteViews;
+//        }
+
+        Notification notification = builder.build();
+
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, notification);
+
+        Picasso.with(this).load(avatar)
+                .into(remoteViews, R.id.conversation_avatar, NOTIFICATION_ID, notification);
+
     }
 
     private void saveChatFriendData(ChatFriend chatFriend) {
