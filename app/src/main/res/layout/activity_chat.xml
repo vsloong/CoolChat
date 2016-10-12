@@ -39,8 +39,8 @@
 
             <ImageButton
                 android:id="@+id/imgbtn_voice_keyboard"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:background="@color/transparent"
                 android:src="@mipmap/conversation_btn_messages_voice" />
 
@@ -56,12 +56,12 @@
             <Button
                 android:id="@+id/btn_audio"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_ripple"
-                android:text="按住录音"
+                android:text="长按录音（右滑取消）"
                 android:textColor="@color/white"
                 android:visibility="gone" />
 
@@ -75,15 +75,15 @@
 
             <ImageButton
                 android:id="@+id/imgbtn_gallery"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:background="@color/transparent"
                 android:src="@mipmap/conversation_btn_messages_gallery" />
 
             <ImageButton
                 android:id="@+id/imgbtn_more_send_close"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:background="@color/transparent"
                 android:src="@mipmap/conversation_btn_messages_more" />
 

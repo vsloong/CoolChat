@@ -124,6 +124,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //朋友或者其他发送的 语音
             ((PeerAudioViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             ((PeerAudioViewHolder) holder).text_content.setText(listData.get(position).getAudioLength() + "''");
+            int audioLength = Integer.parseInt(listData.get(position).getAudioLength()) + 4;
+            ((PeerAudioViewHolder) holder).text_content.setEms(audioLength < 15 ? audioLength : 15);
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerAudioViewHolder) holder).img_avatar);
             ((PeerAudioViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -135,6 +137,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //自己发送的 语音
             ((SelfAudioViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             ((SelfAudioViewHolder) holder).text_content.setText(listData.get(position).getAudioLength() + "''");
+            int audioLength = Integer.parseInt(listData.get(position).getAudioLength()) + 4;
+            ((SelfAudioViewHolder) holder).text_content.setEms(audioLength < 15 ? audioLength : 15);
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfAudioViewHolder) holder).img_avatar);
             ((SelfAudioViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

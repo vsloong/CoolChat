@@ -75,6 +75,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private String chatType;
 
     private long startTime = 0;
+    private float startX;
 
     private final int REQUEST_IMAGE = 0x01;
 
@@ -136,6 +137,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         imgbtn_more_send_close.setOnClickListener(this);
         imgbtn_voice_keyboard.setOnClickListener(this);
         imgbtn_gallery.setOnClickListener(this);
+        btn_audio.setOnClickListener(this);
         btn_audio.setOnTouchListener(this);
     }
 
@@ -458,6 +460,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     return;
                 }
                 break;
+            case R.id.btn_audio:
+                Toast.makeText(ChatActivity.this, "点击了按钮", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }
@@ -481,15 +486,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        switch (view.getId()) {
-            case R.id.btn_audio:
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        audioRecorderUtils.startRecord();
-                        Log.e("录音开始时间", TimeUtils.getCurrentTime());
-                        startTime = System.currentTimeMillis();
-                        break;
-                    case MotionEvent.ACTION_UP:
+        if (view.getId() == R.id.btn_audio) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    audioRecorderUtils.startRecord();
+                    Log.e("录音开始时间", TimeUtils.getCurrentTime());
+                    startTime = System.currentTimeMillis();
+                    startX = motionEvent.getX();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    float endX = motionEvent.getX();
+                    if (endX - startX > 150) {
+                        Log.e("录音取消", "取消发送");
+                        audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
+                        Toast.makeText(ChatActivity.this, "录音已取消", Toast.LENGTH_SHORT).show();
+                    } else {
                         Log.e("录音结束时间", TimeUtils.getCurrentTime());
                         long endTime = System.currentTimeMillis();
                         long audioLength = endTime - startTime;
@@ -505,11 +516,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                             audioRecorderUtils.stopRecord();        //结束录音（保存录音文件），并发送
                             Log.e("录音时间长度", audioLength / 6000 + "秒");
                         }
-                        break;
-                }
-                break;
-            default:
-                break;
+                    }
+                    break;
+            }
         }
         return true;
     }

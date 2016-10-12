@@ -38,7 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:background="@drawable/conversation_bkg_messages_text_self_normal"
-            android:gravity="center"
+            android:drawablePadding="4dp"
+            android:drawableRight="@mipmap/icon_chat_audio"
+            android:gravity="end|center_vertical"
             android:textSize="14sp"
             tools:text="10''" />
     </LinearLayout>

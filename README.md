@@ -140,7 +140,8 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 ![image](./pictures/main_drawer.jpg)     ![image](./pictures/main_empty_conversation.jpg)
 ![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/main_conversation.jpg)
 ![image](./pictures/main_contact.jpg)     ![image](./pictures/chat_send.jpg)
-![image](./pictures/profile_me.jpg)     ![image](./pictures/profile_other.jpg)
+![image](./pictures/chat_audio_image.jpg)     ![image](./pictures/profile_me.jpg)
+![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览
 该app在开发中也引用了大量的第三方优秀控件，感谢这些开源的作者

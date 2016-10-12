@@ -35,8 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:background="@drawable/conversation_bkg_messages_text_peer_normal"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:drawableLeft="@mipmap/icon_chat_audio"
             android:textSize="14sp"
+            android:drawablePadding="4dp"
             tools:text="2''" />
     </LinearLayout>
 
