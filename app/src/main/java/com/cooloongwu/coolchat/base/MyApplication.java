@@ -1,6 +1,7 @@
 package com.cooloongwu.coolchat.base;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.loopj.android.http.AsyncHttpClient;
 
@@ -14,6 +15,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //MultiDex.install(this);
         initClient();
     }
 

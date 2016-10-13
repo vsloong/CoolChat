@@ -27,12 +27,26 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    //其它配置
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
+    dexOptions {
+//        preDexLibraries = false
+        javaMaxHeapSize "4g"
     }
 }
 
@@ -43,9 +57,9 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    //compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    //compile 'com.android.support:support-v4:24.2.1'
     compile 'com.github.clans:fab:1.6.4'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -53,9 +67,27 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'org.greenrobot:greendao-generator:3.1.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
+
+    //七牛云存储所需
+    //============================================================
     compile 'com.qiniu:qiniu-android-sdk:7.2.3'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.qiniu:happy-dns:0.2.10'
-    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
+    //============================================================
+
+    //趣拍SDK所需
+    //============================================================
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:support-v13:24.2.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.4'
+    compile 'com.google.dagger:dagger-compiler:2.0.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile project(':Qupai')
+    //============================================================
+
+    compile 'com.android.support:multidex:1.0.1'
 }

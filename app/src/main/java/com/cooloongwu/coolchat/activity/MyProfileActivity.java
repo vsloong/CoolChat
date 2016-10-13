@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
+import com.duanqu.qupai.auth.AuthService;
+import com.duanqu.qupai.auth.QupaiAuthListener;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -28,7 +31,8 @@ public class MyProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_profile);
         initToolbar();
         initViews();
-        //test();
+
+        auth();
     }
 
     private void initToolbar() {
@@ -55,22 +59,26 @@ public class MyProfileActivity extends AppCompatActivity {
         profile_text_sex.setText(AppConfig.getUserSex(MyProfileActivity.this));
     }
 
-    /**
-     * 上传图片等到千牛云
-     */
-    private void test() {
-        UploadManager uploadManager = new UploadManager();
-        File file = new File("/storage/emulated/0/Pictures/Screenshots/S60930-111330.jpg");
-        uploadManager.put(
-                file, //文件
-                null, //文件名
-                AppConfig.getUserToken(MyProfileActivity.this),//token
-                new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo info, JSONObject res) {
-                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
-                        Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
-                    }
-                }, null);
+    private void auth() {
+        AuthService authService = AuthService.getInstance();
+        authService.setQupaiAuthListener(new QupaiAuthListener() {
+            @Override
+            public void onAuthError(int errorCode, String message) {
+                Log.e("QupaiAuth", "错误码：" + errorCode + "；错误信息：" + message);
+                Toast.makeText(MyProfileActivity.this, "趣拍云认证失败：" + errorCode, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAuthComplte(int responseCode, String responseMessage) {
+                Toast.makeText(MyProfileActivity.this, "趣拍云认证成功：" + responseMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+        String appKey = "20c8241fb3e0c95";
+        String appSecret = "149edead851b4331a0eb4207542a9a3e";
+        authService.startAuth(
+                MyProfileActivity.this,
+                appKey,
+                appSecret,
+                String.valueOf(AppConfig.getUserId(MyProfileActivity.this)));
     }
 }
