@@ -3,24 +3,13 @@ package com.cooloongwu.coolchat.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
-import com.duanqu.qupai.auth.AuthService;
-import com.duanqu.qupai.auth.QupaiAuthListener;
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UploadManager;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
-
-import java.io.File;
 
 
 public class MyProfileActivity extends AppCompatActivity {
@@ -32,7 +21,7 @@ public class MyProfileActivity extends AppCompatActivity {
         initToolbar();
         initViews();
 
-        auth();
+        test();
     }
 
     private void initToolbar() {
@@ -59,26 +48,9 @@ public class MyProfileActivity extends AppCompatActivity {
         profile_text_sex.setText(AppConfig.getUserSex(MyProfileActivity.this));
     }
 
-    private void auth() {
-        AuthService authService = AuthService.getInstance();
-        authService.setQupaiAuthListener(new QupaiAuthListener() {
-            @Override
-            public void onAuthError(int errorCode, String message) {
-                Log.e("QupaiAuth", "错误码：" + errorCode + "；错误信息：" + message);
-                Toast.makeText(MyProfileActivity.this, "趣拍云认证失败：" + errorCode, Toast.LENGTH_SHORT).show();
-            }
+    private void test() {
 
-            @Override
-            public void onAuthComplte(int responseCode, String responseMessage) {
-                Toast.makeText(MyProfileActivity.this, "趣拍云认证成功：" + responseMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-        String appKey = "20c8241fb3e0c95";
-        String appSecret = "149edead851b4331a0eb4207542a9a3e";
-        authService.startAuth(
-                MyProfileActivity.this,
-                appKey,
-                appSecret,
-                String.valueOf(AppConfig.getUserId(MyProfileActivity.this)));
     }
+
+
 }

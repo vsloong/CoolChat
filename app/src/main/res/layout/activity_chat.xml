@@ -81,11 +81,19 @@
                 android:src="@mipmap/conversation_btn_messages_gallery" />
 
             <ImageButton
+                android:id="@+id/imgbtn_video"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@color/transparent"
+                android:src="@mipmap/conversation_btn_messages_video" />
+
+            <ImageButton
                 android:id="@+id/imgbtn_more_send_close"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:background="@color/transparent"
-                android:src="@mipmap/conversation_btn_messages_more" />
+                android:src="@mipmap/conversation_btn_messages_more"
+                android:layout_marginRight="10dp" />
 
         </LinearLayout>
 

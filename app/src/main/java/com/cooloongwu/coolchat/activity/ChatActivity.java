@@ -32,6 +32,13 @@ import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
+import com.cooloongwu.qupai.QupaiSetting;
+import com.cooloongwu.qupai.QupaiUpload;
+import com.cooloongwu.qupai.RecordResult;
+import com.duanqu.qupai.sdk.android.QupaiManager;
+import com.duanqu.qupai.sdk.android.QupaiService;
+import com.duanqu.qupai.upload.QupaiUploadListener;
+import com.duanqu.qupai.upload.UploadService;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -45,6 +52,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
@@ -78,6 +86,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private float startX;
 
     private final int REQUEST_IMAGE = 0x01;
+    private final int REQUEST_VIDEO = 0x02;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +140,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         imgbtn_more_send_close = (ImageButton) findViewById(R.id.imgbtn_more_send_close);
         imgbtn_voice_keyboard = (ImageButton) findViewById(R.id.imgbtn_voice_keyboard);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
+        ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
         btn_audio = (Button) findViewById(R.id.btn_audio);
 
         imgbtn_emoji_keyboard.setOnClickListener(this);
         imgbtn_more_send_close.setOnClickListener(this);
         imgbtn_voice_keyboard.setOnClickListener(this);
         imgbtn_gallery.setOnClickListener(this);
+        imgbtn_video.setOnClickListener(this);
         btn_audio.setOnClickListener(this);
         btn_audio.setOnTouchListener(this);
     }
@@ -427,6 +438,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.imgbtn_gallery:
                 openImageGallery();
                 break;
+            case R.id.imgbtn_video:
+                openRecordPage();
+                break;
             case R.id.imgbtn_more_send_close:
                 //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
                 if (isMore) {
@@ -480,6 +494,30 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 for (String path : paths) {
                     sendImageMessage(new File(path));
                 }
+            }
+        }
+
+        if (requestCode == REQUEST_VIDEO) {
+            if (resultCode == RESULT_OK) {
+                RecordResult result = new RecordResult(data);
+                //得到视频地址，和缩略图地址的数组，返回十张缩略图
+                String videoPath = result.getPath();
+                String thumbnails[] = result.getThumbnail();
+                result.getDuration();
+
+                Toast.makeText(this, "视频路径:" + videoPath + "图片路径:" + thumbnails[0], Toast.LENGTH_SHORT).show();
+                Log.e("趣拍视频地址", videoPath);
+                Log.e("趣拍缩略图地址", thumbnails[0]);
+                startUpload(videoPath, thumbnails[0]);
+
+                /**
+                 * 清除草稿,草稿文件将会删除。所以在这之前我们执行拷贝move操作。
+                 * 上面的拷贝操作请自行实现，第一版本的copyVideoFile接口不再使用
+                 */
+//            QupaiService qupaiService = QupaiManager
+//                    .getQupaiService(MainActivity.this);
+//            qupaiService.deleteDraft(getApplicationContext(),data);
+
             }
         }
     }
@@ -637,5 +675,65 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 .count(9) // max select image size, 9 by default. used width #.multi()
                 .multi() // multi、single mode, default mode is multi;
                 .start(this, REQUEST_IMAGE);
+    }
+
+    /**
+     * 打开短视频录制页面
+     */
+    private void openRecordPage() {
+        QupaiService qupaiService = QupaiManager.getQupaiService(this);
+        if (qupaiService == null) {
+            Toast.makeText(this, "插件没有初始化，无法获取 QupaiService", Toast.LENGTH_LONG).show();
+            return;
+        }
+        qupaiService.showRecordPage(this, REQUEST_VIDEO, true);
+    }
+
+    /**
+     * 开始上传
+     */
+    private void startUpload(String videoPath, String thumbnailPath) {
+        UploadService uploadService = UploadService.getInstance();
+        uploadService.setQupaiUploadListener(new QupaiUploadListener() {
+            @Override
+            public void onUploadProgress(String uuid, long uploadedBytes, long totalBytes) {
+                int percentsProgress = (int) (uploadedBytes * 100 / totalBytes);
+                Log.e("趣拍云上传进度", "uuid:" + uuid + "；进度：" + percentsProgress + "%");
+                //progress.setProgress(percentsProgress);
+            }
+
+            @Override
+            public void onUploadError(String uuid, int errorCode, String message) {
+                Log.e("趣拍云上传失败", "uuid:" + uuid + "；错误信息：" + errorCode + message);
+            }
+
+            @Override
+            public void onUploadComplte(String uuid, int responseCode, String responseMessage) {
+                //http://{DOMAIN}/v/{UUID}.mp4?token={ACCESS-TOKEN}
+                //progress.setVisibility(View.GONE);
+
+                //这里返回的uuid是你创建上传任务时生成的uuid.开发者可以使用其他作为标识
+                //videoUrl返回的是上传成功的视频地址,imageUrl是上传成功的图片地址
+                String videoUrl = QupaiSetting.domain + "/v/" + responseMessage + ".mp4" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
+                String imageUrl = QupaiSetting.domain + "/v/" + responseMessage + ".jpg" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
+                Log.e("趣拍云上传成功", "视频地址：" + videoUrl);
+                Log.e("趣拍云上传成功", "缩略图地址：" + imageUrl);
+            }
+        });
+
+        String uuid = UUID.randomUUID().toString();
+        Log.e("趣拍云认证", "accessToken：" + AppConfig.getQupaiToken(ChatActivity.this) + "；space：" + AppConfig.getUserId(ChatActivity.this));
+
+        QupaiUpload.startUpload(QupaiUpload.createUploadTask(
+                this,
+                uuid,
+                new File(videoPath),
+                new File(thumbnailPath),
+                AppConfig.getQupaiToken(ChatActivity.this),
+                String.valueOf(AppConfig.getUserId(ChatActivity.this)),
+                QupaiSetting.shareType,
+                QupaiSetting.tags,
+                QupaiSetting.description)
+        );
     }
 }

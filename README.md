@@ -108,6 +108,9 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 但是部署后由于路由那一块搞得比较头大，于是就放弃TP5转而选择了目前国外比较流行的Laravel框架。就目前而言，路由、控制器、
 数据库用起来都非常顺手，所以目前就暂定使用该框架了。）
 
+短视频的拍摄使用了“趣拍云”的SDK，由于需要绑定签名，所以大家在测试的时候可能会出现不能拍摄的问题。后期我会将软件签名文件和
+密码放出来供大家打包测试。
+
 ###Android端
 - [x] **页面开发**
     - [x] 侧栏页面
@@ -140,11 +143,12 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 ![image](./pictures/main_drawer.jpg)     ![image](./pictures/main_empty_conversation.jpg)
 ![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/main_conversation.jpg)
 ![image](./pictures/main_contact.jpg)     ![image](./pictures/chat_send.jpg)
-![image](./pictures/chat_audio_image.jpg)     ![image](./pictures/profile_me.jpg)
+![image](./pictures/chat_audio_image.jpg)     ![image](./pictures/chat_video.jpg)
+![image](./pictures/chat_video_edit.jpg)     ![image](./pictures/profile_me.jpg)
 ![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览
-该app在开发中也引用了大量的第三方优秀控件，感谢这些开源的作者
+该app在开发中也引用了大量的第三方优秀控件、框架和SDK，感谢这些开源的作者
 - [Clans/FloatingActionButton][3]
 - [square/picasso][4]
 - [greenrobot/EventBus][5]
@@ -153,6 +157,8 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [hdodenhof/CircleImageView][8]
 - [loopj/android-async-http][9]
 - [lovetuzitong/MultiImageSelector][10]
+- [七牛云][11]
+- [趣拍云][12]
 
 ##已知Bug一览（带删除线的为已修复）
 - ~~自己发消息超过两行，文字会超出屏幕~~
@@ -200,3 +206,5 @@ limitations under the License.
 [8]:https://github.com/hdodenhof/CircleImageView
 [9]:https://github.com/loopj/android-async-http
 [10]:https://github.com/lovetuzitong/MultiImageSelector
+[11]:http://www.qiniu.com/
+[12]:https://www.qupaicloud.com/
