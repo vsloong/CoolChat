@@ -148,7 +148,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         if ("friend".equals(chatType)) {
             //如果是和好友聊天
             Log.e("加载聊天数据", "好友");
-            ChatFriendDao chatFriendDao = new GreenDAO(ChatActivity.this).getChatFriendDao();
+            ChatFriendDao chatFriendDao = GreenDAO.getInstance(ChatActivity.this).getChatFriendDao();
             List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
                     .whereOr(ChatFriendDao.Properties.FromId.eq(chatId), ChatFriendDao.Properties.ToId.eq(chatId))
                     .limit(5)
@@ -294,7 +294,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         uploadManager.put(
                 file, //文件
                 null, //文件名
-                AppConfig.getUserToken(ChatActivity.this),//token
+                AppConfig.getQiniuToken(ChatActivity.this),//token
                 new UpCompletionHandler() {
                     @Override
                     public void complete(String key, ResponseInfo info, JSONObject res) {
@@ -329,7 +329,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         uploadManager.put(
                 file, //文件
                 null, //文件名
-                AppConfig.getUserToken(ChatActivity.this),//token
+                AppConfig.getQiniuToken(ChatActivity.this),//token
                 new UpCompletionHandler() {
                     @Override
                     public void complete(String key, ResponseInfo info, JSONObject res) {

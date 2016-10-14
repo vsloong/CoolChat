@@ -36,13 +36,19 @@ public class AppConfig {
     private static final String defaultUserAvatar = "";
 
     /**
-     * 存储修改用户Token默认为空
+     * 存储修改用户七牛云Token默认为空
      */
-    private static final String USER_TOKEN = "user_token";
-    private static final String defaultUserToken = "";
+    private static final String USER_TOKEN_QINIU = "user_token_qiniu";
+    private static final String defaultUserQiniuToken = "";
 
     /**
-     * 存储修改用户Token默认为空
+     * 存储修改用户趣拍云Token默认为空
+     */
+    private static final String USER_TOKEN_QUPAI = "user_token_qupai";
+    private static final String defaultUserQupaiToken = "";
+
+    /**
+     * 存储修改用户登录时间
      */
     private static final String USER_LOGIN_TIME = "user_login_time";
     private static final long defaultUserLoginTime = 0;
@@ -136,19 +142,35 @@ public class AppConfig {
     }
 
     /**
-     * 存储获取用户的token
+     * 存储获取用户七牛的token
      *
      * @param context 上下文
      * @param token   token
      */
-    public static void setUserToken(Context context, String token) {
+    public static void setQiniuToken(Context context, String token) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putString(USER_TOKEN, token).apply();
+        preferences.edit().putString(USER_TOKEN_QINIU, token).apply();
     }
 
-    public static String getUserToken(Context context) {
+    public static String getQiniuToken(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(USER_TOKEN, defaultUserToken);
+        return preferences.getString(USER_TOKEN_QINIU, defaultUserQiniuToken);
+    }
+
+    /**
+     * 存储获取用户趣拍的token
+     *
+     * @param context 上下文
+     * @param token   token
+     */
+    public static void setQupaiToken(Context context, String token) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putString(USER_TOKEN_QUPAI, token).apply();
+    }
+
+    public static String getQupaiToken(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(USER_TOKEN_QUPAI, defaultUserQupaiToken);
     }
 
     /**

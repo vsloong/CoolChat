@@ -65,7 +65,7 @@ public class ConversationFragment extends BaseFragment {
      */
     private void initListData() {
         //加载聊天列表数据
-        conversationDao = new GreenDAO(getActivity()).getConversationDao();
+        conversationDao = GreenDAO.getInstance(getActivity()).getConversationDao();
         List<Conversation> conversations = conversationDao.queryBuilder().build().list();
         listData.clear();
         listData.addAll(conversations);
@@ -99,7 +99,7 @@ public class ConversationFragment extends BaseFragment {
      * 将数据插入或者更新数据库
      */
     private void insertOrUpdateConversationDB(Conversation conversation) {
-        conversationDao = new GreenDAO(getActivity()).getConversationDao();
+        conversationDao = GreenDAO.getInstance(getActivity()).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.MultiId.eq(conversation.getMultiId()))
                 .build()
@@ -168,7 +168,7 @@ public class ConversationFragment extends BaseFragment {
                 chatId = fromId;
             }
             //根据ID去查询好友的其他信息
-            ContactDao contactDao = new GreenDAO(getActivity()).getContactDao();
+            ContactDao contactDao = GreenDAO.getInstance(getActivity()).getContactDao();
             Contact contact = contactDao.queryBuilder()
                     .where(ContactDao.Properties.UserId.eq(chatId))
                     .build()
@@ -227,7 +227,7 @@ public class ConversationFragment extends BaseFragment {
      * @return 未读消息数
      */
     private int getConversationUnread(int chatId, String chatType) {
-        ConversationDao conversationDao = new GreenDAO(getActivity()).getConversationDao();
+        ConversationDao conversationDao = GreenDAO.getInstance(getActivity()).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.MultiId.eq(chatId), ConversationDao.Properties.Type.eq(chatType))
                 //.and(ConversationDao.Properties.Type.eq(chatType),ConversationDao.Properties.MultiId.eq(chatId))

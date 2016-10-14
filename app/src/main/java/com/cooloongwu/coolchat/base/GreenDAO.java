@@ -17,16 +17,20 @@ import com.cooloongwu.greendao.gen.DaoSession;
 
 public class GreenDAO {
 
+    private static GreenDAO instance;
     private DaoMaster.DevOpenHelper devOpenHelper;
 
-    public GreenDAO(Context context) {
-        String dataBaseName = AppConfig.getUserDB(context);
-        Log.e("加载的用户的数据库", dataBaseName);
-        devOpenHelper = getOpenHelper(context, dataBaseName);
+    public static GreenDAO getInstance(Context context) {
+        if (instance == null) {
+            instance = new GreenDAO(context);
+        }
+        return instance;
     }
 
-    private static DaoMaster.DevOpenHelper getOpenHelper(Context context, String dataBaseName) {
-        return new DaoMaster.DevOpenHelper(context, dataBaseName, null);
+    GreenDAO(Context context) {
+        String dataBaseName = AppConfig.getUserDB(context);
+        Log.e("加载的用户的数据库", dataBaseName);
+        devOpenHelper = new DaoMaster.DevOpenHelper(context, dataBaseName, null);
     }
 
     private DaoSession getDaoSession() {

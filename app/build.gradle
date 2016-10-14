@@ -84,7 +84,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile project(':Qupai')
     //============================================================
     compile 'com.android.support:multidex:1.0.1'
-    compile project(':Qupai')
 }

@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             AppConfig.setUserName(LoginActivity.this, response.getString("name"));
                             AppConfig.setUserAvatar(LoginActivity.this, response.getString("avatar"));
                             AppConfig.setUserSex(LoginActivity.this, response.getString("sex"));
-                            AppConfig.setUserToken(LoginActivity.this, response.getString("token"));
+                            AppConfig.setQiniuToken(LoginActivity.this, response.getString("token"));
                             AppConfig.setUserLoginTime(LoginActivity.this, System.currentTimeMillis());
 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));

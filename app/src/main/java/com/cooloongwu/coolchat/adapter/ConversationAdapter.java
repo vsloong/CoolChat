@@ -132,7 +132,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param id Conversation表的主键
      */
     private void updateConversationDB(long id) {
-        ConversationDao conversationDao = new GreenDAO(context).getConversationDao();
+        ConversationDao conversationDao = GreenDAO.getInstance(context).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.Id.eq(id))
                 .build()

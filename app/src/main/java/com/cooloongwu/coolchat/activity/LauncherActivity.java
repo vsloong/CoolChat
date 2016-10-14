@@ -19,7 +19,7 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void login() {
-        if (AppConfig.getUserToken(this).isEmpty()) {
+        if (AppConfig.getQiniuToken(this).isEmpty()) {
             goLogin();
         } else {
             if (TimeUtils.canLogin(this)) {

@@ -4,11 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -23,7 +19,6 @@ import com.cooloongwu.coolchat.socket.SocketConnect;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.cooloongwu.greendao.gen.ChatGroupDao;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -215,7 +210,7 @@ public class MyService extends Service {
     }
 
     private void saveChatFriendData(ChatFriend chatFriend) {
-        ChatFriendDao chatFriendDao = new GreenDAO(this).getChatFriendDao();
+        ChatFriendDao chatFriendDao = GreenDAO.getInstance(this).getChatFriendDao();
         chatFriendDao.insert(chatFriend);
     }
 

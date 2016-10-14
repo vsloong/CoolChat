@@ -1,8 +1,8 @@
 package com.cooloongwu.coolchat.base;
 
 import android.app.Application;
-import android.support.multidex.MultiDex;
 
+import com.cooloongwu.qupai.QupaiAuth;
 import com.loopj.android.http.AsyncHttpClient;
 
 /**
@@ -18,6 +18,7 @@ public class MyApplication extends Application {
 
         //MultiDex.install(this);
         initClient();
+        initQupaiAuth();
     }
 
     /**
@@ -25,5 +26,13 @@ public class MyApplication extends Application {
      */
     private void initClient() {
         Client.setClientGeneral(new AsyncHttpClient());
+    }
+
+    /**
+     * 趣拍云鉴权
+     */
+    private void initQupaiAuth() {
+        QupaiAuth auth = QupaiAuth.getInstance();
+        auth.initAuth(getApplicationContext());
     }
 }
