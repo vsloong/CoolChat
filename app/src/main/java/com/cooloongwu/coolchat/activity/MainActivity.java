@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_send) {
 
         }
+        startActivity(new Intent(MainActivity.this, TestActivity.class));
         showToast("暂未开发");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

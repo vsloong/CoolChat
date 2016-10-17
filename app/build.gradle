@@ -54,6 +54,12 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -68,14 +74,15 @@ dependencies {
     compile 'org.greenrobot:greendao-generator:3.1.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
-    //七牛云存储所需
+    compile 'com.android.support:multidex:1.0.1'
+    //以下为七牛云存储所需
     //============================================================
     compile 'com.qiniu:qiniu-android-sdk:7.2.3'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.qiniu:happy-dns:0.2.10'
     //============================================================
-    //趣拍SDK所需
+    //以下为趣拍SDK所需
     //============================================================
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v13:24.2.1'
@@ -86,5 +93,17 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile project(':Qupai')
     //============================================================
-    compile 'com.android.support:multidex:1.0.1'
+    //以下为ijkPlayer所需
+    //============================================================
+    // required, enough for most devices.
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.6.2'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.6.2'
+    // Other ABIs: optional
+//    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.6.2'
+//    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.6.2'
+//    compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.6.2'
+//    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.6.2'
+    // ExoPlayer as IMediaPlayer: optional, experimental
+//    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.6.2'
+    //============================================================
 }

@@ -157,8 +157,9 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [hdodenhof/CircleImageView][8]
 - [loopj/android-async-http][9]
 - [lovetuzitong/MultiImageSelector][10]
-- [七牛云][11]
-- [趣拍云][12]
+- [Bilibili/ijkplayer][11]
+- [七牛云][12]
+- [趣拍云][13]
 
 ##已知Bug一览（带删除线的为已修复）
 - ~~自己发消息超过两行，文字会超出屏幕~~
@@ -206,5 +207,6 @@ limitations under the License.
 [8]:https://github.com/hdodenhof/CircleImageView
 [9]:https://github.com/loopj/android-async-http
 [10]:https://github.com/lovetuzitong/MultiImageSelector
-[11]:http://www.qiniu.com/
-[12]:https://www.qupaicloud.com/
+[11]:https://github.com/Bilibili/ijkplayer
+[12]:http://www.qiniu.com/
+[13]:https://www.qupaicloud.com/
