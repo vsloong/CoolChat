@@ -369,7 +369,29 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     /**
-     * 发送语音消息
+     * 发送视频消息
+     */
+    private void sendVideoMessage(String videoPath) {
+        //发送数据示例
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
+            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
+            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
+            jsonObject.put("toWhich", chatType);
+            jsonObject.put("toId", chatId);
+            jsonObject.put("content", videoPath);
+            jsonObject.put("contentType", "video");
+            jsonObject.put("time", TimeUtils.getCurrentTime());
+
+            myBinder.sendMessage(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 初始化语音
      */
     private void initAudioListener() {
         if (audioRecorderUtils == null) {
@@ -718,6 +740,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 String imageUrl = QupaiSetting.domain + "/v/" + responseMessage + ".jpg" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
                 Log.e("趣拍云上传成功", "视频地址：" + videoUrl);
                 Log.e("趣拍云上传成功", "缩略图地址：" + imageUrl);
+
+                sendVideoMessage(videoUrl);
             }
         });
 

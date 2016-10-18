@@ -2,10 +2,14 @@ package com.cooloongwu.coolchat.adapter;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +21,8 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
 /**
  * 聊天的适配器类，需根据消息类型加载不同的布局
  * Created by CooLoongWu on 2016-9-13 16:31.
@@ -27,8 +33,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LayoutInflater layoutInflater;
     private ArrayList<ChatFriend> listData;
 
-    private MediaPlayer mediaPlayer; // 媒体播放器
-
     //建立枚举 2个item 类型
     private enum ITEM_TYPE {
         PEER_TEXT,
@@ -36,7 +40,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PEER_IMAGE,
         SELF_IMAGE,
         PEER_AUDIO,
-        SELF_AUDIO
+        SELF_AUDIO,
+        PEER_VIDEO,
+        SELF_VIDEO
     }
 
     public ChatAdapter(Context context, ArrayList<ChatFriend> listData) {
@@ -56,6 +62,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return ITEM_TYPE.SELF_IMAGE.ordinal();
             } else if ("audio".equals(contentType)) {
                 return ITEM_TYPE.SELF_AUDIO.ordinal();
+            } else if ("video".equals(contentType)) {
+                return ITEM_TYPE.SELF_VIDEO.ordinal();
             } else {
                 return 0;
             }
@@ -66,6 +74,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return ITEM_TYPE.PEER_IMAGE.ordinal();
             } else if ("audio".equals(contentType)) {
                 return ITEM_TYPE.PEER_AUDIO.ordinal();
+            } else if ("video".equals(contentType)) {
+                return ITEM_TYPE.PEER_VIDEO.ordinal();
             } else {
                 return 0;
             }
@@ -93,13 +103,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (viewType == ITEM_TYPE.SELF_AUDIO.ordinal()) {
             itemView = layoutInflater.inflate(R.layout.item_chat_message_self_audio, parent, false);
             return new SelfAudioViewHolder(itemView);
+        } else if (viewType == ITEM_TYPE.PEER_VIDEO.ordinal()) {
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_peer_video, parent, false);
+            return new PeerVideoViewHolder(itemView);
+        } else if (viewType == ITEM_TYPE.SELF_VIDEO.ordinal()) {
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_self_video, parent, false);
+            return new SelfVideoViewHolder(itemView);
         } else {
             return null;
         }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof PeerTextViewHolder) {
             //朋友或者其他发送的 文字
             ((PeerTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
@@ -146,11 +162,83 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     playSound(listData.get(position).getContent());
                 }
             });
+        } else if (holder instanceof PeerVideoViewHolder) {
+            //朋友或者其他发送的 视频
+            ((PeerVideoViewHolder) holder).text_name.setText(listData.get(position).getFromName());
+            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerVideoViewHolder) holder).img_avatar);
+            final IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
+            ijkMediaPlayer.setKeepInBackground(false);
+            try {
+                ijkMediaPlayer.setDataSource(context, Uri.parse(listData.get(position).getContent()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ((PeerVideoViewHolder) holder).surface_holder.addCallback(new SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+                }
+
+                @Override
+                public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+                    ijkMediaPlayer.setDisplay(((PeerVideoViewHolder) holder).surface_holder);
+                }
+
+                @Override
+                public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+                }
+            });
+
+            ((PeerVideoViewHolder) holder).imgbtn_play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ijkMediaPlayer.setDisplay(((PeerVideoViewHolder) holder).surface_holder);
+                    ((PeerVideoViewHolder) holder).imgbtn_play.setVisibility(View.GONE);
+                }
+            });
+        } else if (holder instanceof SelfVideoViewHolder) {
+            //自己发送的 视频
+            ((SelfVideoViewHolder) holder).text_name.setText(listData.get(position).getFromName());
+            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfVideoViewHolder) holder).img_avatar);
+            final IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
+            ijkMediaPlayer.setKeepInBackground(false);
+            try {
+                ijkMediaPlayer.setDataSource(context, Uri.parse(listData.get(position).getContent()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ((SelfVideoViewHolder) holder).surface_holder.addCallback(new SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+                }
+
+                @Override
+                public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+                    ijkMediaPlayer.setDisplay(((SelfVideoViewHolder) holder).surface_holder);
+                }
+
+                @Override
+                public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+                }
+            });
+            ijkMediaPlayer.prepareAsync();
+            ((SelfVideoViewHolder) holder).imgbtn_play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ijkMediaPlayer.setDisplay(((SelfVideoViewHolder) holder).surface_holder);
+                    ((SelfVideoViewHolder) holder).imgbtn_play.setVisibility(View.GONE);
+                }
+            });
         }
     }
 
     private void playSound(String path) {
-        mediaPlayer = new MediaPlayer();
+        MediaPlayer mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepare();
@@ -194,6 +282,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    private class PeerVideoViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView img_avatar;
+        private TextView text_name;
+        private SurfaceView surface_view;
+        private SurfaceHolder surface_holder;
+        private ImageView img_thumbnail;
+        private ImageButton imgbtn_play;
+
+        PeerVideoViewHolder(View itemView) {
+            super(itemView);
+            img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
+            text_name = (TextView) itemView.findViewById(R.id.text_name);
+            surface_view = (SurfaceView) itemView.findViewById(R.id.surface_view);
+            img_thumbnail = (ImageView) itemView.findViewById(R.id.img_thumbnail);
+            imgbtn_play = (ImageButton) itemView.findViewById(R.id.imgbtn_play);
+            surface_holder = surface_view.getHolder();
+        }
+    }
+
     private class PeerAudioViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView img_avatar;
@@ -234,6 +342,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
             image_content = (ImageView) itemView.findViewById(R.id.image_content);
+        }
+    }
+
+    private class SelfVideoViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView img_avatar;
+        private TextView text_name;
+        private SurfaceView surface_view;
+        private SurfaceHolder surface_holder;
+        private ImageView img_thumbnail;
+        private ImageButton imgbtn_play;
+
+        SelfVideoViewHolder(View itemView) {
+            super(itemView);
+            img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
+            text_name = (TextView) itemView.findViewById(R.id.text_name);
+            surface_view = (SurfaceView) itemView.findViewById(R.id.surface_view);
+            img_thumbnail = (ImageView) itemView.findViewById(R.id.img_thumbnail);
+            imgbtn_play = (ImageButton) itemView.findViewById(R.id.imgbtn_play);
+            surface_holder = surface_view.getHolder();
         }
     }
 

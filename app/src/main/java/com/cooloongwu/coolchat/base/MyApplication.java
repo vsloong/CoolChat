@@ -76,7 +76,7 @@ public class MyApplication extends Application {
                 .build();
 
         ProjectOptions projectOptions = new ProjectOptions.Builder()
-                .setVideoSize(480, 480)
+                .setVideoSize(480, 520)
                 .setVideoFrameRate(30)
                 .setDurationRange(QupaiSetting.DEFAULT_MIN_DURATION_LIMIT, QupaiSetting.DEFAULT_DURATION_LIMIT)
                 .get();

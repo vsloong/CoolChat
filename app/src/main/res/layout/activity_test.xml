@@ -8,8 +8,8 @@
 
     <SurfaceView
         android:id="@+id/video_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="240dp"
+        android:layout_height="260dp"
         android:layout_marginTop="4dp" />
 
 </RelativeLayout>

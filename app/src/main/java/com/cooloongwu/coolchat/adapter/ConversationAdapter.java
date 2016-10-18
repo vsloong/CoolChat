@@ -51,6 +51,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.content.setText("[图片]");
         } else if ("audio".equals(listData.get(position).getContentType())) {
             holder.content.setText("[语音]");
+        } else if ("video".equals(listData.get(position).getContentType())) {
+            holder.content.setText("[视频]");
         } else {
             holder.content.setText(listData.get(position).getContent());
         }
