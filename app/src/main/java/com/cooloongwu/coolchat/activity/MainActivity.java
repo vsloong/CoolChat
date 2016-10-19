@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_send) {
 
         }
-        startActivity(new Intent(MainActivity.this, TestActivity.class));
+        //startActivity(new Intent(MainActivity.this, TestActivity.class));
         showToast("暂未开发");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -160,6 +160,7 @@ public class MainActivity extends BaseActivity
                 fam.close(true);
                 break;
             case R.id.fab_invite_friend:
+                startActivity(new Intent(MainActivity.this, AddFriendsActivity.class));
                 fam.close(true);
                 break;
             case R.id.fab_new_chat:
