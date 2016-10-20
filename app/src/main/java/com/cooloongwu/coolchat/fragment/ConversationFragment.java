@@ -15,7 +15,7 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ConversationAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
-import com.cooloongwu.coolchat.base.GreenDAO;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.greendao.gen.ContactDao;
@@ -65,7 +65,7 @@ public class ConversationFragment extends BaseFragment {
      */
     private void initListData() {
         //加载聊天列表数据
-        conversationDao = GreenDAO.getInstance(getActivity()).getConversationDao();
+        conversationDao = GreenDAOUtils.getInstance(getActivity()).getConversationDao();
         List<Conversation> conversations = conversationDao.queryBuilder().build().list();
         listData.clear();
         listData.addAll(conversations);
@@ -99,7 +99,7 @@ public class ConversationFragment extends BaseFragment {
      * 将数据插入或者更新数据库
      */
     private void insertOrUpdateConversationDB(Conversation conversation) {
-        conversationDao = GreenDAO.getInstance(getActivity()).getConversationDao();
+        conversationDao = GreenDAOUtils.getInstance(getActivity()).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.MultiId.eq(conversation.getMultiId()))
                 .build()
@@ -168,7 +168,7 @@ public class ConversationFragment extends BaseFragment {
                 chatId = fromId;
             }
             //根据ID去查询好友的其他信息
-            ContactDao contactDao = GreenDAO.getInstance(getActivity()).getContactDao();
+            ContactDao contactDao = GreenDAOUtils.getInstance(getActivity()).getContactDao();
             Contact contact = contactDao.queryBuilder()
                     .where(ContactDao.Properties.UserId.eq(chatId))
                     .build()
@@ -227,7 +227,7 @@ public class ConversationFragment extends BaseFragment {
      * @return 未读消息数
      */
     private int getConversationUnread(int chatId, String chatType) {
-        ConversationDao conversationDao = GreenDAO.getInstance(getActivity()).getConversationDao();
+        ConversationDao conversationDao = GreenDAOUtils.getInstance(getActivity()).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.MultiId.eq(chatId), ConversationDao.Properties.Type.eq(chatType))
                 //.and(ConversationDao.Properties.Type.eq(chatType),ConversationDao.Properties.MultiId.eq(chatId))

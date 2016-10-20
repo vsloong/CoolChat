@@ -1,8 +1,9 @@
-package com.cooloongwu.coolchat.base;
+package com.cooloongwu.coolchat.utils;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.cooloongwu.greendao.gen.ChatGroupDao;
 import com.cooloongwu.greendao.gen.ContactDao;
@@ -15,19 +16,19 @@ import com.cooloongwu.greendao.gen.DaoSession;
  * Created by CooLoongWu on 2016-9-28 14:25.
  */
 
-public class GreenDAO {
+public class GreenDAOUtils {
 
-    private static GreenDAO instance;
+    private static GreenDAOUtils instance;
     private DaoMaster.DevOpenHelper devOpenHelper;
 
-    public static GreenDAO getInstance(Context context) {
+    public static GreenDAOUtils getInstance(Context context) {
         if (instance == null) {
-            instance = new GreenDAO(context);
+            instance = new GreenDAOUtils(context);
         }
         return instance;
     }
 
-    GreenDAO(Context context) {
+    public GreenDAOUtils(Context context) {
         String dataBaseName = AppConfig.getUserDB(context);
         Log.e("加载的用户的数据库", dataBaseName);
         devOpenHelper = new DaoMaster.DevOpenHelper(context, dataBaseName, null);

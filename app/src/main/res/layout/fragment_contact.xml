@@ -16,6 +16,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/text_addfriend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_ripple"

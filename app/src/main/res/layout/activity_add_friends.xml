@@ -41,30 +41,42 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="72dp"
-            android:layout_marginRight="72dp"
-            android:layout_marginTop="32dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/layout_points"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="输入姓名/电话号码/CoolChat账号进行搜索"
-                android:textColor="@color/text_brown"
-                android:textSize="14sp" />
+                android:layout_marginLeft="72dp"
+                android:layout_marginRight="72dp"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="搜索国外用户请输入其国家码+手机号"
-                android:textColor="@color/text_brown"
-                android:textSize="14sp" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="输入姓名/电话号码/CoolChat账号进行搜索"
+                    android:textColor="@color/text_brown"
+                    android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="搜索国外用户请输入其国家码+手机号"
+                    android:textColor="@color/text_brown"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

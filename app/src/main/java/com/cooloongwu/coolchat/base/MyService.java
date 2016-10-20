@@ -16,6 +16,7 @@ import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.entity.ChatGroup;
 import com.cooloongwu.coolchat.socket.SocketCallback;
 import com.cooloongwu.coolchat.socket.SocketConnect;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.cooloongwu.greendao.gen.ChatGroupDao;
 import com.squareup.picasso.Picasso;
@@ -210,12 +211,12 @@ public class MyService extends Service {
     }
 
     private void saveChatFriendData(ChatFriend chatFriend) {
-        ChatFriendDao chatFriendDao = GreenDAO.getInstance(this).getChatFriendDao();
+        ChatFriendDao chatFriendDao = GreenDAOUtils.getInstance(this).getChatFriendDao();
         chatFriendDao.insert(chatFriend);
     }
 
     private void saveChatGroupData(ChatGroup chatGroup) {
-        ChatGroupDao chatGroupDao = new GreenDAO(this).getChatGroupDao();
+        ChatGroupDao chatGroupDao = new GreenDAOUtils(this).getChatGroupDao();
         chatGroupDao.insert(chatGroup);
     }
 

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
-import com.cooloongwu.coolchat.base.GreenDAO;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.squareup.picasso.Picasso;
@@ -134,7 +134,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param id Conversation表的主键
      */
     private void updateConversationDB(long id) {
-        ConversationDao conversationDao = GreenDAO.getInstance(context).getConversationDao();
+        ConversationDao conversationDao = GreenDAOUtils.getInstance(context).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
                 .where(ConversationDao.Properties.Id.eq(id))
                 .build()

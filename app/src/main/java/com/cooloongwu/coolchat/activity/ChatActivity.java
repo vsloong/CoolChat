@@ -26,7 +26,7 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
-import com.cooloongwu.coolchat.base.GreenDAO;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
@@ -159,7 +159,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         if ("friend".equals(chatType)) {
             //如果是和好友聊天
             Log.e("加载聊天数据", "好友");
-            ChatFriendDao chatFriendDao = GreenDAO.getInstance(ChatActivity.this).getChatFriendDao();
+            ChatFriendDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatFriendDao();
             List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
                     .whereOr(ChatFriendDao.Properties.FromId.eq(chatId), ChatFriendDao.Properties.ToId.eq(chatId))
                     .limit(5)

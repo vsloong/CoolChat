@@ -1,5 +1,6 @@
 package com.cooloongwu.coolchat.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.activity.AddFriendsActivity;
 import com.cooloongwu.coolchat.adapter.ContactAdapter;
 import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
-import com.cooloongwu.coolchat.base.GreenDAO;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -33,7 +35,7 @@ import cz.msebera.android.httpclient.Header;
 /**
  * 联系人界面
  */
-public class ContactFragment extends BaseFragment {
+public class ContactFragment extends BaseFragment implements View.OnClickListener {
 
     private ContactAdapter adapter;
     private ArrayList<Contact> listData = new ArrayList<>();
@@ -62,6 +64,9 @@ public class ContactFragment extends BaseFragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layout_addfriends = (LinearLayout) view.findViewById(R.id.layout_addfriends);
         contact_text_num = (TextView) view.findViewById(R.id.contact_text_num);
+
+        TextView text_addfriend = (TextView) view.findViewById(R.id.text_addfriend);
+        text_addfriend.setOnClickListener(this);
 
         adapter = new ContactAdapter(getActivity(), listData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -127,7 +132,7 @@ public class ContactFragment extends BaseFragment {
      * @param contact 实体类
      */
     private void insertOrUpdateContactDB(Contact contact) {
-        ContactDao contactDao = GreenDAO.getInstance(getActivity()).getContactDao();
+        ContactDao contactDao = GreenDAOUtils.getInstance(getActivity()).getContactDao();
         Contact result = contactDao.queryBuilder()
                 .where(ContactDao.Properties.UserId.eq(contact.getUserId()))        //判断是否有该ID
                 .build()
@@ -141,6 +146,17 @@ public class ContactFragment extends BaseFragment {
             contactDao.update(result);
         } else {
             contactDao.insert(contact);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.text_addfriend:
+                getActivity().startActivity(new Intent(getActivity(), AddFriendsActivity.class));
+                break;
+            default:
+                break;
         }
     }
 }
