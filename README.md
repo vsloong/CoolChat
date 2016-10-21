@@ -124,7 +124,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
     -  [x] 本地存储消息内容
     -  [x] 发送接收图片
     -  [x] 发送接收音频
-    -  [ ] 发送接收视频
+    -  [x] 发送接收视频
     -  [ ] 给群组发送消息
     -  [ ] 添加、创建群组
     -  [ ] 添加好友
@@ -144,8 +144,8 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 ![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/main_conversation.jpg)
 ![image](./pictures/main_contact.jpg)     ![image](./pictures/chat_send.jpg)
 ![image](./pictures/chat_audio_image.jpg)     ![image](./pictures/chat_video.jpg)
-![image](./pictures/chat_video_edit.jpg)     ![image](./pictures/profile_me.jpg)
-![image](./pictures/profile_other.jpg)
+![image](./pictures/chat_video_edit.jpg)     ![image](./pictures/chat_video_image_audio.jpg)
+![image](./pictures/profile_me.jpg)     ![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览
 该app在开发中也引用了大量的第三方优秀控件、框架和SDK，感谢这些开源的作者

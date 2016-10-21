@@ -3,6 +3,7 @@ package com.cooloongwu.coolchat.base;
 import android.app.Application;
 import android.hardware.Camera;
 
+import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.qupai.QupaiAuth;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.duanqu.qupai.engine.session.MovieExportOptions;
@@ -35,7 +36,7 @@ public class MyApplication extends Application {
      * 初始化全局静态Client
      */
     private void initClient() {
-        Client.setClientGeneral(new AsyncHttpClient());
+        AsyncHttpClientUtils.setClientGeneral(new AsyncHttpClient());
     }
 
     /**

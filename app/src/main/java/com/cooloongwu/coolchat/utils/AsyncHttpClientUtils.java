@@ -1,4 +1,4 @@
-package com.cooloongwu.coolchat.base;
+package com.cooloongwu.coolchat.utils;
 
 import android.content.Context;
 
@@ -11,14 +11,18 @@ import com.loopj.android.http.RequestParams;
  * Created by CooLoongWu on 2016-9-26 14:55.
  */
 
-class Client {
+public class AsyncHttpClientUtils {
 
     private static AsyncHttpClient clientGeneral;
     private static final int CONNECT_TIME = 8 * 1000;
     private static final int RESPONSE_TIME = 10 * 1000;
 
-    private static final String TEST_SERVER = "http://121.42.187.66/coolchat/";          //APP接口测试服务器
-    private static final String OFFICIAL_SERVER = "http://121.42.187.66/coolchat/";      //APP接口正式服务器
+    public static final String SERVER_IP = "120.27.47.125";
+    public static final int SERVER_PORT = 8282;
+
+    private static final String SERVER_HTTP = "http://" + SERVER_IP;
+    private static final String TEST_SERVER = SERVER_HTTP + "/coolchat/";          //APP接口测试服务器
+    private static final String OFFICIAL_SERVER = SERVER_HTTP + "/coolchat/";      //APP接口正式服务器
 
     private static String BASE_SERVER = OFFICIAL_SERVER;
 
@@ -27,7 +31,7 @@ class Client {
      *
      * @param client 客户端
      */
-    static void setClientGeneral(AsyncHttpClient client) {
+    public static void setClientGeneral(AsyncHttpClient client) {
         clientGeneral = client;
         clientGeneral.setConnectTimeout(CONNECT_TIME);
         clientGeneral.setResponseTimeout(RESPONSE_TIME);

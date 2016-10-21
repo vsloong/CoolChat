@@ -527,7 +527,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 String thumbnails[] = result.getThumbnail();
                 result.getDuration();
 
-                Toast.makeText(this, "视频路径:" + videoPath + "图片路径:" + thumbnails[0], Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "视频路径:" + videoPath + "图片路径:" + thumbnails[0], Toast.LENGTH_SHORT).show();
                 Log.e("趣拍视频地址", videoPath);
                 Log.e("趣拍缩略图地址", thumbnails[0]);
                 startUpload(videoPath, thumbnails[0]);

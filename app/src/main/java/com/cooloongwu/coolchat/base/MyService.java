@@ -16,6 +16,7 @@ import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.entity.ChatGroup;
 import com.cooloongwu.coolchat.socket.SocketCallback;
 import com.cooloongwu.coolchat.socket.SocketConnect;
+import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
 import com.cooloongwu.greendao.gen.ChatGroupDao;
@@ -150,7 +151,7 @@ public class MyService extends Service {
                 Log.e("Service Socket", "已断开");
             }
         });
-        socketConnect.setRemoteAddress("121.42.187.66", 8282);
+        socketConnect.setRemoteAddress(AsyncHttpClientUtils.SERVER_IP, AsyncHttpClientUtils.SERVER_PORT);
         new Thread(socketConnect).start();
     }
 

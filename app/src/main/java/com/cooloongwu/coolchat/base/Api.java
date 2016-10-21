@@ -2,6 +2,7 @@ package com.cooloongwu.coolchat.base;
 
 import android.content.Context;
 
+import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -26,7 +27,7 @@ public class Api {
         RequestParams params = new RequestParams();
         params.add("userId", userId);
         params.add("password", password);
-        Client.post(context, URL_LOGIN, params, handler);
+        AsyncHttpClientUtils.post(context, URL_LOGIN, params, handler);
     }
 
     /**
@@ -39,6 +40,6 @@ public class Api {
     public static void getFriendsList(Context context, int userId, JsonHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.add("userId", String.valueOf(userId));
-        Client.post(context, URL_FRIENDS, params, handler);
+        AsyncHttpClientUtils.post(context, URL_FRIENDS, params, handler);
     }
 }
