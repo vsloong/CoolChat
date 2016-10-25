@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.AddFriendsActivity;
+import com.cooloongwu.coolchat.activity.GroupActivity;
 import com.cooloongwu.coolchat.adapter.ContactAdapter;
 import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
@@ -66,7 +67,9 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
         contact_text_num = (TextView) view.findViewById(R.id.contact_text_num);
 
         TextView text_addfriend = (TextView) view.findViewById(R.id.text_addfriend);
+        TextView text_group = (TextView) view.findViewById(R.id.text_group);
         text_addfriend.setOnClickListener(this);
+        text_group.setOnClickListener(this);
 
         adapter = new ContactAdapter(getActivity(), listData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -154,6 +157,9 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.text_addfriend:
                 getActivity().startActivity(new Intent(getActivity(), AddFriendsActivity.class));
+                break;
+            case R.id.text_group:
+                getActivity().startActivity(new Intent(getActivity(), GroupActivity.class));
                 break;
             default:
                 break;

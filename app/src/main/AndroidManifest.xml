@@ -59,6 +59,14 @@
         <activity
             android:name=".activity.AddFriendsActivity"
             android:label="@string/title_activity_add_friends"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.GroupActivity"
+            android:label="@string/title_activity_group"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.CreateGroupActivity"
+            android:label="@string/title_activity_create_group"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
