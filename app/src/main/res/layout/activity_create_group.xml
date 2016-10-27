@@ -42,13 +42,14 @@
                 android:textColor="@color/text_bg_unread" />
 
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/edit_group_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"
                 android:inputType="textEmailAddress" />
 
             <TextView
+                android:id="@+id/text_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
