@@ -1,16 +1,15 @@
 package com.cooloongwu.coolchat.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 
@@ -43,21 +42,35 @@ public class CreateGroupActivity extends AppCompatActivity {
 
 
         edit_group_name.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.length() == 20) {
-                    String name = s.toString();
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                text_num.setText(s.length() + "/20");
+                Editable editable = edit_group_name.getText();
+                int maxLength = 20;
+                int length = editable.length();//原字符串长度
+                if (length > maxLength) {//如果原字符串长度大于最大长度
+                    int selectEndIndex = Selection.getSelectionEnd(editable);//getSelectionEnd：获取光标结束的索引值
+                    String str = editable.toString();//旧字符串
+                    String newStr = str.substring(0, maxLength);//截取新字符串
+                    edit_group_name.setText(newStr);
+                    editable = edit_group_name.getText();
+                    int newLength = editable.length();//新字符串长度
+                    if (selectEndIndex > newLength) {//如果光标结束的索引值超过新字符串长度
+                        selectEndIndex = editable.length();
+                        Toast.makeText(CreateGroupActivity.this, "最多只能输入" + maxLength + "个字哦", Toast.LENGTH_SHORT).show();
+                    }
+                    Selection.setSelection(editable, selectEndIndex);//设置新光标所在的位置
+                } else {
+                    text_num.setText(s.length() + "/20");
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }
