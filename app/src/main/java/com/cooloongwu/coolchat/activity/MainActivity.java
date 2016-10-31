@@ -158,10 +158,11 @@ public class MainActivity extends BaseActivity
         switch (s) {
             case R.id.fab_create_group:
                 fam.close(true);
+                startActivity(new Intent(MainActivity.this, CreateGroupActivity.class));
                 break;
             case R.id.fab_invite_friend:
-                startActivity(new Intent(MainActivity.this, AddFriendsActivity.class));
                 fam.close(true);
+                startActivity(new Intent(MainActivity.this, AddFriendsActivity.class));
                 break;
             case R.id.fab_new_chat:
                 fam.close(true);

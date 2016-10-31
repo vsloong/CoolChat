@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +16,8 @@ import android.widget.Toast;
 import com.cooloongwu.coolchat.R;
 
 public class CreateGroupActivity extends AppCompatActivity {
+
+    private EditText edit_group_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        final EditText edit_group_name = (EditText) findViewById(R.id.edit_group_name);
+        edit_group_name = (EditText) findViewById(R.id.edit_group_name);
         final TextView text_num = (TextView) findViewById(R.id.text_num);
 
 
@@ -75,4 +79,26 @@ public class CreateGroupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_create_group, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_create:
+                String name = edit_group_name.getText().toString().trim();
+                if (name.isEmpty()) {
+                    Toast.makeText(CreateGroupActivity.this, "群组名不可为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CreateGroupActivity.this, "群组名为：" + name, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

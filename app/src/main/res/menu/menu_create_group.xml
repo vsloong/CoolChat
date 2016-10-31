@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cooloongwu.coolchat.activity.UserProfileActivity">
+    <item
+        android:id="@+id/action_create"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/icon_menu_create_group_ok"
+        android:title="" />
+</menu>
