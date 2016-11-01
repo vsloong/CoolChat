@@ -14,6 +14,7 @@ import com.loopj.android.http.RequestParams;
 public class Api {
     private static final String URL_LOGIN = "login";
     private static final String URL_FRIENDS = "friends";
+    private static final String URL_GROUPS = "groups";
 
     /**
      * 登陆的接口
@@ -41,5 +42,18 @@ public class Api {
         RequestParams params = new RequestParams();
         params.add("userId", String.valueOf(userId));
         AsyncHttpClientUtils.post(context, URL_FRIENDS, params, handler);
+    }
+
+    /**
+     * 得到群组列表
+     *
+     * @param context 上下文
+     * @param userId  用户ID
+     * @param handler 处理
+     */
+    public static void getGroupsList(Context context, int userId, JsonHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.add("userId", String.valueOf(userId));
+        AsyncHttpClientUtils.post(context, URL_GROUPS, params, handler);
     }
 }

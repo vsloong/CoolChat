@@ -27,6 +27,7 @@ public class DaoMaster extends AbstractDaoMaster {
         ChatGroupDao.createTable(db, ifNotExists);
         ContactDao.createTable(db, ifNotExists);
         ConversationDao.createTable(db, ifNotExists);
+        GroupDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -35,6 +36,7 @@ public class DaoMaster extends AbstractDaoMaster {
         ChatGroupDao.dropTable(db, ifExists);
         ContactDao.dropTable(db, ifExists);
         ConversationDao.dropTable(db, ifExists);
+        GroupDao.dropTable(db, ifExists);
     }
 
     /**
@@ -57,6 +59,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(ChatGroupDao.class);
         registerDaoClass(ContactDao.class);
         registerDaoClass(ConversationDao.class);
+        registerDaoClass(GroupDao.class);
     }
 
     public DaoSession newSession() {

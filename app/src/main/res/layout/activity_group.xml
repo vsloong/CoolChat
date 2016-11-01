@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fitsSystemWindows="true"
     tools:context="com.cooloongwu.coolchat.activity.GroupActivity">
 
@@ -33,9 +34,11 @@
             android:id="@+id/text_create_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/bg_ripple"
             android:clickable="true"
-            android:drawableLeft="@mipmap/main_contact_groups"
+            android:drawableLeft="@mipmap/icon_group_create_item_avatar"
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
             android:paddingBottom="8dp"
@@ -45,5 +48,61 @@
             android:text="创建新的群组"
             android:textColor="@color/black"
             android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/text_group_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群组（9）"
+            android:layout_margin="16dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/layout_create_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/group_empty_pic" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="创建群组，畅享多人通话"
+                    android:textColor="@color/text_brown"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="家人聊天，朋友聚会，工作讨论..."
+                    android:textColor="@color/text_brown"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </FrameLayout>
     </LinearLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>
