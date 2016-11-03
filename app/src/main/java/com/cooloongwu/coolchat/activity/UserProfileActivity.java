@@ -19,7 +19,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private String avatar;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
@@ -83,7 +82,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 intent.setClass(UserProfileActivity.this, ChatActivity.class);
                 intent.putExtra("chatId", chatId);
                 intent.putExtra("chatName", chatName);
-                intent.putExtra("chatType", "friend");
+                intent.putExtra("chatType", chatType);
                 startActivity(intent);
                 break;
             default:
