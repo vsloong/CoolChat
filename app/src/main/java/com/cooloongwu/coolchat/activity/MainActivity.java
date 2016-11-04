@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,11 +21,27 @@ import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.MyFragmentPagerAdapter;
+import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.entity.Contact;
+import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.greendao.gen.ContactDao;
+import com.cooloongwu.greendao.gen.GroupDao;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -37,6 +54,8 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
 
         initViews();
+        getFriendsList();
+        getGroupsList();
     }
 
     /**
@@ -184,4 +203,141 @@ public class MainActivity extends BaseActivity
                 break;
         }
     }
+
+    private void getFriendsList() {
+        Api.getFriendsList(MainActivity.this, AppConfig.getUserId(MainActivity.this), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.e("获取朋友列表成功", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    switch (status) {
+                        case 0:
+                            //没有好友
+                            break;
+                        case 1:
+                            //有好友
+                            JSONArray jsonArray = response.getJSONArray("friends");
+                            List<Contact> contacts = new ArrayList<>();
+                            int friendsNum = jsonArray.length();
+                            for (int i = 0; i < friendsNum; i++) {
+                                JSONObject user = jsonArray.getJSONObject(i);
+                                Contact contact = new Contact();
+                                contact.setUserId(user.getInt("userId"));
+                                contact.setName(user.getString("name"));
+                                contact.setAvatar(user.getString("avatar"));
+                                contact.setSex(user.getString("sex"));
+                                contacts.add(contact);
+
+                                insertOrUpdateContactDB(contact);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.e("获取朋友数据失败", "" + statusCode);
+            }
+        });
+    }
+
+    private void getGroupsList() {
+        Api.getGroupsList(MainActivity.this, AppConfig.getUserId(MainActivity.this), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.e("获取群组列表成功", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    switch (status) {
+                        case 0:
+                            //没有群组
+                            break;
+                        case 1:
+                            //有群组
+                            JSONArray jsonArray = response.getJSONArray("groups");
+                            int groupNum = jsonArray.length();
+                            if (groupNum > 0) {
+                                List<Group> groups = new ArrayList<>();
+                                for (int i = 0; i < groupNum; i++) {
+                                    JSONObject tempGroup = jsonArray.getJSONObject(i);
+                                    Group group = new Group();
+                                    group.setGroupId(tempGroup.getInt("groupId"));
+                                    group.setGroupName(tempGroup.getString("groupName"));
+                                    group.setGroupAvatar(tempGroup.getString("groupAvatar"));
+                                    groups.add(group);
+
+                                    insertOrUpdateGroupDB(group);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.e("获取群组数据失败", "" + statusCode);
+            }
+        });
+    }
+
+    /**
+     * 插入或者更新朋友数据
+     *
+     * @param contact 实体类
+     */
+    private void insertOrUpdateContactDB(Contact contact) {
+        ContactDao contactDao = GreenDAOUtils.getInstance(MainActivity.this).getContactDao();
+        Contact result = contactDao.queryBuilder()
+                .where(ContactDao.Properties.UserId.eq(contact.getUserId()))        //判断是否有该ID
+                .build()
+                .unique();
+        if (result != null) {
+            //如果有该用户
+            result.setSex(contact.getSex());
+            result.setName(contact.getName());
+            result.setAvatar(contact.getAvatar());
+            result.setPhone(contact.getPhone());
+            contactDao.update(result);
+        } else {
+            contactDao.insert(contact);
+        }
+    }
+
+    /**
+     * 插入或者更新群组数据
+     *
+     * @param group 实体类
+     */
+    private void insertOrUpdateGroupDB(Group group) {
+        GroupDao groupDao = GreenDAOUtils.getInstance(MainActivity.this).getGroupDao();
+        Group result = groupDao.queryBuilder()
+                .where(GroupDao.Properties.GroupId.eq(group.getGroupId()))      //判断是否有该ID
+                .build()
+                .unique();
+        if (result != null) {
+            //如果有该用户
+            result.setGroupAvatar(group.getGroupAvatar());
+            result.setGroupName(group.getGroupName());
+            result.setCreateTime(group.getCreateTime());
+            groupDao.update(result);
+        } else {
+            groupDao.insert(group);
+        }
+    }
+
 }

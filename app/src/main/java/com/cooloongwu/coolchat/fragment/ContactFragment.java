@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.AddFriendsActivity;
@@ -57,7 +58,7 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         initViews(view);
-        getFriendsList();
+        getFriendsListFromDB();
         return view;
     }
 
@@ -76,79 +77,20 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
         recyclerView.setAdapter(adapter);
     }
 
-    private void getFriendsList() {
-        Api.getFriendsList(getActivity(), AppConfig.getUserId(getActivity()), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Log.e("获取朋友列表成功", response.toString());
-                try {
-                    int status = response.getInt("status");
-                    switch (status) {
-                        case 0:
-                            //没有好友
-                            layout_addfriends.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                            break;
-                        case 1:
-                            //有好友
-                            layout_addfriends.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            JSONArray jsonArray = response.getJSONArray("friends");
-                            List<Contact> contacts = new ArrayList<>();
-                            int friendsNum = jsonArray.length();
-                            contact_text_num.setText("好友（" + friendsNum + "）");
-                            for (int i = 0; i < friendsNum; i++) {
-                                JSONObject user = jsonArray.getJSONObject(i);
-                                Contact contact = new Contact();
-                                contact.setUserId(user.getInt("userId"));
-                                contact.setName(user.getString("name"));
-                                contact.setAvatar(user.getString("avatar"));
-                                contact.setSex(user.getString("sex"));
-                                contacts.add(contact);
-
-                                insertOrUpdateContactDB(contact);
-                            }
-                            listData.addAll(contacts);
-                            adapter.notifyDataSetChanged();
-
-                            break;
-                        default:
-                            break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("获取数据失败", "" + statusCode);
-            }
-        });
-    }
-
-    /**
-     * 插入或者更新数据
-     *
-     * @param contact 实体类
-     */
-    private void insertOrUpdateContactDB(Contact contact) {
+    private void getFriendsListFromDB() {
         ContactDao contactDao = GreenDAOUtils.getInstance(getActivity()).getContactDao();
-        Contact result = contactDao.queryBuilder()
-                .where(ContactDao.Properties.UserId.eq(contact.getUserId()))        //判断是否有该ID
+        List<Contact> contacts = contactDao.queryBuilder()
                 .build()
-                .unique();
-        if (result != null) {
-            //如果有该用户
-            result.setSex(contact.getSex());
-            result.setName(contact.getName());
-            result.setAvatar(contact.getAvatar());
-            result.setPhone(contact.getPhone());
-            contactDao.update(result);
+                .list();
+        if (contacts.size() > 0) {
+            layout_addfriends.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            contact_text_num.setText("好友（" + contacts.size() + "）");
+            listData.addAll(contacts);
+            adapter.notifyDataSetChanged();
         } else {
-            contactDao.insert(contact);
+            layout_addfriends.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 

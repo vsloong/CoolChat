@@ -15,11 +15,13 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ConversationAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
+import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
+import com.cooloongwu.greendao.gen.GroupDao;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -152,8 +154,8 @@ public class ConversationFragment extends BaseFragment {
     @Subscribe
     public void onEventMainThread(JSONObject jsonObject) throws JSONException {
         int chatId;                     //默认与其他人或者群组聊天的ID（非自己）
-        String chatName = "";           //默认其他人或者群组的名称（非自己）
-        String chatAvatar = "";         //默认其他人或者群组的头像（非自己）
+        String chatName;           //默认其他人或者群组的名称（非自己）
+        String chatAvatar;         //默认其他人或者群组的头像（非自己）
         String chatType = jsonObject.getString("toWhich");   //聊天的类型
         int fromId = jsonObject.getInt("fromId");
         int toId = jsonObject.getInt("toId");
@@ -180,6 +182,14 @@ public class ConversationFragment extends BaseFragment {
             //如果在跟群组聊天，那么toId就是群组的ID
             chatId = toId;
             chatType = "group";
+            GroupDao groupDao = GreenDAOUtils.getInstance(getActivity()).getGroupDao();
+            Group group = groupDao.queryBuilder()
+                    .where(GroupDao.Properties.GroupId.eq(chatId))
+                    .build()
+                    .unique();
+            Log.e("得到的群组的数据", group.getGroupName() + "");
+            chatName = group.getGroupName();
+            chatAvatar = group.getGroupAvatar();
         }
 
         int unReadNum;

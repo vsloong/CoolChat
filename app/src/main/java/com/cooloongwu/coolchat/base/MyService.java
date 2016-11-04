@@ -120,6 +120,7 @@ public class MyService extends Service {
                         chatGroup.setContentType(contentType);
                         chatGroup.setToGroupId(toId);
                         chatGroup.setTime(time);
+
                         //chatGroup.setIsRead(false);           //消息是否已读
                         saveChatGroupData(chatGroup);
                     }

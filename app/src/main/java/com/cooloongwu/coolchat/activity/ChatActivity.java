@@ -26,6 +26,7 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.entity.ChatGroup;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
@@ -72,7 +73,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isKeyboard = false;
     private boolean isVoice = true;
 
-    private ArrayList<ChatFriend> listData = new ArrayList<>();
+    private ArrayList<ChatFriend> chatFriendListData = new ArrayList<>();
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
 
@@ -131,7 +132,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
         //layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatAdapter(ChatActivity.this, listData);
+        adapter = new ChatAdapter(ChatActivity.this, chatFriendListData);
         recyclerView.setAdapter(adapter);
         edit_input = (EditText) findViewById(R.id.edit_input);
         edit_input.addTextChangedListener(textWatcher);
@@ -175,7 +176,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     Log.e("聊天语音长度", chatFriend.getAudioLength() + "");
                 }
             }
-            listData.addAll(chatFriends);
+            chatFriendListData.addAll(chatFriends);
             adapter.notifyDataSetChanged();
             int itemCount = adapter.getItemCount() - 1;
             if (itemCount > 0) {
@@ -234,7 +235,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         }
 
                         chatFriends.add(chatFriend);
-                        listData.addAll(chatFriends);
+                        chatFriendListData.addAll(chatFriends);
 
                         Message msg = new Message();
                         msg.what = 0;
@@ -245,7 +246,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     //当前在跟群组聊天，需判断是不是当前群组的消息
                     if (chatId == toId) {
-                        // TODO 是当前群组的聊天消息
+                        List<ChatGroup> chatGroups = new ArrayList<>();
+                        ChatGroup chatGroup = new ChatGroup();
+                        chatGroup.setContent(content);
+                        chatGroup.setContentType(contentType);
+                        chatGroup.setFromAvatar(fromAvatar);
+                        chatGroup.setFromId(fromId);
+                        chatGroup.setTime(time);
+                        chatGroup.setToGroupId(toId);
+                        chatGroup.setIsRead(true);
+                        if ("audio".equals(contentType)) {
+                            //chatGroup.setAudioLength(jsonObject.getString("audioLength"));
+                        }
                     } else {
                         //不是当前群组的聊天消息，提示来消息了即可
                         showOtherMsg(fromName + "：" + content);

@@ -65,9 +65,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.num.setVisibility(View.GONE);
         }
 
-        Picasso.with(context)
-                .load(listData.get(position).getAvatar())
-                .into(holder.avatar);
+        if (!listData.get(position).getAvatar().isEmpty()) {
+            Picasso.with(context)
+                    .load(listData.get(position).getAvatar())
+                    .into(holder.avatar);
+        }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

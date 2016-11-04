@@ -16,6 +16,8 @@ import com.cooloongwu.coolchat.adapter.GroupAdapter;
 import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.greendao.gen.GroupDao;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -42,7 +44,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
         initToolbar();
         initViews();
-        initData();
+        getGroupListFromDB();
     }
 
     private void initToolbar() {
@@ -68,49 +70,16 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         text_create_group.setOnClickListener(this);
     }
 
-    private void initData() {
-        Api.getGroupsList(GroupActivity.this, AppConfig.getUserId(GroupActivity.this), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Log.e("获取群组列表成功", response.toString());
-                try {
-                    int status = response.getInt("status");
-                    switch (status) {
-                        case 1:
-                            JSONArray jsonArray = response.getJSONArray("groups");
-                            int groupNum = jsonArray.length();
-                            text_group_num.setText("群组（" + groupNum + "）");
-                            if (groupNum > 0) {
-                                layout_create_group.setVisibility(View.GONE);
-                                List<Group> groups = new ArrayList<>();
-                                for (int i = 0; i < groupNum; i++) {
-                                    JSONObject tempGroup = jsonArray.getJSONObject(i);
-                                    Group group = new Group();
-                                    group.setGroupId(tempGroup.getInt("groupId"));
-                                    group.setGroupName(tempGroup.getString("groupName"));
-                                    group.setGroupAvatar(tempGroup.getString("groupAvatar"));
-                                    groups.add(group);
-                                }
-                                listData.addAll(groups);
-                                adapter.notifyDataSetChanged();
-                            }
-                            break;
-                        case 0:
-                            break;
-                        default:
-                            break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+    private void getGroupListFromDB() {
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
+        GroupDao groupDao = GreenDAOUtils.getInstance(GroupActivity.this).getGroupDao();
+        List<Group> groups = groupDao.queryBuilder().build().list();
+        if (groups.size() > 0) {
+            text_group_num.setText("群组（" + groups.size() + "）");
+            layout_create_group.setVisibility(View.GONE);
+            listData.addAll(groups);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

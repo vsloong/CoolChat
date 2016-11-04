@@ -10,6 +10,7 @@ import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.DaoMaster;
 import com.cooloongwu.greendao.gen.DaoSession;
+import com.cooloongwu.greendao.gen.GroupDao;
 
 /**
  * 操作GreenDAO的类
@@ -40,6 +41,10 @@ public class GreenDAOUtils {
 
     public ContactDao getContactDao() {
         return getDaoSession().getContactDao();
+    }
+
+    public GroupDao getGroupDao() {
+        return getDaoSession().getGroupDao();
     }
 
     public ConversationDao getConversationDao() {
