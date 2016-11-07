@@ -4,34 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.AddFriendsActivity;
 import com.cooloongwu.coolchat.activity.GroupActivity;
 import com.cooloongwu.coolchat.adapter.ContactAdapter;
-import com.cooloongwu.coolchat.base.Api;
-import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseFragment;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.greendao.gen.ContactDao;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -50,7 +42,7 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -94,6 +86,11 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    @Subscribe
+    public void onEventMainThread(Contact contact) {
+        getFriendsListFromDB();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -106,5 +103,11 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -34,6 +34,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -282,6 +283,9 @@ public class MainActivity extends BaseActivity
                         default:
                             break;
                     }
+
+                    //通知Fragment刷新
+                    EventBus.getDefault().post(new Contact());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
