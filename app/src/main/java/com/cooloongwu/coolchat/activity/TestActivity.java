@@ -2,17 +2,17 @@ package com.cooloongwu.coolchat.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.BaseActivity;
 
 import java.io.IOException;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends BaseActivity {
 
     private IjkMediaPlayer ijkMediaPlayer;
 

@@ -67,6 +67,10 @@
         <activity
             android:name=".activity.CreateGroupActivity"
             android:label="@string/title_activity_create_group"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -1,7 +1,6 @@
 package com.cooloongwu.coolchat.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,10 +8,11 @@ import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
+import com.cooloongwu.coolchat.base.BaseActivity;
 import com.squareup.picasso.Picasso;
 
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -58,4 +58,12 @@ public class GreenDAOUtils {
     public ChatGroupDao getChatGroupDao() {
         return getDaoSession().getChatGroupDao();
     }
+
+    public void clearAllData() {
+        getContactDao().deleteAll();
+        getGroupDao().deleteAll();
+        getContactDao().deleteAll();
+        getChatFriendDao().deleteAll();
+        getChatGroupDao().deleteAll();
+    }
 }

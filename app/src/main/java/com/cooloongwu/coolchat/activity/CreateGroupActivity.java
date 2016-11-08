@@ -1,7 +1,6 @@
 package com.cooloongwu.coolchat.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
@@ -14,8 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.BaseActivity;
 
-public class CreateGroupActivity extends AppCompatActivity {
+public class CreateGroupActivity extends BaseActivity {
 
     private EditText edit_group_name;
 

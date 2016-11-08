@@ -2,7 +2,6 @@ package com.cooloongwu.coolchat.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,8 +9,9 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.BaseActivity;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
 
     private int chatId;
     private String chatName;

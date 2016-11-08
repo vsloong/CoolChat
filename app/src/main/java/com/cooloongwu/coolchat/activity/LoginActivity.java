@@ -2,7 +2,6 @@ package com.cooloongwu.coolchat.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
+import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.MyService;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText edit_phone;
     private EditText edit_password;

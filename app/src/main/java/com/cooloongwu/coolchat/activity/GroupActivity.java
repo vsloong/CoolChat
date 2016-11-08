@@ -2,34 +2,24 @@ package com.cooloongwu.coolchat.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.GroupAdapter;
-import com.cooloongwu.coolchat.base.Api;
-import com.cooloongwu.coolchat.base.AppConfig;
+import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.GroupDao;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
-
-public class GroupActivity extends AppCompatActivity implements View.OnClickListener {
+public class GroupActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout layout_create_group;
     private RecyclerView recyclerView;
