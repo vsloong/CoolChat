@@ -229,6 +229,9 @@ public class MainActivity extends BaseActivity
                         default:
                             break;
                     }
+
+                    //通知联系人Fragment页面刷新
+                    EventBus.getDefault().post(new Contact());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -275,9 +278,6 @@ public class MainActivity extends BaseActivity
                         default:
                             break;
                     }
-
-                    //通知Fragment刷新
-                    EventBus.getDefault().post(new Contact());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

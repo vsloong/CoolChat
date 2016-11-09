@@ -13,13 +13,11 @@ import android.widget.RemoteViews;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.ChatFriend;
-import com.cooloongwu.coolchat.entity.ChatGroup;
 import com.cooloongwu.coolchat.socket.SocketCallback;
 import com.cooloongwu.coolchat.socket.SocketConnect;
 import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
-import com.cooloongwu.greendao.gen.ChatGroupDao;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -94,37 +92,22 @@ public class MyService extends Service {
                     String contentType = jsonObject.getString("contentType");
                     String time = jsonObject.getString("time");
 
-                    if ("friend".equals(toWhich)) {
-                        //把好友的聊天数据保存
-                        ChatFriend chatFriend = new ChatFriend();
-                        chatFriend.setFromId(fromId);
-                        chatFriend.setFromAvatar(fromAvatar);
-                        chatFriend.setFromName(fromName);
-                        chatFriend.setContent(content);
-                        chatFriend.setContentType(contentType);
-                        chatFriend.setToId(toId);
-                        chatFriend.setTime(time);
-                        //chatFriend.setIsRead(false);            //消息是否已读
-                        if ("audio".equals(contentType)) {
-                            chatFriend.setAudioLength(jsonObject.getString("audioLength"));
-                        }
-                        //保存聊天数据到本地数据库
-                        saveChatFriendData(chatFriend);
-                    } else {
-                        //把群组的聊天数据保存
-                        ChatGroup chatGroup = new ChatGroup();
-                        chatGroup.setFromId(fromId);
-                        chatGroup.setFromAvatar(fromAvatar);
-                        chatGroup.setFromName(fromName);
-                        chatGroup.setContent(content);
-                        chatGroup.setContentType(contentType);
-                        chatGroup.setToGroupId(toId);
-                        chatGroup.setTime(time);
-
-                        //chatGroup.setIsRead(false);           //消息是否已读
-                        saveChatGroupData(chatGroup);
+                    //把聊天数据保存
+                    ChatFriend chatFriend = new ChatFriend();
+                    chatFriend.setFromId(fromId);
+                    chatFriend.setChatType(toWhich);
+                    chatFriend.setFromAvatar(fromAvatar);
+                    chatFriend.setFromName(fromName);
+                    chatFriend.setContent(content);
+                    chatFriend.setContentType(contentType);
+                    chatFriend.setToId(toId);
+                    chatFriend.setTime(time);
+                    //chatFriend.setIsRead(false);            //消息是否已读
+                    if ("audio".equals(contentType)) {
+                        chatFriend.setAudioLength(jsonObject.getString("audioLength"));
                     }
-
+                    //保存聊天数据到本地数据库
+                    saveChatFriendData(chatFriend);
 
                     //展示通知(如果不是自己发的也不是当前聊天的人或群组发的就提示)
                     if (!(fromId == AppConfig.getUserId(MyService.this)
@@ -217,9 +200,5 @@ public class MyService extends Service {
         chatFriendDao.insert(chatFriend);
     }
 
-    private void saveChatGroupData(ChatGroup chatGroup) {
-        ChatGroupDao chatGroupDao = new GreenDAOUtils(this).getChatGroupDao();
-        chatGroupDao.insert(chatGroup);
-    }
 
 }

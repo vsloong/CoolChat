@@ -26,7 +26,6 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
-import com.cooloongwu.coolchat.entity.ChatGroup;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.ChatFriend;
@@ -157,35 +156,32 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * 加载最近的聊天消息，默认5条（QQ是15条）
      */
     private void initRecentChatData() {
-        if ("friend".equals(chatType)) {
-            //如果是和好友聊天
-            Log.e("加载聊天数据", "好友");
-            ChatFriendDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatFriendDao();
-            List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
-                    .whereOr(ChatFriendDao.Properties.FromId.eq(chatId), ChatFriendDao.Properties.ToId.eq(chatId))
-                    .limit(5)
-                    .orderDesc(ChatFriendDao.Properties.Time)
-                    .build()
-                    .list();
-            //倒序排列下
-            Collections.reverse(chatFriends);
-            for (ChatFriend chatFriend : chatFriends) {
-                Log.e("聊天内容", chatFriend.getContent());
-                Log.e("聊天内容类型", chatFriend.getContentType());
-                if ("audio".equals(chatFriend.getContentType())) {
-                    Log.e("聊天语音长度", chatFriend.getAudioLength() + "");
-                }
+        //如果是和好友聊天
+        Log.e("加载聊天数据", "好友");
+        ChatFriendDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatFriendDao();
+        List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
+                .where(ChatFriendDao.Properties.ChatType.eq(chatType))
+                .whereOr(ChatFriendDao.Properties.FromId.eq(chatId), ChatFriendDao.Properties.ToId.eq(chatId))
+                .limit(5)
+                .orderDesc(ChatFriendDao.Properties.Time)
+                .build()
+                .list();
+        //倒序排列下
+        Collections.reverse(chatFriends);
+        for (ChatFriend chatFriend : chatFriends) {
+            Log.e("聊天内容", chatFriend.getContent());
+            Log.e("聊天内容类型", chatFriend.getContentType());
+            if ("audio".equals(chatFriend.getContentType())) {
+                Log.e("聊天语音长度", chatFriend.getAudioLength() + "");
             }
-            chatFriendListData.addAll(chatFriends);
-            adapter.notifyDataSetChanged();
-            int itemCount = adapter.getItemCount() - 1;
-            if (itemCount > 0) {
-                recyclerView.smoothScrollToPosition(itemCount);
-            }
-        } else {
-            //如果是和群组聊天
-            Log.e("加载聊天数据", "群组");
         }
+        chatFriendListData.addAll(chatFriends);
+        adapter.notifyDataSetChanged();
+        int itemCount = adapter.getItemCount() - 1;
+        if (itemCount > 0) {
+            recyclerView.smoothScrollToPosition(itemCount);
+        }
+
     }
 
     @Subscribe
@@ -246,18 +242,24 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     //当前在跟群组聊天，需判断是不是当前群组的消息
                     if (chatId == toId) {
-                        List<ChatGroup> chatGroups = new ArrayList<>();
-                        ChatGroup chatGroup = new ChatGroup();
-                        chatGroup.setContent(content);
-                        chatGroup.setContentType(contentType);
-                        chatGroup.setFromAvatar(fromAvatar);
-                        chatGroup.setFromId(fromId);
-                        chatGroup.setTime(time);
-                        chatGroup.setToGroupId(toId);
-                        chatGroup.setIsRead(true);
+                        List<ChatFriend> chatFriends = new ArrayList<>();
+                        ChatFriend chatFriend = new ChatFriend();
+                        chatFriend.setContent(content);
+                        chatFriend.setContentType(contentType);
+                        chatFriend.setFromAvatar(fromAvatar);
+                        chatFriend.setFromId(fromId);
+                        chatFriend.setTime(time);
+                        chatFriend.setToId(toId);
+                        chatFriend.setIsRead(true);
                         if ("audio".equals(contentType)) {
-                            //chatGroup.setAudioLength(jsonObject.getString("audioLength"));
+                            chatFriend.setAudioLength(jsonObject.getString("audioLength"));
                         }
+                        chatFriends.add(chatFriend);
+                        chatFriendListData.addAll(chatFriends);
+
+                        Message msg = new Message();
+                        msg.what = 0;
+                        handler.sendMessage(msg);
                     } else {
                         //不是当前群组的聊天消息，提示来消息了即可
                         showOtherMsg(fromName + "：" + content);

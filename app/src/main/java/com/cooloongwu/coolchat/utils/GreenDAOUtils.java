@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.greendao.gen.ChatFriendDao;
-import com.cooloongwu.greendao.gen.ChatGroupDao;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.DaoMaster;
@@ -55,15 +54,10 @@ public class GreenDAOUtils {
         return getDaoSession().getChatFriendDao();
     }
 
-    public ChatGroupDao getChatGroupDao() {
-        return getDaoSession().getChatGroupDao();
-    }
-
     public void clearAllData() {
         getContactDao().deleteAll();
         getGroupDao().deleteAll();
         getContactDao().deleteAll();
         getChatFriendDao().deleteAll();
-        getChatGroupDao().deleteAll();
     }
 }
