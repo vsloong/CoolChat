@@ -78,6 +78,8 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
             layout_addfriends.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             contact_text_num.setText("好友（" + contacts.size() + "）");
+            //加载前清空下，否则更新时会导致重复加载
+            listData.clear();
             listData.addAll(contacts);
             adapter.notifyDataSetChanged();
         } else {
