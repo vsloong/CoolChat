@@ -109,6 +109,7 @@ public class ConversationFragment extends BaseFragment {
         if (result != null) {
             result.setContent(conversation.getContent());
             result.setContentType(conversation.getContentType());
+            result.setTime(conversation.getTime());
             result.setUnReadNum(conversation.getUnReadNum());
             conversationDao.update(result);
         } else {
@@ -162,6 +163,7 @@ public class ConversationFragment extends BaseFragment {
         String content = jsonObject.getString("content");
         String contentType = jsonObject.getString("contentType");
         String time = jsonObject.getString("time");
+        Log.e("得到的消息的时间", time);
         if ("friend".equals(chatType)) {
             //如果是好友发来的那么要判断好友ID是fromId还是toId
             if (fromId == AppConfig.getUserId(getActivity())) {

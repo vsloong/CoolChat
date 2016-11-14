@@ -58,8 +58,9 @@ public class SocketConnect implements Runnable {
                 Log.e("Socket", "数据读取错误-" + e.toString());
             } finally {
                 //重连
-                writeRunnable.stop();
-                mSocket.disconnect();
+                disconnect();
+//                writeRunnable.stop();
+//                mSocket.disconnect();
             }
         }
     }
