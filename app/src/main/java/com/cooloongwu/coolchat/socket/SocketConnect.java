@@ -13,7 +13,7 @@ public class SocketConnect implements Runnable {
 
     private boolean isConnect = false;// 是否连接服务器
     private boolean isWrite = false;// 是否发送数据
-    private static final Vector<byte[]> datas = new Vector<byte[]>();// 待发送数据队列
+    private static final Vector<byte[]> data = new Vector<>();// 待发送数据队列
     private SocketBase mSocket;// socket连接
     private WriteRunnable writeRunnable;// 发送数据线程
     private String ip = null;
@@ -58,9 +58,9 @@ public class SocketConnect implements Runnable {
                 Log.e("Socket", "数据读取错误-" + e.toString());
             } finally {
                 //重连
-                disconnect();
-//                writeRunnable.stop();
-//                mSocket.disconnect();
+//                disconnect();
+                writeRunnable.stop();
+                mSocket.disconnect();
             }
         }
     }
@@ -68,7 +68,7 @@ public class SocketConnect implements Runnable {
     /**
      * 关闭服务器连接
      */
-    public synchronized void disconnect() {
+    private synchronized void disconnect() {
         isConnect = false;
         this.notify();
         resetConnect();
@@ -77,7 +77,7 @@ public class SocketConnect implements Runnable {
     /**
      * 重置连接
      */
-    public void resetConnect() {
+    private void resetConnect() {
         writeRunnable.stop();// 发送停止信息
         mSocket.disconnect();
     }
@@ -122,18 +122,18 @@ public class SocketConnect implements Runnable {
 
         @Override
         public void run() {
-            System.out.println(">TCP发送线程开启<");
+            Log.e(">TCP发送线程开启<", "" + writeRunnable.hashCode());
             while (isWrite) {
                 synchronized (this) {
-                    if (datas.size() <= 0) {
+                    if (data.size() <= 0) {
                         try {
                             this.wait();// 等待发送数据
                         } catch (InterruptedException e) {
                             continue;
                         }
                     }
-                    while (datas.size() > 0) {
-                        byte[] buffer = datas.remove(0);// 获取一条发送数据
+                    while (data.size() > 0) {
+                        byte[] buffer = data.remove(0);// 获取一条发送数据
                         if (isWrite) {
                             writes(buffer);// 发送数据
                         } else {
@@ -142,7 +142,7 @@ public class SocketConnect implements Runnable {
                     }
                 }
             }
-            System.out.println(">TCP发送线程结束<");
+            Log.e(">TCP发送线程结束<", "" + writeRunnable.hashCode());
         }
 
         /**
@@ -150,12 +150,12 @@ public class SocketConnect implements Runnable {
          *
          * @param buffer 数据字节
          */
-        public synchronized void write(byte[] buffer) {
-            datas.add(buffer);// 将发送数据添加到发送队列
+        synchronized void write(byte[] buffer) {
+            data.add(buffer);// 将发送数据添加到发送队列
             this.notify();// 取消等待
         }
 
-        public synchronized void stop() {
+        synchronized void stop() {
             isWrite = false;
             this.notify();
         }
