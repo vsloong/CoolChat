@@ -5,21 +5,21 @@ package com.cooloongwu.coolchat.socket;
  * 获取网络数据的回调接口
  * Created by CooLoongWu on 2016-8-8 14:29.
  */
-public abstract interface SocketCallback {
+public interface SocketCallback {
     /**
      * 当建立连接时的回调
      */
-    public abstract void connected();
+    void connected();
 
     /**
      * 当获取到网络数据时的回调
      *
      * @param buffer 字节数据
      */
-    public abstract void receive(byte[] buffer);
+    void receive(byte[] buffer);
 
     /**
      * 当连接断开时的回调
      */
-    public abstract void disconnect();
+    void disconnect();
 }

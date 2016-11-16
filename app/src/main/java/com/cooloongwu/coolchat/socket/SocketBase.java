@@ -12,19 +12,18 @@ import java.net.Socket;
  * Socket连接的操作类
  * Created by CooLoongWu on 2016-8-8 14:27.
  */
-public class SocketBase {
+class SocketBase {
     private Socket mSocket;// socket连接对象
     private DataOutputStream out;
     private DataInputStream in;// 输入流
     private SocketCallback callback;// 信息回调接口
-    private int timeOut = 1000 * 30;
 
     /**
      * 构造方法传入信息回调接口对象
      *
      * @param callback 回调接口
      */
-    public SocketBase(SocketCallback callback) {
+    SocketBase(SocketCallback callback) {
         this.callback = callback;
     }
 
@@ -32,11 +31,11 @@ public class SocketBase {
     /**
      * 连接服务器
      *
-     * @param ip
-     * @param port
+     * @param ip   IP地址
+     * @param port 端口号
      * @throws Exception
      */
-    public void connect(final String ip, final int port) throws Exception {
+    void connect(final String ip, final int port) throws Exception {
         try {
             mSocket = new Socket(ip, port);
 
@@ -58,14 +57,11 @@ public class SocketBase {
      * @param timeOut 超时时间
      */
     public void setTimeOut(int timeOut) {
-        this.timeOut = timeOut;
+        int timeOut1 = timeOut;
     }
 
     public boolean isConnected() {
-        if (mSocket != null) {
-            return mSocket.isConnected();
-        }
-        return false;
+        return mSocket != null && mSocket.isConnected();
     }
 
     /**
@@ -74,7 +70,7 @@ public class SocketBase {
      * @param buffer 信息字节数据
      * @throws IOException
      */
-    public void write(byte[] buffer) throws IOException {
+    void write(byte[] buffer) throws IOException {
         if (out != null) {
             out.write(buffer);
             out.flush();
@@ -83,10 +79,8 @@ public class SocketBase {
 
     /**
      * 断开连接
-     *
-     * @throws IOException
      */
-    public void disconnect() {
+    void disconnect() {
         try {
             if (mSocket != null) {
                 if (!mSocket.isInputShutdown()) {
@@ -118,7 +112,7 @@ public class SocketBase {
      *
      * @throws IOException
      */
-    public void read() throws IOException {
+    void read() throws IOException {
         if (in != null) {
             byte[] buffer = new byte[1024];// 缓冲区字节数组，信息不能大于此缓冲区
             byte[] tmpBuffer;// 临时缓冲区
@@ -127,7 +121,6 @@ public class SocketBase {
                 tmpBuffer = new byte[len];// 创建临时缓冲区
                 System.arraycopy(buffer, 0, tmpBuffer, 0, len);// 将数据拷贝到临时缓冲区
                 callback.receive(tmpBuffer);// 调用回调接口传入得到的数据
-                tmpBuffer = null;
             }
         }
     }

@@ -25,8 +25,12 @@ public class SocketConnect implements Runnable {
      * @param callback 回调接口
      */
     public SocketConnect(SocketCallback callback) {
-        mSocket = new SocketBase(callback);// 创建socket连接
-        writeRunnable = new WriteRunnable();// 创建发送线程
+        if (mSocket == null) {
+            mSocket = new SocketBase(callback);// 创建socket连接
+        }
+        if (writeRunnable == null) {
+            writeRunnable = new WriteRunnable();// 创建发送线程
+        }
     }
 
     @Override
