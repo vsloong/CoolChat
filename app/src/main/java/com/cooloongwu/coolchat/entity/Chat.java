@@ -5,12 +5,11 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
- * 同好友条
+ * 聊天的实体类（与群组或者好友聊天）
  * Created by CooLoongWu on 2016-9-15.
  */
 @Entity
-public class ChatFriend {
-
+public class Chat {
     @Id
     private Long id;
     private int fromId;             //用户ID
@@ -24,10 +23,10 @@ public class ChatFriend {
     private String time;            //发送时间
     private boolean isRead;         //消息是否已读
 
-    @Generated(hash = 936331378)
-    public ChatFriend(Long id, int fromId, int toId, String chatType, String fromName,
-                      String fromAvatar, String content, String contentType, String audioLength,
-                      String time, boolean isRead) {
+    @Generated(hash = 1372647985)
+    public Chat(Long id, int fromId, int toId, String chatType, String fromName,
+                String fromAvatar, String content, String contentType,
+                String audioLength, String time, boolean isRead) {
         this.id = id;
         this.fromId = fromId;
         this.toId = toId;
@@ -41,8 +40,8 @@ public class ChatFriend {
         this.isRead = isRead;
     }
 
-    @Generated(hash = 230513170)
-    public ChatFriend() {
+    @Generated(hash = 519536279)
+    public Chat() {
     }
 
     public Long getId() {
@@ -67,6 +66,14 @@ public class ChatFriend {
 
     public void setToId(int toId) {
         this.toId = toId;
+    }
+
+    public String getChatType() {
+        return this.chatType;
+    }
+
+    public void setChatType(String chatType) {
+        this.chatType = chatType;
     }
 
     public String getFromName() {
@@ -101,6 +108,14 @@ public class ChatFriend {
         this.contentType = contentType;
     }
 
+    public String getAudioLength() {
+        return this.audioLength;
+    }
+
+    public void setAudioLength(String audioLength) {
+        this.audioLength = audioLength;
+    }
+
     public String getTime() {
         return this.time;
     }
@@ -116,22 +131,5 @@ public class ChatFriend {
     public void setIsRead(boolean isRead) {
         this.isRead = isRead;
     }
-
-    public String getAudioLength() {
-        return this.audioLength;
-    }
-
-    public void setAudioLength(String audioLength) {
-        this.audioLength = audioLength;
-    }
-
-    public String getChatType() {
-        return this.chatType;
-    }
-
-    public void setChatType(String chatType) {
-        this.chatType = chatType;
-    }
-
 
 }

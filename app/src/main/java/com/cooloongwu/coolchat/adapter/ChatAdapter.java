@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
-import com.cooloongwu.coolchat.entity.ChatFriend;
+import com.cooloongwu.coolchat.entity.Chat;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private ArrayList<ChatFriend> listData;
+    private ArrayList<Chat> listData;
 
     //建立枚举 2个item 类型
     private enum ITEM_TYPE {
@@ -45,7 +45,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         SELF_VIDEO
     }
 
-    public ChatAdapter(Context context, ArrayList<ChatFriend> listData) {
+    public ChatAdapter(Context context, ArrayList<Chat> listData) {
         this.context = context;
         this.listData = listData;
         this.layoutInflater = LayoutInflater.from(context);

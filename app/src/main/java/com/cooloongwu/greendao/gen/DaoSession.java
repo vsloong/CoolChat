@@ -8,12 +8,12 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.cooloongwu.coolchat.entity.ChatFriend;
+import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
 
-import com.cooloongwu.greendao.gen.ChatFriendDao;
+import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
@@ -27,12 +27,12 @@ import com.cooloongwu.greendao.gen.GroupDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig chatFriendDaoConfig;
+    private final DaoConfig chatDaoConfig;
     private final DaoConfig contactDaoConfig;
     private final DaoConfig conversationDaoConfig;
     private final DaoConfig groupDaoConfig;
 
-    private final ChatFriendDao chatFriendDao;
+    private final ChatDao chatDao;
     private final ContactDao contactDao;
     private final ConversationDao conversationDao;
     private final GroupDao groupDao;
@@ -41,8 +41,8 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        chatFriendDaoConfig = daoConfigMap.get(ChatFriendDao.class).clone();
-        chatFriendDaoConfig.initIdentityScope(type);
+        chatDaoConfig = daoConfigMap.get(ChatDao.class).clone();
+        chatDaoConfig.initIdentityScope(type);
 
         contactDaoConfig = daoConfigMap.get(ContactDao.class).clone();
         contactDaoConfig.initIdentityScope(type);
@@ -53,26 +53,26 @@ public class DaoSession extends AbstractDaoSession {
         groupDaoConfig = daoConfigMap.get(GroupDao.class).clone();
         groupDaoConfig.initIdentityScope(type);
 
-        chatFriendDao = new ChatFriendDao(chatFriendDaoConfig, this);
+        chatDao = new ChatDao(chatDaoConfig, this);
         contactDao = new ContactDao(contactDaoConfig, this);
         conversationDao = new ConversationDao(conversationDaoConfig, this);
         groupDao = new GroupDao(groupDaoConfig, this);
 
-        registerDao(ChatFriend.class, chatFriendDao);
+        registerDao(Chat.class, chatDao);
         registerDao(Contact.class, contactDao);
         registerDao(Conversation.class, conversationDao);
         registerDao(Group.class, groupDao);
     }
 
     public void clear() {
-        chatFriendDaoConfig.clearIdentityScope();
+        chatDaoConfig.clearIdentityScope();
         contactDaoConfig.clearIdentityScope();
         conversationDaoConfig.clearIdentityScope();
         groupDaoConfig.clearIdentityScope();
     }
 
-    public ChatFriendDao getChatFriendDao() {
-        return chatFriendDao;
+    public ChatDao getChatDao() {
+        return chatDao;
     }
 
     public ContactDao getContactDao() {

@@ -26,12 +26,12 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.base.MyService;
-import com.cooloongwu.coolchat.entity.ChatFriend;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
-import com.cooloongwu.greendao.gen.ChatFriendDao;
+import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.cooloongwu.qupai.QupaiUpload;
 import com.cooloongwu.qupai.RecordResult;
@@ -72,7 +72,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isKeyboard = false;
     private boolean isVoice = true;
 
-    private ArrayList<ChatFriend> chatFriendListData = new ArrayList<>();
+    private ArrayList<Chat> chatListData = new ArrayList<>();
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
 
@@ -131,7 +131,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
         //layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatAdapter(ChatActivity.this, chatFriendListData);
+        adapter = new ChatAdapter(ChatActivity.this, chatListData);
         recyclerView.setAdapter(adapter);
         edit_input = (EditText) findViewById(R.id.edit_input);
         edit_input.addTextChangedListener(textWatcher);
@@ -158,24 +158,24 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private void initRecentChatData() {
         //如果是和好友聊天
         Log.e("加载聊天数据", "好友");
-        ChatFriendDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatFriendDao();
-        List<ChatFriend> chatFriends = chatFriendDao.queryBuilder()
-                .where(ChatFriendDao.Properties.ChatType.eq(chatType))
-                .whereOr(ChatFriendDao.Properties.FromId.eq(chatId), ChatFriendDao.Properties.ToId.eq(chatId))
+        ChatDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
+        List<Chat> chatFriends = chatFriendDao.queryBuilder()
+                .where(ChatDao.Properties.ChatType.eq(chatType))
+                .whereOr(ChatDao.Properties.FromId.eq(chatId), ChatDao.Properties.ToId.eq(chatId))
                 .limit(5)
-                .orderDesc(ChatFriendDao.Properties.Time)
+                .orderDesc(ChatDao.Properties.Time)
                 .build()
                 .list();
         //倒序排列下
         Collections.reverse(chatFriends);
-        for (ChatFriend chatFriend : chatFriends) {
+        for (Chat chatFriend : chatFriends) {
             Log.e("聊天内容", chatFriend.getContent());
             Log.e("聊天内容类型", chatFriend.getContentType());
             if ("audio".equals(chatFriend.getContentType())) {
                 Log.e("聊天语音长度", chatFriend.getAudioLength() + "");
             }
         }
-        chatFriendListData.addAll(chatFriends);
+        chatListData.addAll(chatFriends);
         adapter.notifyDataSetChanged();
         int itemCount = adapter.getItemCount() - 1;
         if (itemCount > 0) {
@@ -216,8 +216,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                             || (toId == AppConfig.getUserId(ChatActivity.this) && fromId == chatId)//朋友发给我的消息
                             ) {
                         //是跟当前好友的聊天消息
-                        List<ChatFriend> chatFriends = new ArrayList<>();
-                        ChatFriend chatFriend = new ChatFriend();
+                        List<Chat> chatFriends = new ArrayList<>();
+                        Chat chatFriend = new Chat();
                         chatFriend.setFromId(fromId);
                         chatFriend.setFromAvatar(fromAvatar);
                         chatFriend.setFromName(fromName);
@@ -231,7 +231,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         }
 
                         chatFriends.add(chatFriend);
-                        chatFriendListData.addAll(chatFriends);
+                        chatListData.addAll(chatFriends);
 
                         Message msg = new Message();
                         msg.what = 0;
@@ -242,20 +242,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     //当前在跟群组聊天，需判断是不是当前群组的消息
                     if (chatId == toId) {
-                        List<ChatFriend> chatFriends = new ArrayList<>();
-                        ChatFriend chatFriend = new ChatFriend();
-                        chatFriend.setContent(content);
-                        chatFriend.setContentType(contentType);
-                        chatFriend.setFromAvatar(fromAvatar);
-                        chatFriend.setFromId(fromId);
-                        chatFriend.setTime(time);
-                        chatFriend.setToId(toId);
-                        chatFriend.setIsRead(true);
+                        List<Chat> chatGroups = new ArrayList<>();
+                        Chat chatGroup = new Chat();
+                        chatGroup.setContent(content);
+                        chatGroup.setContentType(contentType);
+                        chatGroup.setFromAvatar(fromAvatar);
+                        chatGroup.setFromId(fromId);
+                        chatGroup.setTime(time);
+                        chatGroup.setToId(toId);
+                        chatGroup.setIsRead(true);
                         if ("audio".equals(contentType)) {
-                            chatFriend.setAudioLength(jsonObject.getString("audioLength"));
+                            chatGroup.setAudioLength(jsonObject.getString("audioLength"));
                         }
-                        chatFriends.add(chatFriend);
-                        chatFriendListData.addAll(chatFriends);
+                        chatGroups.add(chatGroup);
+                        chatListData.addAll(chatGroups);
 
                         Message msg = new Message();
                         msg.what = 0;
