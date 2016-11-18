@@ -22,7 +22,6 @@ import java.util.List;
 public class GroupActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout layout_create_group;
-    private RecyclerView recyclerView;
     private TextView text_group_num;
     private ArrayList<Group> listData = new ArrayList<>();
     private GroupAdapter adapter;
@@ -53,7 +52,7 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
         TextView text_create_group = (TextView) findViewById(R.id.text_create_group);
         text_group_num = (TextView) findViewById(R.id.text_group_num);
         layout_create_group = (LinearLayout) findViewById(R.id.layout_create_group);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(GroupActivity.this));
         adapter = new GroupAdapter(this, listData);
         recyclerView.setAdapter(adapter);

@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.squareup.picasso.Picasso;
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
 
@@ -35,12 +38,12 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         chatType = intent.getStringExtra("type");
         String sex = intent.getStringExtra("sex");
 
-        initToolbar(chatName);
+        initToolbar();
     }
 
-    private void initToolbar(String name) {
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(name);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +54,17 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initViews() {
+        TextView text_name_remark = (TextView) findViewById(R.id.text_name_remark);
+        TextView text_nickname = (TextView) findViewById(R.id.text_nickname);
+        ImageView img_avatar = (ImageView) findViewById(R.id.img_avatar);
         ImageButton imgbtn_call = (ImageButton) findViewById(R.id.imgbtn_call);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
         ImageButton imgbtn_message = (ImageButton) findViewById(R.id.imgbtn_message);
+
+        text_name_remark.setText(chatName);
+        if (!avatar.isEmpty()) {
+            Picasso.with(this).load(avatar).into(img_avatar);
+        }
         imgbtn_call.setOnClickListener(this);
         imgbtn_video.setOnClickListener(this);
         imgbtn_message.setOnClickListener(this);
