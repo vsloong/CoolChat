@@ -1,5 +1,6 @@
 package com.cooloongwu.coolchat.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -15,22 +16,43 @@ import android.widget.Toast;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.BaseActivity;
 
-public class CreateGroupActivity extends BaseActivity {
+/**
+ * 用来起名字的，给群组起名或者修改好友的备注名
+ */
+public class NameActivity extends BaseActivity {
 
-    private EditText edit_group_name;
+    public static int REQUEST_REMARKNAME = 0x01;
+    public static int REQUEST_CREATEGROUP = 0x02;
+    private EditText edit_name;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_group);
+        setContentView(R.layout.activity_name);
 
-        initToolbar();
+        initData();
         initViews();
     }
 
-    private void initToolbar() {
+    private void initData() {
+        Intent intent = getIntent();
+        type = intent.getStringExtra("type");
+        switch (type) {
+            case "remarkName":
+                initToolbar("设置备注名");
+                break;
+            case "createGroup":
+                initToolbar("创建群组");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void initToolbar(String title) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("群组");
+        toolbar.setTitle(title);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,11 +63,10 @@ public class CreateGroupActivity extends BaseActivity {
     }
 
     private void initViews() {
-        edit_group_name = (EditText) findViewById(R.id.edit_group_name);
+        edit_name = (EditText) findViewById(R.id.edit_name);
         final TextView text_num = (TextView) findViewById(R.id.text_num);
 
-
-        edit_group_name.addTextChangedListener(new TextWatcher() {
+        edit_name.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -53,19 +74,19 @@ public class CreateGroupActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Editable editable = edit_group_name.getText();
+                Editable editable = edit_name.getText();
                 int maxLength = 20;
                 int length = editable.length();//原字符串长度
                 if (length > maxLength) {//如果原字符串长度大于最大长度
                     int selectEndIndex = Selection.getSelectionEnd(editable);//getSelectionEnd：获取光标结束的索引值
                     String str = editable.toString();//旧字符串
                     String newStr = str.substring(0, maxLength);//截取新字符串
-                    edit_group_name.setText(newStr);
-                    editable = edit_group_name.getText();
+                    edit_name.setText(newStr);
+                    editable = edit_name.getText();
                     int newLength = editable.length();//新字符串长度
                     if (selectEndIndex > newLength) {//如果光标结束的索引值超过新字符串长度
                         selectEndIndex = editable.length();
-                        Toast.makeText(CreateGroupActivity.this, "最多只能输入" + maxLength + "个字哦", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NameActivity.this, "最多只能输入" + maxLength + "个字哦", Toast.LENGTH_SHORT).show();
                     }
                     Selection.setSelection(editable, selectEndIndex);//设置新光标所在的位置
                 } else {
@@ -89,16 +110,32 @@ public class CreateGroupActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_create:
-                String name = edit_group_name.getText().toString().trim();
+                String name = edit_name.getText().toString().trim();
                 if (name.isEmpty()) {
-                    Toast.makeText(CreateGroupActivity.this, "群组名不可为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NameActivity.this, "名字不可为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(CreateGroupActivity.this, "群组名为：" + name, Toast.LENGTH_SHORT).show();
+                    returnName(name);
                 }
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void returnName(String name) {
+        switch (type) {
+            case "remarkName":
+                Intent intent = new Intent();
+                intent.putExtra("name", name);
+                setResult(REQUEST_REMARKNAME, intent);
+                finish();
+                break;
+            case "createGroup":
+                Toast.makeText(NameActivity.this, "名字为：" + name, Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.cooloongwu.coolchat.activity.CreateGroupActivity">
+    tools:context="com.cooloongwu.coolchat.activity.NameActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,11 +38,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="给群组起个名字"
+                android:text="起个名字吧"
                 android:textColor="@color/text_bg_unread" />
 
             <EditText
-                android:id="@+id/edit_group_name"
+                android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"

@@ -46,7 +46,7 @@
                         android:layout_marginBottom="16dp"
                         android:layout_marginTop="8dp"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         tools:text="昵称：朋友的昵称" />
 
                     <TextView

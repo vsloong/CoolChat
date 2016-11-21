@@ -30,7 +30,6 @@ import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.GroupDao;
-import com.duanqu.qupai.utils.ToastUtils;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -172,7 +171,7 @@ public class MainActivity extends BaseActivity
         switch (s) {
             case R.id.fab_create_group:
                 fam.close(true);
-                startActivity(new Intent(MainActivity.this, CreateGroupActivity.class));
+                startActivity(new Intent(MainActivity.this, NameActivity.class));
                 break;
             case R.id.fab_invite_friend:
                 fam.close(true);

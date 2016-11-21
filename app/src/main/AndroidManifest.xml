@@ -65,7 +65,7 @@
             android:label="@string/title_activity_group"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.CreateGroupActivity"
+            android:name=".activity.NameActivity"
             android:label="@string/title_activity_create_group"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

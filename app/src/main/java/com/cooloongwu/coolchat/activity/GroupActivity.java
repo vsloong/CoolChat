@@ -75,7 +75,9 @@ public class GroupActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.text_create_group:
-                startActivity(new Intent(GroupActivity.this, CreateGroupActivity.class));
+                Intent intent = new Intent(GroupActivity.this, NameActivity.class);
+                intent.putExtra("type", "createGroup");
+                startActivity(intent);
                 break;
             default:
                 break;

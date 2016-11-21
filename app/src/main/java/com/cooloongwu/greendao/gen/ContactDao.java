@@ -28,9 +28,10 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property UserId = new Property(1, int.class, "userId", false, "USER_ID");
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Avatar = new Property(3, String.class, "avatar", false, "AVATAR");
-        public final static Property Sex = new Property(4, String.class, "sex", false, "SEX");
-        public final static Property Phone = new Property(5, String.class, "phone", false, "PHONE");
+        public final static Property RemarkName = new Property(3, String.class, "remarkName", false, "REMARK_NAME");
+        public final static Property Avatar = new Property(4, String.class, "avatar", false, "AVATAR");
+        public final static Property Sex = new Property(5, String.class, "sex", false, "SEX");
+        public final static Property Phone = new Property(6, String.class, "phone", false, "PHONE");
     }
 
 
@@ -51,9 +52,10 @@ public class ContactDao extends AbstractDao<Contact, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"USER_ID\" INTEGER NOT NULL ," + // 1: userId
                 "\"NAME\" TEXT," + // 2: name
-                "\"AVATAR\" TEXT," + // 3: avatar
-                "\"SEX\" TEXT," + // 4: sex
-                "\"PHONE\" TEXT);"); // 5: phone
+                "\"REMARK_NAME\" TEXT," + // 3: remarkName
+                "\"AVATAR\" TEXT," + // 4: avatar
+                "\"SEX\" TEXT," + // 5: sex
+                "\"PHONE\" TEXT);"); // 6: phone
     }
 
     /** Drops the underlying database table. */
@@ -76,20 +78,25 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (name != null) {
             stmt.bindString(3, name);
         }
+
+        String remarkName = entity.getRemarkName();
+        if (remarkName != null) {
+            stmt.bindString(4, remarkName);
+        }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
-            stmt.bindString(4, avatar);
+            stmt.bindString(5, avatar);
         }
  
         String sex = entity.getSex();
         if (sex != null) {
-            stmt.bindString(5, sex);
+            stmt.bindString(6, sex);
         }
  
         String phone = entity.getPhone();
         if (phone != null) {
-            stmt.bindString(6, phone);
+            stmt.bindString(7, phone);
         }
     }
 
@@ -107,20 +114,25 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (name != null) {
             stmt.bindString(3, name);
         }
+
+        String remarkName = entity.getRemarkName();
+        if (remarkName != null) {
+            stmt.bindString(4, remarkName);
+        }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
-            stmt.bindString(4, avatar);
+            stmt.bindString(5, avatar);
         }
  
         String sex = entity.getSex();
         if (sex != null) {
-            stmt.bindString(5, sex);
+            stmt.bindString(6, sex);
         }
  
         String phone = entity.getPhone();
         if (phone != null) {
-            stmt.bindString(6, phone);
+            stmt.bindString(7, phone);
         }
     }
 
@@ -135,9 +147,10 @@ public class ContactDao extends AbstractDao<Contact, Long> {
                 cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
                 cursor.getInt(offset + 1), // userId
                 cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
-                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // sex
-                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // phone
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // remarkName
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avatar
+                cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // sex
+                cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // phone
         );
         return entity;
     }
@@ -147,9 +160,10 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUserId(cursor.getInt(offset + 1));
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setSex(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setPhone(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setRemarkName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setSex(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setPhone(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override

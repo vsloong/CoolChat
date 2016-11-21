@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cooloongwu.coolchat.activity.UserProfileActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_remark"
         android:orderInCategory="100"
         android:title="设置备注名"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_delete"
         android:orderInCategory="100"
         android:title="删除好友"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_report"
         android:orderInCategory="100"
         android:title="举报该用户"
         app:showAsAction="never" />

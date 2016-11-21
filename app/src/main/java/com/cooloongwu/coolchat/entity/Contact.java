@@ -15,16 +15,18 @@ public class Contact {
     private Long id;
     private int userId;             //好友ID
     private String name;            //用户名
+    private String remarkName;      //备注名
     private String avatar;          //用户头像的url
     private String sex;             //用户性别
     private String phone;           //用户手机
 
-    @Generated(hash = 619777179)
-    public Contact(Long id, int userId, String name, String avatar, String sex,
-                   String phone) {
+    @Generated(hash = 225590820)
+    public Contact(Long id, int userId, String name, String remarkName,
+                   String avatar, String sex, String phone) {
         this.id = id;
         this.userId = userId;
         this.name = name;
+        this.remarkName = remarkName;
         this.avatar = avatar;
         this.sex = sex;
         this.phone = phone;
@@ -80,6 +82,14 @@ public class Contact {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getRemarkName() {
+        return this.remarkName;
+    }
+
+    public void setRemarkName(String remarkName) {
+        this.remarkName = remarkName;
     }
 
 
