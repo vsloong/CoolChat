@@ -47,6 +47,7 @@
         <activity android:name=".activity.MainActivity" />
         <activity
             android:name=".activity.ChatActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activity.UserProfileActivity" />
         <activity android:name=".activity.MyProfileActivity" />
@@ -71,7 +72,8 @@
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.GroupProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -516,6 +518,30 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        if ("friend".equals(chatType)) {
+            menu.getItem(0).setIcon(R.mipmap.icon_menu_profile_user);
+        } else {
+            menu.getItem(0).setIcon(R.mipmap.icon_menu_profile_group);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if ("friend".equals(chatType)) {
+            Intent intent = new Intent(ChatActivity.this, UserProfileActivity.class);
+            intent.putExtra("id", chatId);
+            startActivity(intent);
+        } else {
+            //跳转到群组
+            startActivity(new Intent(ChatActivity.this, GroupProfileActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

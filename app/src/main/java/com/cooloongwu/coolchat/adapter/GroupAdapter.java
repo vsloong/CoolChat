@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.activity.UserProfileActivity;
 import com.cooloongwu.coolchat.entity.Group;
 import com.squareup.picasso.Picasso;
@@ -50,11 +51,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(context, UserProfileActivity.class);
-                intent.putExtra("name", listData.get(position).getGroupName());
-                intent.putExtra("avatar", listData.get(position).getGroupAvatar());
-                intent.putExtra("id", listData.get(position).getGroupId());
-                intent.putExtra("type", "group");
+                intent.setClass(context, ChatActivity.class);
+                intent.putExtra("chatName", listData.get(position).getGroupName());
+                intent.putExtra("chatId", listData.get(position).getGroupId());
+                intent.putExtra("chatType", "group");
                 context.startActivity(intent);
             }
         });

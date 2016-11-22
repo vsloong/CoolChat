@@ -78,7 +78,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (name != null) {
             stmt.bindString(3, name);
         }
-
+ 
         String remarkName = entity.getRemarkName();
         if (remarkName != null) {
             stmt.bindString(4, remarkName);
@@ -114,7 +114,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (name != null) {
             stmt.bindString(3, name);
         }
-
+ 
         String remarkName = entity.getRemarkName();
         if (remarkName != null) {
             stmt.bindString(4, remarkName);
