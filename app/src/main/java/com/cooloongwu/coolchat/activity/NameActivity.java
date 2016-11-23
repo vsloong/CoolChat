@@ -23,6 +23,7 @@ public class NameActivity extends BaseActivity {
 
     public static int REQUEST_REMARKNAME = 0x01;
     public static int REQUEST_CREATEGROUP = 0x02;
+    public static int REQUEST_CHANGEGROUPNAME = 0x03;
     private EditText edit_name;
     private String type;
 
@@ -31,8 +32,8 @@ public class NameActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name);
 
-        initData();
         initViews();
+        initData();
     }
 
     private void initData() {
@@ -44,6 +45,10 @@ public class NameActivity extends BaseActivity {
                 break;
             case "createGroup":
                 initToolbar("创建群组");
+                break;
+            case "changeGroupName":
+                initToolbar("修改群组名称");
+                edit_name.setText(intent.getStringExtra("name"));
                 break;
             default:
                 break;
@@ -133,6 +138,12 @@ public class NameActivity extends BaseActivity {
                 break;
             case "createGroup":
                 Toast.makeText(NameActivity.this, "名字为：" + name, Toast.LENGTH_SHORT).show();
+                break;
+            case "changeGroupName":
+                Intent changeNameIntent = new Intent();
+                changeNameIntent.putExtra("name", name);
+                setResult(REQUEST_CHANGEGROUPNAME, changeNameIntent);
+                finish();
                 break;
             default:
                 break;

@@ -533,14 +533,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
         if ("friend".equals(chatType)) {
-            Intent intent = new Intent(ChatActivity.this, UserProfileActivity.class);
-            intent.putExtra("id", chatId);
-            startActivity(intent);
+            //跳转到好友个人资料页面
+            intent.setClass(ChatActivity.this, UserProfileActivity.class);
         } else {
-            //跳转到群组
-            startActivity(new Intent(ChatActivity.this, GroupProfileActivity.class));
+            //跳转到群组资料页面
+            intent.setClass(ChatActivity.this, GroupProfileActivity.class);
         }
+        intent.putExtra("id", chatId);
+        startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
 
