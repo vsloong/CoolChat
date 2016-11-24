@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,28 @@ public class ConversationFragment extends BaseFragment {
         //加载聊天列表数据
         conversationDao = GreenDAOUtils.getInstance(getActivity()).getConversationDao();
         List<Conversation> conversations = conversationDao.queryBuilder().build().list();
+
+        ContactDao contactDao;
+        GroupDao groupDao;
+
+        //为了修改群组名和好友备注名时也能及时更新
+        for (int i = 0; i < conversations.size(); i++) {
+            if ("friend".equals(conversations.get(i).getType())) {
+                contactDao = GreenDAOUtils.getInstance(getActivity()).getContactDao();
+                Contact contact = contactDao.queryBuilder()
+                        .where(ContactDao.Properties.UserId.eq(conversations.get(i).getMultiId()))
+                        .build()
+                        .unique();
+                conversations.get(i).setName(TextUtils.isEmpty(contact.getRemarkName()) ? contact.getName() : contact.getRemarkName());
+            } else if ("group".equals(conversations.get(i).getType())) {
+                groupDao = GreenDAOUtils.getInstance(getActivity()).getGroupDao();
+                Group group = groupDao.queryBuilder()
+                        .where(GroupDao.Properties.GroupId.eq(conversations.get(i).getMultiId()))
+                        .build()
+                        .unique();
+                conversations.get(i).setName(group.getGroupName());
+            }
+        }
         listData.clear();
         listData.addAll(conversations);
         adapter.notifyDataSetChanged();
@@ -131,7 +154,7 @@ public class ConversationFragment extends BaseFragment {
 
 
     /**
-     * 删除数据后的更新页面
+     * 删除数据后的更新页面，处理未读消息，处理修改备注名后的更新
      *
      * @param event 事件
      */

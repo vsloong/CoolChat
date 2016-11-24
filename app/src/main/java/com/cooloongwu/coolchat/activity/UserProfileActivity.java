@@ -15,9 +15,12 @@ import android.widget.TextView;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
+import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
 
@@ -139,11 +142,17 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NameActivity.REQUEST_REMARKNAME) {
+        if (requestCode == NameActivity.REQUEST_REMARKNAME && resultCode == NameActivity.REQUEST_REMARKNAME) {
+            Log.e("修改后的备注名为", data.getStringExtra("name"));
             String name = data.getStringExtra("name");
             contact.setRemarkName(name);
             contactDao.update(contact);
             initData();
+
+            //通知主页聊天页面用户昵称更新
+            EventBus.getDefault().post(new Conversation());
+        } else {
+            Log.e("修改后的备注名为", "未修改");
         }
     }
 }

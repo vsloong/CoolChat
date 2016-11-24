@@ -79,8 +79,12 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NameActivity.REQUEST_CHANGEGROUPNAME) {
-            Log.e("修改的后的群组名", data.getStringExtra("name"));
+        if (requestCode == NameActivity.REQUEST_CHANGEGROUPNAME && resultCode == NameActivity.REQUEST_CHANGEGROUPNAME) {
+            if (data.hasExtra("name")) {
+                Log.e("修改的后的群组名", data.getStringExtra("name"));
+            }
+        } else {
+            Log.e("修改的后的群组名", "未修改");
         }
 
     }
