@@ -62,6 +62,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         if (TextUtils.isEmpty(chatName)) {
             text_name_remark.setText(nickName);
             text_nickname.setText("");
+            chatName = nickName;
         } else {
             text_name_remark.setText(chatName);
             text_nickname.setText("昵称：" + nickName);

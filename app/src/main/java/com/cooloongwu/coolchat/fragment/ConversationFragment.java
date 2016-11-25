@@ -126,7 +126,8 @@ public class ConversationFragment extends BaseFragment {
     private void insertOrUpdateConversationDB(Conversation conversation) {
         conversationDao = GreenDAOUtils.getInstance(getActivity()).getConversationDao();
         Conversation result = conversationDao.queryBuilder()
-                .where(ConversationDao.Properties.MultiId.eq(conversation.getMultiId()))
+                .where(ConversationDao.Properties.MultiId.eq(conversation.getMultiId()),
+                        ConversationDao.Properties.Type.eq(conversation.getType()))
                 .build()
                 .unique();
         if (result != null) {
