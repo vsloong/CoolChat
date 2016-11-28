@@ -6,6 +6,10 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+
 /**
  * 网络请求类
  * Created by CooLoongWu on 2016-9-26 14:55.
@@ -19,6 +23,7 @@ public class AsyncHttpClientUtils {
 
     public static final String SERVER_IP = "120.27.47.125";
     public static final int SERVER_PORT = 8282;
+    public static final int SERVER_PORT_WEBSOCKET = 8283;
 
     private static final String SERVER_HTTP = "http://" + SERVER_IP;
     private static final String TEST_SERVER = SERVER_HTTP + "/coolchat/";          //APP接口测试服务器
@@ -59,4 +64,5 @@ public class AsyncHttpClientUtils {
     public static void post(Context context, String url, RequestParams params, AsyncHttpResponseHandler handler) {
         clientGeneral.post(context, BASE_SERVER + url, params, handler);
     }
+
 }

@@ -18,11 +18,25 @@ import com.cooloongwu.coolchat.socket.SocketConnect;
 import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
+import com.koushikdutta.async.ByteBufferList;
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.async.callback.DataCallback;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.WebSocket;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * 一个Service类
@@ -39,6 +53,7 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         initSocket();
+        initWebSocket();
     }
 
     //startService一次则调用一次
@@ -56,6 +71,43 @@ public class MyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return myBinder;
+    }
+
+    private void initWebSocket() {
+        AsyncHttpClient.getDefaultInstance().websocket("ws://120.27.47.125:8283", "websocket", new AsyncHttpClient.WebSocketConnectCallback() {
+            @Override
+            public void onCompleted(Exception ex, WebSocket webSocket) {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    return;
+                }
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("fromId", AppConfig.getUserId(MyService.this));
+                    jsonObject.put("toWhich", "server");
+                    webSocket.send(jsonObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                webSocket.send();
+
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    @Override
+                    public void onStringAvailable(String s) {
+                        Log.e("字符串返回", s);
+                    }
+                });
+
+                webSocket.setDataCallback(new DataCallback() {
+                    @Override
+                    public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
+                        Log.e("byte返回", bb.readString());
+                        bb.recycle();
+                    }
+                });
+            }
+        });
+
     }
 
     private void initSocket() {
