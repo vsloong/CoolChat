@@ -6,12 +6,12 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ConversationAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
@@ -147,7 +147,7 @@ public class ConversationFragment extends BaseFragment {
      * 将数据从数据库删除
      */
     private void deleteFromDB(Conversation conversation) {
-        Log.e("要删除的ID", conversation.getId() + "");
+        LogUtils.e("要删除的ID：" + conversation.getId() + "");
         conversationDao.delete(conversation);
         //更新页面
         handleConversation.sendEmptyMessage(0);
@@ -187,7 +187,6 @@ public class ConversationFragment extends BaseFragment {
         String content = jsonObject.getString("content");
         String contentType = jsonObject.getString("contentType");
         String time = jsonObject.getString("time");
-        Log.e("得到的消息的时间", time);
         if ("friend".equals(chatType)) {
             //如果是好友发来的那么要判断好友ID是fromId还是toId
             if (fromId == AppConfig.getUserId(getActivity())) {
@@ -201,7 +200,6 @@ public class ConversationFragment extends BaseFragment {
                     .where(ContactDao.Properties.UserId.eq(chatId))
                     .build()
                     .unique();
-            Log.e("得到的联系人的数据", contact.getName() + "");
             chatName = contact.getName();
             chatAvatar = contact.getAvatar();
         } else {
@@ -213,7 +211,6 @@ public class ConversationFragment extends BaseFragment {
                     .where(GroupDao.Properties.GroupId.eq(chatId))
                     .build()
                     .unique();
-            Log.e("得到的群组的数据", group.getGroupName() + "");
             chatName = group.getGroupName();
             chatAvatar = group.getGroupAvatar();
         }
@@ -223,11 +220,9 @@ public class ConversationFragment extends BaseFragment {
                 && chatType.equals(AppConfig.getUserCurrentChatType(getActivity()))) {
             //来的是跟当前好友或者群组的聊天消息，则未读消息数变为0
             unReadNum = 0;
-            Log.e("未读消息无", "" + unReadNum);
         } else {
             //来的不是跟当前好友或者群组的聊天消息，则展示新消息的未读数
             unReadNum = getConversationUnread(chatId, chatType) + 1;
-            Log.e("未读消息有", "" + unReadNum);
         }
 
         Conversation conversation = new Conversation(null,

@@ -3,6 +3,7 @@ package com.cooloongwu.coolchat.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ContactDao;
@@ -30,7 +31,7 @@ public class GreenDAOUtils {
 
     public GreenDAOUtils(Context context) {
         String dataBaseName = AppConfig.getUserDB(context);
-        Log.e("加载的用户的数据库", dataBaseName);
+        LogUtils.e("加载的用户的数据库：" + dataBaseName);
         devOpenHelper = new DaoMaster.DevOpenHelper(context, dataBaseName, null);
     }
 

@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.MyFragmentPagerAdapter;
 import com.cooloongwu.coolchat.base.Api;
@@ -206,7 +207,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.e("获取朋友列表成功", response.toString());
+                LogUtils.e("获取朋友列表成功：" + response.toString());
                 try {
                     int status = response.getInt("status");
                     switch (status) {
@@ -244,7 +245,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("获取朋友数据失败", "" + statusCode);
+                LogUtils.e("获取朋友数据失败", "" + statusCode);
             }
         });
     }
@@ -254,7 +255,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.e("获取群组列表成功", response.toString());
+                LogUtils.e("获取群组列表成功：" + response.toString());
                 try {
                     int status = response.getInt("status");
                     switch (status) {
@@ -290,7 +291,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("获取群组数据失败", "" + statusCode);
+                LogUtils.e("获取群组数据失败", "" + statusCode);
             }
         });
     }

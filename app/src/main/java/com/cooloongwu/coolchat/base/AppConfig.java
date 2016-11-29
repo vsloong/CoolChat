@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.apkfuns.logutils.LogUtils;
+
 /**
  * App的各种配置类
  * Created by CooLoongWu on 2016-9-14 13:50.
  */
 public class AppConfig {
+
+
     private static final String defaultDB = "CoolChat";
 
     /**

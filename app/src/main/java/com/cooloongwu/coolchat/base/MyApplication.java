@@ -3,6 +3,8 @@ package com.cooloongwu.coolchat.base;
 import android.app.Application;
 import android.hardware.Camera;
 
+import com.apkfuns.logutils.LogLevel;
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.qupai.QupaiAuth;
 import com.cooloongwu.qupai.QupaiSetting;
@@ -25,6 +27,13 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        LogUtils.getLogConfig()
+                .configAllowLog(true)
+                .configTagPrefix("CoolChat")
+                .configShowBorders(true)
+                .configFormatTag("%d{HH:mm:ss:SSS} %t %c{-5}")
+                .configLevel(LogLevel.TYPE_VERBOSE);
 
         //MultiDex.install(this);
         initClient();

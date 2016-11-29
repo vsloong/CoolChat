@@ -13,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -24,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
@@ -108,7 +108,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         chatId = intent.getIntExtra("chatId", 0);                 //好友或者群组的ID
         chatType = intent.getStringExtra("chatType");               //群组还是好友
         String chatName = intent.getStringExtra("chatName");        //群组名或者好友名
-        Log.e("聊天信息", "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");
+        LogUtils.e("聊天信息" + "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");
         initToolbar(chatName);
 
         //保存当前聊天对象的信息
@@ -159,7 +159,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      */
     private void initRecentChatData() {
         //如果是和好友聊天
-        Log.e("加载聊天数据", "好友");
         ChatDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
         List<Chat> chatFriends = chatFriendDao.queryBuilder()
                 .where(ChatDao.Properties.ChatType.eq(chatType))
@@ -170,13 +169,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 .list();
         //倒序排列下
         Collections.reverse(chatFriends);
-        for (Chat chatFriend : chatFriends) {
-            Log.e("聊天内容", chatFriend.getContent());
-            Log.e("聊天内容类型", chatFriend.getContentType());
-            if ("audio".equals(chatFriend.getContentType())) {
-                Log.e("聊天语音长度", chatFriend.getAudioLength() + "");
-            }
-        }
         chatListData.addAll(chatFriends);
         adapter.notifyDataSetChanged();
         int itemCount = adapter.getItemCount() - 1;
@@ -188,7 +180,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Subscribe
     public void onEventMainThread(JSONObject jsonObject) {
-        Log.e("聊天页面收到消息", jsonObject.toString());
         try {
 
             /**
@@ -207,8 +198,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             String content = jsonObject.getString("content");
             String contentType = jsonObject.getString("contentType");
             String time = jsonObject.getString("time");
-
-            Log.e("消息类型", contentType);
 
             if (chatType.equals(toWhich)) {
                 //跟当前聊天类型匹配，是群组或者好友的消息
@@ -273,7 +262,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("Json解析", "出错了");
         }
     }
 
@@ -326,7 +314,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     @Override
                     public void complete(String key, ResponseInfo info, JSONObject res) {
                         //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
-                        Log.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
+                        LogUtils.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
 
                         //发送数据示例
                         JSONObject jsonObject = new JSONObject();
@@ -361,7 +349,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     @Override
                     public void complete(String key, ResponseInfo info, JSONObject res) {
                         //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
-                        Log.e("七牛云，语音", key + ",\r\n " + info + ",\r\n " + res);
+                        LogUtils.e("七牛云，语音", key + ",\r\n " + info + ",\r\n " + res);
 
                         //发送数据示例
                         JSONObject jsonObject = new JSONObject();
@@ -421,7 +409,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
             @Override
             public void onStop(String filePath, String audioLength) {
-                Log.e("录音结束", "文件位置：" + filePath + "\n录音长度：" + audioLength);
+                LogUtils.e("录音结束", "文件位置：" + filePath + "\n录音长度：" + audioLength);
                 sendAudioMessage(new File(filePath), audioLength);
             }
         });
@@ -570,8 +558,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 result.getDuration();
 
                 //Toast.makeText(this, "视频路径:" + videoPath + "图片路径:" + thumbnails[0], Toast.LENGTH_SHORT).show();
-                Log.e("趣拍视频地址", videoPath);
-                Log.e("趣拍缩略图地址", thumbnails[0]);
                 startUpload(videoPath, thumbnails[0]);
 
                 /**
@@ -592,18 +578,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     audioRecorderUtils.startRecord();
-                    Log.e("录音开始时间", TimeUtils.getCurrentTime());
                     startTime = System.currentTimeMillis();
                     startX = motionEvent.getX();
                     break;
                 case MotionEvent.ACTION_UP:
                     float endX = motionEvent.getX();
                     if (endX - startX > 150) {
-                        Log.e("录音取消", "取消发送");
                         audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
                         Toast.makeText(ChatActivity.this, "录音已取消", Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.e("录音结束时间", TimeUtils.getCurrentTime());
                         long endTime = System.currentTimeMillis();
                         long audioLength = endTime - startTime;
                         if (audioLength < 1000) {
@@ -616,7 +599,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                             Toast.makeText(ChatActivity.this, "录音时间不得多于1分钟", Toast.LENGTH_SHORT).show();
                         } else {
                             audioRecorderUtils.stopRecord();        //结束录音（保存录音文件），并发送
-                            Log.e("录音时间长度", audioLength / 6000 + "秒");
                         }
                     }
                     break;
@@ -762,13 +744,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onUploadProgress(String uuid, long uploadedBytes, long totalBytes) {
                 int percentsProgress = (int) (uploadedBytes * 100 / totalBytes);
-                Log.e("趣拍云上传进度", "uuid:" + uuid + "；进度：" + percentsProgress + "%");
+                LogUtils.e("趣拍云上传进度", "uuid:" + uuid + "；进度：" + percentsProgress + "%");
                 //progress.setProgress(percentsProgress);
             }
 
             @Override
             public void onUploadError(String uuid, int errorCode, String message) {
-                Log.e("趣拍云上传失败", "uuid:" + uuid + "；错误信息：" + errorCode + message);
+                LogUtils.e("趣拍云上传失败", "uuid:" + uuid + "；错误信息：" + errorCode + message);
             }
 
             @Override
@@ -780,15 +762,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 //videoUrl返回的是上传成功的视频地址,imageUrl是上传成功的图片地址
                 String videoUrl = QupaiSetting.domain + "/v/" + responseMessage + ".mp4" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
                 String imageUrl = QupaiSetting.domain + "/v/" + responseMessage + ".jpg" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
-                Log.e("趣拍云上传成功", "视频地址：" + videoUrl);
-                Log.e("趣拍云上传成功", "缩略图地址：" + imageUrl);
+                LogUtils.e("趣拍云上传成功", "视频地址：" + videoUrl);
+                LogUtils.e("趣拍云上传成功", "缩略图地址：" + imageUrl);
 
                 sendVideoMessage(videoUrl);
             }
         });
 
         String uuid = UUID.randomUUID().toString();
-        Log.e("趣拍云认证", "accessToken：" + AppConfig.getQupaiToken(ChatActivity.this) + "；space：" + AppConfig.getUserId(ChatActivity.this));
+        LogUtils.e("趣拍云认证", "accessToken：" + AppConfig.getQupaiToken(ChatActivity.this) + "；space：" + AppConfig.getUserId(ChatActivity.this));
 
         QupaiUpload.startUpload(QupaiUpload.createUploadTask(
                 this,

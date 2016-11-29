@@ -3,6 +3,7 @@ package com.cooloongwu.qupai;
 import android.content.Context;
 import android.util.Log;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.duanqu.qupai.auth.AuthService;
 import com.duanqu.qupai.auth.QupaiAuthListener;
@@ -33,12 +34,12 @@ public class QupaiAuth {
         service.setQupaiAuthListener(new QupaiAuthListener() {
             @Override
             public void onAuthError(int errorCode, String message) {
-                Log.e("趣拍云认证失败", "ErrorCode" + errorCode + "；message" + message);
+                LogUtils.e("趣拍云认证失败：" + "ErrorCode" + errorCode + "；message" + message);
             }
 
             @Override
             public void onAuthComplte(int responseCode, String responseMessage) {
-                Log.e("趣拍云认证成功", "responseCode" + responseCode + "；message" + responseMessage);
+                LogUtils.e("趣拍云认证成功：" + "responseCode" + responseCode + "；message" + responseMessage);
                 AppConfig.setQupaiToken(context, responseMessage);
             }
         });

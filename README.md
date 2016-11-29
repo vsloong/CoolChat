@@ -170,8 +170,10 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [loopj/android-async-http][9]
 - [lovetuzitong/MultiImageSelector][10]
 - [Bilibili/ijkplayer][11]
-- [七牛云][12]
-- [趣拍云][13]
+- [koush/AndroidAsync][12]
+- [pengwei1024/LogUtils][13]
+- [七牛云][14]
+- [趣拍云][15]
 
 ##已知Bug一览（带删除线的为已修复）
 - ~~自己发消息超过两行，文字会超出屏幕~~
@@ -222,5 +224,7 @@ limitations under the License.
 [9]:https://github.com/loopj/android-async-http
 [10]:https://github.com/lovetuzitong/MultiImageSelector
 [11]:https://github.com/Bilibili/ijkplayer
-[12]:http://www.qiniu.com/
-[13]:https://www.qupaicloud.com/
+[12]:https://github.com/koush/AndroidAsync
+[13]:https://github.com/pengwei1024/LogUtils
+[14]:http://www.qiniu.com/
+[15]:https://www.qupaicloud.com/

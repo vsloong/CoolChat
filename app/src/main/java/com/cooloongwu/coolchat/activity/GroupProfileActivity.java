@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
@@ -81,10 +81,10 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NameActivity.REQUEST_CHANGEGROUPNAME && resultCode == NameActivity.REQUEST_CHANGEGROUPNAME) {
             if (data.hasExtra("name")) {
-                Log.e("修改的后的群组名", data.getStringExtra("name"));
+                LogUtils.e("修改的后的群组名", data.getStringExtra("name"));
             }
         } else {
-            Log.e("修改的后的群组名", "未修改");
+            LogUtils.e("修改的后的群组名", "未修改");
         }
 
     }

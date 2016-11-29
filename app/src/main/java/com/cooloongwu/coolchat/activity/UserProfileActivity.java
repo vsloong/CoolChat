@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
@@ -144,7 +144,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NameActivity.REQUEST_REMARKNAME && resultCode == NameActivity.REQUEST_REMARKNAME) {
-            Log.e("修改后的备注名为", data.getStringExtra("name"));
+            LogUtils.e("修改后的备注名为", data.getStringExtra("name"));
             String name = data.getStringExtra("name");
             contact.setRemarkName(name);
             contactDao.update(contact);
@@ -153,7 +153,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             //通知主页聊天页面用户昵称更新
             EventBus.getDefault().post(new Conversation());
         } else {
-            Log.e("修改后的备注名为", "未修改");
+            LogUtils.e("修改后的备注名为", "未修改");
         }
     }
 }

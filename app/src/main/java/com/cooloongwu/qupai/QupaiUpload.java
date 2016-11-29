@@ -3,6 +3,7 @@ package com.cooloongwu.qupai;
 import android.content.Context;
 import android.util.Log;
 
+import com.apkfuns.logutils.LogUtils;
 import com.duanqu.qupai.bean.QupaiUploadTask;
 import com.duanqu.qupai.upload.UploadService;
 
@@ -46,7 +47,7 @@ public class QupaiUpload {
             UploadService uploadService = UploadService.getInstance();
             uploadService.startUpload(data);
         } catch (IllegalArgumentException exc) {
-            Log.d("趣拍云上传错误", "Missing some arguments. " + exc.getMessage());
+            LogUtils.e("趣拍云上传错误：" + "Missing some arguments. " + exc.getMessage());
         }
     }
 }
