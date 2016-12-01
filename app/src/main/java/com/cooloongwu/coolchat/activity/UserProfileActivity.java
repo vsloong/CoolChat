@@ -1,7 +1,9 @@
 package com.cooloongwu.coolchat.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -106,12 +108,32 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.action_remark:
                 Intent intent = new Intent(UserProfileActivity.this, NameActivity.class);
                 intent.putExtra("type", "remarkName");
                 startActivityForResult(intent, NameActivity.REQUEST_REMARKNAME);
+                break;
+            case R.id.action_delete:
+                new AlertDialog.Builder(UserProfileActivity.this)
+                        .setMessage("确认删除好友")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        //设置最右边的按钮
+                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+                break;
+            case R.id.action_report:
+
                 break;
             default:
                 break;
