@@ -12,13 +12,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
+import com.cooloongwu.coolchat.utils.DialogUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.IMyDialogListener;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.squareup.picasso.Picasso;
 
@@ -115,22 +118,27 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, NameActivity.REQUEST_REMARKNAME);
                 break;
             case R.id.action_delete:
-                new AlertDialog.Builder(UserProfileActivity.this)
-                        .setMessage("确认删除好友")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        //设置最右边的按钮
-                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .show();
+
+                DialogUtils.showMdAlert(UserProfileActivity.this, "提醒", "确定删除该好友么？", "确定", "取消", "", true, true, new IMyDialogListener() {
+                    @Override
+                    public void onPositive(DialogInterface dialog) {
+                        Toast.makeText(UserProfileActivity.this, "确定", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNegative(DialogInterface dialog) {
+                        Toast.makeText(UserProfileActivity.this, "取消", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNeutral(DialogInterface dialog) {
+                        Toast.makeText(UserProfileActivity.this, "3", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                });
                 break;
             case R.id.action_report:
 

@@ -15,38 +15,38 @@ public class DialogUtils {
 
     public static AlertDialog showMdAlert(Activity activity, String title, String msg,
                                           String firstTxt, String secondTxt, String thirdTxt,
-                                          boolean outsideCancleable, boolean cancleable,
+                                          boolean outsideCancelable, boolean cancelable,
                                           final IMyDialogListener listener) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title)
                 .setMessage(msg)
-                .setCancelable(cancleable)
+                .setCancelable(cancelable)
                 .setPositiveButton(firstTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.onFirst(dialog);
+                        listener.onPositive(dialog);
                         dialog.dismiss();
                     }
                 })
                 .setNegativeButton(secondTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.onSecond(dialog);
+                        listener.onNegative(dialog);
                         dialog.dismiss();
                     }
                 }).setNeutralButton(thirdTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.onThird(dialog);
+                listener.onNeutral(dialog);
                 dialog.dismiss();
             }
         });
         AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(outsideCancleable);
+        dialog.setCanceledOnTouchOutside(outsideCancelable);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                listener.onCancle();
+                listener.onCancel();
             }
         });
         dialog.show();

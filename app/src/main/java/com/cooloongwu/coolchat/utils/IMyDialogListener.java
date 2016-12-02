@@ -7,14 +7,16 @@ import android.content.DialogInterface;
  */
 
 public interface IMyDialogListener {
-    public abstract void onFirst(DialogInterface dialog);
+    //最右边的按钮，确定
+    void onPositive(DialogInterface dialog);
 
-    public abstract void onSecond(DialogInterface dialog);
+    //右边第二个按钮，取消
+    void onNegative(DialogInterface dialog);
 
-    public void onThird(DialogInterface dialog);
+    //最左边的按钮
+    void onNeutral(DialogInterface dialog);
 
-
-    public void onCancle();
+    void onCancel();
 
 
 }
