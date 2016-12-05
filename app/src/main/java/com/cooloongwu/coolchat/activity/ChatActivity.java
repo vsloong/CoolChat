@@ -28,10 +28,10 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
-import com.cooloongwu.coolchat.entity.Chat;
-import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.base.MyService;
+import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
+import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.qupai.QupaiSetting;
@@ -51,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,8 +76,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isVoice = true;
 
     private ArrayList<Chat> chatListData = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private ChatAdapter adapter;
+    private static RecyclerView recyclerView;
+    private static ChatAdapter adapter;
+    private MyHandler handler = new MyHandler(ChatActivity.this);
 
     private MyService.MyBinder myBinder;
     private AudioRecorderUtils audioRecorderUtils;
@@ -618,12 +620,40 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         AppConfig.setUserCurrentChatType(ChatActivity.this, "");
     }
 
+    private static class MyHandler extends Handler {
+        private WeakReference<ChatActivity> activityWeakReference;
+
+        MyHandler(ChatActivity activity) {
+            activityWeakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ChatActivity activity = activityWeakReference.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case 0:
+                        adapter.notifyDataSetChanged();
+                        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                        break;
+                    case 1:
+                        Bundle bundle = msg.getData();
+                        String otherMsg = bundle.getString("otherMsg");
+                        //Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
     /**
      * 处理消息事件
      * 0：刷新数据
      * 1：提醒其他好友或群组来消息
      */
-    private Handler handler = new Handler() {
+    /*private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -641,7 +671,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             }
             super.handleMessage(msg);
         }
-    };
+    };*/
 
     /**
      * 显示键盘
