@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -76,6 +77,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isVoice = true;
 
     private ArrayList<Chat> chatListData = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
     private static RecyclerView recyclerView;
     private static ChatAdapter adapter;
     private MyHandler handler = new MyHandler(ChatActivity.this);
@@ -91,6 +93,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private final int REQUEST_IMAGE = 0x01;
     private final int REQUEST_VIDEO = 0x02;
+
+    private long latestId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +135,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
         //layoutManager.setStackFromEnd(true);
@@ -154,6 +159,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         imgbtn_video.setOnClickListener(this);
         btn_audio.setOnClickListener(this);
         btn_audio.setOnTouchListener(this);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initRefreshChatData();
+            }
+        });
     }
 
     /**
@@ -169,15 +181,39 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 .orderDesc(ChatDao.Properties.Time)
                 .build()
                 .list();
-        //倒序排列下
-        Collections.reverse(chatFriends);
-        chatListData.addAll(chatFriends);
-        adapter.notifyDataSetChanged();
-        int itemCount = adapter.getItemCount() - 1;
-        if (itemCount > 0) {
-            recyclerView.smoothScrollToPosition(itemCount);
-        }
+        if (!chatFriends.isEmpty()) {
+            latestId = chatFriends.get(chatFriends.size() - 1).getId();
+            //倒序排列下
+            Collections.reverse(chatFriends);
+            chatListData.addAll(chatFriends);
 
+            adapter.notifyDataSetChanged();
+            int itemCount = adapter.getItemCount() - 1;
+            if (itemCount > 0) {
+                recyclerView.smoothScrollToPosition(itemCount);
+            }
+        }
+    }
+
+    private void initRefreshChatData() {
+        //如果是和好友聊天
+        ChatDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
+        List<Chat> chatFriends = chatFriendDao.queryBuilder()
+                .where(ChatDao.Properties.ChatType.eq(chatType), ChatDao.Properties.Id.lt(latestId))
+                .whereOr(ChatDao.Properties.FromId.eq(chatId), ChatDao.Properties.ToId.eq(chatId))
+                .limit(10)
+                .orderDesc(ChatDao.Properties.Time)
+                .build()
+                .list();
+        if (!chatFriends.isEmpty()) {
+            latestId = chatFriends.get(chatFriends.size() - 1).getId();
+            Collections.reverse(chatFriends);
+            chatListData.addAll(0, chatFriends);
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(ChatActivity.this, "没有更多数据了", Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Subscribe
