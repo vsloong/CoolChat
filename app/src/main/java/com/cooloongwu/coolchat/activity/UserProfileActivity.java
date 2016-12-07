@@ -3,7 +3,6 @@ package com.cooloongwu.coolchat.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.base.AppManager;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
@@ -23,6 +23,7 @@ import com.cooloongwu.coolchat.utils.DialogUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.IMyDialogListener;
 import com.cooloongwu.greendao.gen.ContactDao;
+import com.cooloongwu.greendao.gen.ConversationDao;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -118,11 +119,28 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, NameActivity.REQUEST_REMARKNAME);
                 break;
             case R.id.action_delete:
-
                 DialogUtils.showMdAlert(UserProfileActivity.this, "提醒", "确定删除该好友么？", "确定", "取消", "", true, true, new IMyDialogListener() {
                     @Override
                     public void onPositive(DialogInterface dialog) {
-                        Toast.makeText(UserProfileActivity.this, "确定", Toast.LENGTH_SHORT).show();
+                        //删除会话页面的聊天信息
+                        ConversationDao conversationDao = GreenDAOUtils.getInstance(UserProfileActivity.this).getConversationDao();
+                        Conversation conversation = conversationDao
+                                .queryBuilder()
+                                .where(ConversationDao.Properties.Type.eq("friend"), ConversationDao.Properties.MultiId.eq(contact.getUserId()))
+                                .build()
+                                .unique();
+                        if (conversation != null) {
+                            conversationDao.delete(conversation);
+                            //通知会话页面刷新
+                            EventBus.getDefault().post(new Conversation());
+                        }
+
+                        //删除联系人
+                        contactDao.delete(contact);
+                        //通知联系人Fragment页面刷新
+                        EventBus.getDefault().post(new Contact());
+
+                        AppManager.getInstance().finishActivity(UserProfileActivity.this);
                     }
 
                     @Override

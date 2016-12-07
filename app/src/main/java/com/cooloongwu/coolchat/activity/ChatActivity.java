@@ -212,8 +212,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             adapter.notifyDataSetChanged();
         } else {
             Toast.makeText(ChatActivity.this, "没有更多数据了", Toast.LENGTH_SHORT).show();
-            swipeRefreshLayout.setRefreshing(false);
         }
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Subscribe
