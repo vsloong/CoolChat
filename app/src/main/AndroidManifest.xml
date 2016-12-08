@@ -50,7 +50,9 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <activity android:name=".activity.UserProfileActivity" />
+        <activity
+            android:name=".activity.UserProfileActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".activity.MyProfileActivity" />
         <activity android:name=".activity.LoginActivity" />
         <!-- Image Selector Entry -->
@@ -74,7 +76,11 @@
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.GroupProfileActivity"></activity>
+        <activity
+            android:name=".activity.GroupProfileActivity"
+            android:label="@string/title_activity_setting"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

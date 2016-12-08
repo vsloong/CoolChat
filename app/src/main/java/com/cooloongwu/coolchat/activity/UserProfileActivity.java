@@ -140,7 +140,9 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                         //通知联系人Fragment页面刷新
                         EventBus.getDefault().post(new Contact());
 
+                        AppManager.getInstance().finishActivity(ChatActivity.class);
                         AppManager.getInstance().finishActivity(UserProfileActivity.this);
+
                     }
 
                     @Override
