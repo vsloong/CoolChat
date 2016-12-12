@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apkfuns.logutils.LogUtils;
@@ -68,6 +69,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private ImageButton imgbtn_voice_keyboard;
     private Button btn_audio;
     private EditText edit_input;
+    private static TextView text_unread_msg;
 
     private boolean isSend = false;
     private boolean isMore = true;
@@ -144,6 +146,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         recyclerView.setAdapter(adapter);
         edit_input = (EditText) findViewById(R.id.edit_input);
         edit_input.addTextChangedListener(textWatcher);
+        text_unread_msg = (TextView) findViewById(R.id.text_unread_msg);
 
         imgbtn_emoji_keyboard = (ImageButton) findViewById(R.id.imgbtn_emoji_keyboard);
         imgbtn_more_send_close = (ImageButton) findViewById(R.id.imgbtn_more_send_close);
@@ -315,6 +318,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         msg.setData(bundle);
         msg.what = 1;
         handler.sendMessage(msg);
+        handler.sendEmptyMessageDelayed(2, 1500);
     }
 
     /**
@@ -650,6 +654,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         unbindService(connection);
+        handler.removeCallbacksAndMessages(null);
 
         //设置当前聊天对象，表示没有
         AppConfig.setUserCurrentChatId(ChatActivity.this, 0);
@@ -675,7 +680,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     case 1:
                         Bundle bundle = msg.getData();
                         String otherMsg = bundle.getString("otherMsg");
+                        text_unread_msg.setVisibility(View.VISIBLE);
+                        text_unread_msg.setText(otherMsg);
                         //Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        text_unread_msg.setVisibility(View.GONE);
                         break;
                     default:
                         break;
@@ -850,4 +860,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 QupaiSetting.description)
         );
     }
+
+
 }

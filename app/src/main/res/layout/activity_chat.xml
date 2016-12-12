@@ -91,19 +91,18 @@
                 android:id="@+id/imgbtn_more_send_close"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
+                android:layout_marginRight="10dp"
                 android:background="@color/transparent"
-                android:src="@mipmap/conversation_btn_messages_more"
-                android:layout_marginRight="10dp" />
+                android:src="@mipmap/conversation_btn_messages_more" />
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_input"
             android:layout_below="@+id/appbar"
-            android:background="@color/bg_chat"
-            android:orientation="vertical">
+            android:background="@color/bg_chat">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
@@ -118,7 +117,17 @@
                 </android.support.v7.widget.RecyclerView>
             </android.support.v4.widget.SwipeRefreshLayout>
 
+            <TextView
+                android:id="@+id/text_unread_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="16dp"
+                android:text="名字：内容"
+                android:textColor="@color/text_brown"
+                android:textSize="16sp"
+                android:visibility="gone" />
 
-        </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
