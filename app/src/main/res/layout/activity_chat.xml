@@ -122,6 +122,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:ellipsize="end"
+                android:lines="1"
                 android:padding="16dp"
                 android:text="名字：内容"
                 android:textColor="@color/text_brown"

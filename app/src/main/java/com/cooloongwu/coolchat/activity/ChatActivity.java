@@ -90,6 +90,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private int chatId;
     private String chatType;
 
+    //在当前页面接收到另一个好友或者群组的聊天消息
+    private int otherChatId;
+    private String otherChatType;
+    private String otherChatName;
+
     private long startTime = 0;
     private float startX;
 
@@ -269,6 +274,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         msg.what = 0;
                         handler.sendMessage(msg);
                     } else {
+                        //是好友信息，但不是当前聊天好友的
+                        otherChatId = fromId;
+                        otherChatName = fromName;
+                        otherChatType = toWhich;
+
                         showOtherMsg(fromName + "：" + content);
                     }
                 } else {
@@ -294,6 +304,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         handler.sendMessage(msg);
                     } else {
                         //不是当前群组的聊天消息，提示来消息了即可
+                        otherChatId = toId;
+                        otherChatName = "群组名"; //这里群组名需要从数据库查询
+                        otherChatType = toWhich;
+
                         showOtherMsg(fromName + "：" + content);
                     }
                 }
