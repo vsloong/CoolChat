@@ -32,11 +32,13 @@ import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
+import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
+import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.cooloongwu.qupai.QupaiUpload;
@@ -626,6 +628,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
                 toolbar.setTitle(chatName);
                 initRecentChatData(chatType, chatId);
+
+                //并将聊天列表页的未读消息数置为0
+                ConversationDao conversationDao = GreenDAOUtils.getInstance(ChatActivity.this).getConversationDao();
+                Conversation conversation = conversationDao.queryBuilder()
+                        .where(ConversationDao.Properties.Type.eq(chatType), ConversationDao.Properties.MultiId.eq(chatId))
+                        .build().unique();
+                conversation.setUnReadNum(0);
+                conversationDao.update(conversation);
+                //通知聊天列表页更新
+                EventBus.getDefault().post(new Conversation());
                 break;
             default:
                 break;
