@@ -19,9 +19,7 @@ import org.greenrobot.greendao.identityscope.IdentityScopeType;
 public class DaoMaster extends AbstractDaoMaster {
     public static final int SCHEMA_VERSION = 1;
 
-    /**
-     * Creates underlying database table using DAOs.
-     */
+    /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
         ChatDao.createTable(db, ifNotExists);
         ContactDao.createTable(db, ifNotExists);

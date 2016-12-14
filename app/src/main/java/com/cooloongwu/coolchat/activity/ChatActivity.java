@@ -32,10 +32,12 @@ import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
+import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
+import com.cooloongwu.greendao.gen.GroupDao;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.cooloongwu.qupai.QupaiUpload;
 import com.cooloongwu.qupai.RecordResult;
@@ -87,8 +89,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private MyService.MyBinder myBinder;
     private AudioRecorderUtils audioRecorderUtils;
 
+    private Toolbar toolbar;
     private int chatId;
     private String chatType;
+    private String chatName;
 
     //在当前页面接收到另一个好友或者群组的聊天消息
     private int otherChatId;
@@ -113,14 +117,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
         getData();
         initViews();
-        initRecentChatData();
+        initRecentChatData(chatType, chatId);
     }
 
     private void getData() {
         Intent intent = getIntent();
         chatId = intent.getIntExtra("chatId", 0);                 //好友或者群组的ID
         chatType = intent.getStringExtra("chatType");               //群组还是好友
-        String chatName = intent.getStringExtra("chatName");        //群组名或者好友名
+        chatName = intent.getStringExtra("chatName");        //群组名或者好友名
         LogUtils.e("聊天信息" + "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");
         initToolbar(chatName);
 
@@ -130,7 +134,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initToolbar(String title) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -160,6 +164,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
         btn_audio = (Button) findViewById(R.id.btn_audio);
 
+        text_unread_msg.setOnClickListener(this);
         imgbtn_emoji_keyboard.setOnClickListener(this);
         imgbtn_more_send_close.setOnClickListener(this);
         imgbtn_voice_keyboard.setOnClickListener(this);
@@ -171,7 +176,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initRefreshChatData();
+                initMoreChatData(chatType, chatId);
             }
         });
     }
@@ -179,21 +184,36 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     /**
      * 加载最近的聊天消息，默认5条（QQ是15条）
      */
-    private void initRecentChatData() {
-        //如果是和好友聊天
-        ChatDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
-        List<Chat> chatFriends = chatFriendDao.queryBuilder()
-                .where(ChatDao.Properties.ChatType.eq(chatType))
-                .whereOr(ChatDao.Properties.FromId.eq(chatId), ChatDao.Properties.ToId.eq(chatId))
-                .limit(5)
-                .orderDesc(ChatDao.Properties.Time)
-                .build()
-                .list();
-        if (!chatFriends.isEmpty()) {
-            latestId = chatFriends.get(chatFriends.size() - 1).getId();
+    private void initRecentChatData(String chatType, int chatId) {
+        ChatDao chatDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
+        List<Chat> chats;
+
+        //从Id最大的往小查
+        if ("friend".equals(chatType)) {
+            chats = chatDao.queryBuilder()
+                    .where(ChatDao.Properties.ChatType.eq(chatType))
+                    .whereOr(ChatDao.Properties.FromId.eq(chatId), ChatDao.Properties.ToId.eq(chatId))
+                    .limit(5)
+                    .orderDesc(ChatDao.Properties.Time)
+                    .build()
+                    .list();
+        } else {
+            chats = chatDao.queryBuilder()
+                    .where(ChatDao.Properties.ChatType.eq(chatType), ChatDao.Properties.ToId.eq(chatId))
+                    .limit(5)
+                    .orderDesc(ChatDao.Properties.Time)
+                    .build()
+                    .list();
+        }
+
+        if (!chats.isEmpty()) {
+            latestId = chats.get(chats.size() - 1).getId();
+            LogUtils.e("数据的索引" + latestId);
             //倒序排列下
-            Collections.reverse(chatFriends);
-            chatListData.addAll(chatFriends);
+            Collections.reverse(chats);
+            //为了加载和其他人聊天信息的时候清空屏幕
+            chatListData.clear();
+            chatListData.addAll(chats);
 
             adapter.notifyDataSetChanged();
             int itemCount = adapter.getItemCount() - 1;
@@ -203,26 +223,41 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void initRefreshChatData() {
-        //如果是和好友聊天
-        ChatDao chatFriendDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
-        List<Chat> chatFriends = chatFriendDao.queryBuilder()
-                .where(ChatDao.Properties.ChatType.eq(chatType), ChatDao.Properties.Id.lt(latestId))
-                .whereOr(ChatDao.Properties.FromId.eq(chatId), ChatDao.Properties.ToId.eq(chatId))
-                .limit(10)
-                .orderDesc(ChatDao.Properties.Time)
-                .build()
-                .list();
-        if (!chatFriends.isEmpty()) {
-            latestId = chatFriends.get(chatFriends.size() - 1).getId();
-            Collections.reverse(chatFriends);
-            chatListData.addAll(0, chatFriends);
+    /**
+     * 下拉加载更多聊天信息
+     */
+    private void initMoreChatData(String chatType, int chatId) {
+        ChatDao chatDao = GreenDAOUtils.getInstance(ChatActivity.this).getChatDao();
+        List<Chat> chats;
+        //从Id最大的往小查
+        if ("friend".equals(chatType)) {
+            chats = chatDao.queryBuilder()
+                    .where(ChatDao.Properties.ChatType.eq(chatType), ChatDao.Properties.Id.lt(latestId))
+                    .whereOr(ChatDao.Properties.FromId.eq(chatId), ChatDao.Properties.ToId.eq(chatId))
+                    .limit(10)
+                    .orderDesc(ChatDao.Properties.Time)
+                    .build()
+                    .list();
+        } else {
+            chats = chatDao.queryBuilder()
+                    .where(ChatDao.Properties.ChatType.eq(chatType), ChatDao.Properties.Id.lt(latestId), ChatDao.Properties.ToId.eq(chatId))
+                    .limit(10)
+                    .orderDesc(ChatDao.Properties.Time)
+                    .build()
+                    .list();
+        }
+        if (!chats.isEmpty()) {
+            latestId = chats.get(chats.size() - 1).getId();
+            LogUtils.e("数据的索引" + latestId);
+            Collections.reverse(chats);
+            chatListData.addAll(0, chats);
             adapter.notifyDataSetChanged();
         } else {
             Toast.makeText(ChatActivity.this, "没有更多数据了", Toast.LENGTH_SHORT).show();
         }
         swipeRefreshLayout.setRefreshing(false);
     }
+
 
     @Subscribe
     public void onEventMainThread(JSONObject jsonObject) {
@@ -236,8 +271,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
              *                   那么fromId可能是自己的ID（自己发的消息）或者群组中其他人的ID（群组中其他人发的消息）
              */
             String toWhich = jsonObject.getString("toWhich");   //可能是friend或者group
-            int toId = jsonObject.getInt("toId");             //可能是我自己的ID或者对方的ID
-            int fromId = jsonObject.getInt("fromId");         //可能是我自己的ID或者对方的ID
+            int toId = jsonObject.getInt("toId");               //可能是我自己的ID或者对方的ID
+            int fromId = jsonObject.getInt("fromId");           //可能是我自己的ID或者对方的ID
 
             String fromAvatar = jsonObject.getString("fromAvatar");
             String fromName = jsonObject.getString("fromName");
@@ -253,67 +288,63 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                             || (toId == AppConfig.getUserId(ChatActivity.this) && fromId == chatId)//朋友发给我的消息
                             ) {
                         //是跟当前好友的聊天消息
-                        List<Chat> chatFriends = new ArrayList<>();
-                        Chat chatFriend = new Chat();
-                        chatFriend.setFromId(fromId);
-                        chatFriend.setFromAvatar(fromAvatar);
-                        chatFriend.setFromName(fromName);
-                        chatFriend.setContent(content);
-                        chatFriend.setContentType(contentType);
-                        chatFriend.setToId(toId);
-                        chatFriend.setTime(time);
-                        chatFriend.setIsRead(true);             //消息已读
+                        List<Chat> chats = new ArrayList<>();
+                        Chat chat = new Chat();
+                        chat.setFromId(fromId);
+                        chat.setFromAvatar(fromAvatar);
+                        chat.setFromName(fromName);
+                        chat.setContent(content);
+                        chat.setContentType(contentType);
+                        chat.setToId(toId);
+                        chat.setTime(time);
+                        chat.setIsRead(true);             //消息已读
                         if ("audio".equals(contentType)) {
-                            chatFriend.setAudioLength(jsonObject.getString("audioLength"));
+                            chat.setAudioLength(jsonObject.getString("audioLength"));
                         }
 
-                        chatFriends.add(chatFriend);
-                        chatListData.addAll(chatFriends);
+                        chats.add(chat);
+                        chatListData.addAll(chats);
 
                         Message msg = new Message();
                         msg.what = 0;
                         handler.sendMessage(msg);
                     } else {
                         //是好友信息，但不是当前聊天好友的
-                        otherChatId = fromId;
-                        otherChatName = fromName;
-                        otherChatType = toWhich;
-
-                        showOtherMsg(fromName + "：" + content);
+                        showOtherFriendMsg(fromName + "：" + content, toWhich, fromId, fromName);
                     }
                 } else {
                     //当前在跟群组聊天，需判断是不是当前群组的消息
                     if (chatId == toId) {
-                        List<Chat> chatGroups = new ArrayList<>();
-                        Chat chatGroup = new Chat();
-                        chatGroup.setContent(content);
-                        chatGroup.setContentType(contentType);
-                        chatGroup.setFromAvatar(fromAvatar);
-                        chatGroup.setFromId(fromId);
-                        chatGroup.setTime(time);
-                        chatGroup.setToId(toId);
-                        chatGroup.setIsRead(true);
+                        List<Chat> chats = new ArrayList<>();
+                        Chat chat = new Chat();
+                        chat.setContent(content);
+                        chat.setContentType(contentType);
+                        chat.setFromAvatar(fromAvatar);
+                        chat.setFromId(fromId);
+                        chat.setTime(time);
+                        chat.setToId(toId);
+                        chat.setIsRead(true);
                         if ("audio".equals(contentType)) {
-                            chatGroup.setAudioLength(jsonObject.getString("audioLength"));
+                            chat.setAudioLength(jsonObject.getString("audioLength"));
                         }
-                        chatGroups.add(chatGroup);
-                        chatListData.addAll(chatGroups);
+                        chats.add(chat);
+                        chatListData.addAll(chats);
 
                         Message msg = new Message();
                         msg.what = 0;
                         handler.sendMessage(msg);
                     } else {
                         //不是当前群组的聊天消息，提示来消息了即可
-                        otherChatId = toId;
-                        otherChatName = "群组名"; //这里群组名需要从数据库查询
-                        otherChatType = toWhich;
-
-                        showOtherMsg(fromName + "：" + content);
+                        showOtherGroupMsg(fromName + "：" + content, toWhich, toId);
                     }
                 }
             } else {
-                //跟当前聊天类型不匹配，比如当前在跟好友聊天，来的是群组消息
-                showOtherMsg(fromName + "：" + content);
+                //跟当前聊天类型不匹配，比如：当前在跟好友聊天，来的是群组消息；当前跟群组聊天，来的是好友消息
+                if ("friend".equals(chatType)) {
+                    showOtherFriendMsg(fromName + "：" + content, toWhich, fromId, fromName);
+                } else {
+                    showOtherGroupMsg(fromName + "：" + content, toWhich, toId);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -325,14 +356,42 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      *
      * @param str 消息内容
      */
-    private void showOtherMsg(String str) {
+    private void showOtherFriendMsg(String str, String chatType, int chatId, String chatName) {
+        otherChatType = chatType;
+        otherChatId = chatId;
+        otherChatName = chatName;
+
         Message msg = new Message();
         Bundle bundle = new Bundle();
         bundle.putString("otherMsg", str);
         msg.setData(bundle);
         msg.what = 1;
         handler.sendMessage(msg);
-        handler.sendEmptyMessageDelayed(2, 1500);
+        handler.sendEmptyMessageDelayed(2, 5000);
+    }
+
+    /**
+     * 提醒其他好友或者群组来消息了
+     *
+     * @param str 消息内容
+     */
+    private void showOtherGroupMsg(String str, String chatType, int chatId) {
+        otherChatType = chatType;
+        otherChatId = chatId;
+
+        GroupDao groupDao = GreenDAOUtils.getInstance(ChatActivity.this).getGroupDao();
+        Group group = groupDao.queryBuilder()
+                .where(GroupDao.Properties.GroupId.eq(chatId))
+                .build().unique();
+        otherChatName = group.getGroupName();
+
+        Message msg = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putString("otherMsg", otherChatName + "：" + str);
+        msg.setData(bundle);
+        msg.what = 1;
+        handler.sendMessage(msg);
+        handler.sendEmptyMessageDelayed(2, 5000);
     }
 
     /**
@@ -516,7 +575,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     return;
                 }
                 break;
-
             case R.id.imgbtn_gallery:
                 openImageGallery();
                 break;
@@ -558,6 +616,16 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.btn_audio:
                 Toast.makeText(ChatActivity.this, "点击了按钮", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.text_unread_msg:
+                text_unread_msg.setVisibility(View.GONE);
+                //刷新当前页面，加载与点击的好友或者群组聊天
+                chatId = otherChatId;
+                chatType = otherChatType;
+                chatName = otherChatName;
+
+                toolbar.setTitle(chatName);
+                initRecentChatData(chatType, chatId);
                 break;
             default:
                 break;

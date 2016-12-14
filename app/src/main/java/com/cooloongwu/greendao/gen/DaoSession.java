@@ -63,7 +63,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(Conversation.class, conversationDao);
         registerDao(Group.class, groupDao);
     }
-
+    
     public void clear() {
         chatDaoConfig.clearIdentityScope();
         contactDaoConfig.clearIdentityScope();
