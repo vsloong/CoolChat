@@ -1,5 +1,6 @@
 package com.cooloongwu.coolchat.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -56,7 +57,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         AppConfig.clearAllInfo(SettingActivity.this);
         //清除数据库的数据
         GreenDAOUtils.getInstance(SettingActivity.this).clearAllData();
-        //退出App
-        AppManager.getInstance().exitApp();
+        //打开登录页面
+        startActivity(new Intent(SettingActivity.this, LoginActivity.class));
+        //删除其他的Activity
+        AppManager.getInstance().finishAllActivityExcept(LoginActivity.class);
     }
 }

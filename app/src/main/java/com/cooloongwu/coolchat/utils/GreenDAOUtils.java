@@ -1,7 +1,6 @@
 package com.cooloongwu.coolchat.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.base.AppConfig;
@@ -58,7 +57,7 @@ public class GreenDAOUtils {
     public void clearAllData() {
         getContactDao().deleteAll();
         getGroupDao().deleteAll();
-        getContactDao().deleteAll();
+        getConversationDao().deleteAll();
         getChatDao().deleteAll();
     }
 }
