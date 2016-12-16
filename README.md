@@ -2,6 +2,8 @@
 这是一款高仿“一块”App（英文名：yeeCall）的即时通讯的开源客户端，目前正在进行开发，并逐步完善。
 后期会将服务端等的源码也一并进行开源，敬请期待。
 
+服务端采用的是GatewayWorker框架[16]
+
 ##测试账户
 由于涉及到即时通讯，所以客户端需要跟服务器端建立Socket连接，服务端用的是我自己搭建的阿里云服务器，如需测试请在工作日时间
 09:00-18:00的时间段内进行测试，其他时间服务器暂时不提供Socket连接服务（也就是无法聊天），登录等服务正常提供。
@@ -226,3 +228,4 @@ limitations under the License.
 [13]:https://github.com/pengwei1024/LogUtils
 [14]:http://www.qiniu.com/
 [15]:https://www.qupaicloud.com/
+[16]:hhttp://www.workerman.net/gatewaydoc/
