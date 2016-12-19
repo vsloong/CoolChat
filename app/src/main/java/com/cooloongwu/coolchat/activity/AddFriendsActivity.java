@@ -59,7 +59,6 @@ public class AddFriendsActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Toast.makeText(AddFriendsActivity.this, query, Toast.LENGTH_SHORT).show();
                 searchFriend(query.trim());
                 return false;
             }
