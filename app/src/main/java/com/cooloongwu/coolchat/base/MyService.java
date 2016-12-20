@@ -13,9 +13,6 @@ import android.widget.RemoteViews;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.Chat;
-import com.cooloongwu.coolchat.socket.SocketCallback;
-import com.cooloongwu.coolchat.socket.SocketConnect;
-import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.koushikdutta.async.http.AsyncHttpClient;
@@ -90,30 +87,6 @@ public class MyService extends Service {
                 });
             }
         });
-    }
-
-    private void initSocket() {
-        SocketConnect socketConnect = new SocketConnect(new SocketCallback() {
-            @Override
-            public void connected() {
-                LogUtils.d("Service Socket", "已连接");
-                sendLoginMsg();
-            }
-
-            @Override
-            public void receive(byte[] buffer) {
-                String strJson = new String(buffer);
-                LogUtils.d("Service Socket", "获取的数据：" + strJson);
-                handleMsg(strJson);
-            }
-
-            @Override
-            public void disconnect() {
-                LogUtils.d("Service Socket", "已断开");
-            }
-        });
-        socketConnect.setRemoteAddress(AsyncHttpClientUtils.SERVER_IP, AsyncHttpClientUtils.SERVER_PORT);
-        new Thread(socketConnect).start();
     }
 
     private void handleMsg(String strJson) {
