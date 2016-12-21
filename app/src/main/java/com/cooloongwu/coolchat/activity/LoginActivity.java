@@ -13,6 +13,7 @@ import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.MyService;
+import com.cooloongwu.coolchat.base.UserConfig;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -109,6 +110,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             AppConfig.setUserSex(LoginActivity.this, response.getString("sex"));
                             AppConfig.setQiniuToken(LoginActivity.this, response.getString("token"));
                             AppConfig.setUserLoginTime(LoginActivity.this, System.currentTimeMillis());
+
+                            //使用构建器模式
+                            new UserConfig.Builder(LoginActivity.this)
+                                    .setUserId(response.getInt("userId"))
+                                    .setUserName(response.getString("name"))
+                                    .setUserAvatar(response.getString("avatar"))
+                                    .setUserSex(response.getString("sex"))
+                                    .setUserTokenOfQiniu(response.getString("token"))
+                                    .setUserLoginTime(System.currentTimeMillis())
+                                    .build();
 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
