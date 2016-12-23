@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.activity.FriendAddActivity;
 import com.cooloongwu.coolchat.activity.UserProfileActivity;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.GroupUsers;
@@ -50,7 +51,7 @@ public class GroupUsersAdapter extends RecyclerView.Adapter<GroupUsersAdapter.Vi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "点击了这一项", Toast.LENGTH_SHORT).show();
+                context.startActivity(new Intent(context, FriendAddActivity.class));
             }
         });
 

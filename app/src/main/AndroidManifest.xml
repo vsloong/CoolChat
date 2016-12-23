@@ -49,7 +49,6 @@
             android:name=".activity.ChatActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
         <activity
             android:name=".activity.UserProfileActivity"
             android:launchMode="singleTask" />
@@ -61,7 +60,7 @@
             android:configChanges="orientation|screenSize" />
         <activity android:name=".activity.TestActivity" />
         <activity
-            android:name=".activity.AddFriendsActivity"
+            android:name=".activity.FriendSearchActivity"
             android:label="@string/title_activity_add_friends"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -81,6 +80,7 @@
             android:label="@string/title_activity_setting"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.FriendAddActivity"></activity>
     </application>
 
 </manifest>

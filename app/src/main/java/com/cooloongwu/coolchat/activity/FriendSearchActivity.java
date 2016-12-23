@@ -20,14 +20,14 @@ import com.cooloongwu.greendao.gen.ContactDao;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddFriendsActivity extends BaseActivity {
+public class FriendSearchActivity extends BaseActivity {
 
     private LinearLayout layout_points;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_friends);
+        setContentView(R.layout.activity_friend_search);
 
         initToolBar();
         initViews();
@@ -74,20 +74,20 @@ public class AddFriendsActivity extends BaseActivity {
     }
 
     private void searchFriend(String friend) {
-        ContactDao contactDao = GreenDAOUtils.getInstance(AddFriendsActivity.this).getContactDao();
+        ContactDao contactDao = GreenDAOUtils.getInstance(FriendSearchActivity.this).getContactDao();
         List<Contact> contacts = contactDao.queryBuilder()
                 .whereOr(ContactDao.Properties.UserId.eq(friend), ContactDao.Properties.Name.eq(friend), ContactDao.Properties.Name.like("%" + friend + "%"))
                 .build()
                 .list();
 
         if (contacts.size() == 0) {
-            Toast.makeText(AddFriendsActivity.this, "本地无好友，去网络搜索", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FriendSearchActivity.this, "本地无好友，去网络搜索", Toast.LENGTH_SHORT).show();
         } else {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             ArrayList<Contact> listData = new ArrayList<>();
             listData.addAll(contacts);
-            ContactAdapter contactAdapter = new ContactAdapter(AddFriendsActivity.this, listData);
-            recyclerView.setLayoutManager(new LinearLayoutManager(AddFriendsActivity.this));
+            ContactAdapter contactAdapter = new ContactAdapter(FriendSearchActivity.this, listData);
+            recyclerView.setLayoutManager(new LinearLayoutManager(FriendSearchActivity.this));
             recyclerView.setAdapter(contactAdapter);
             contactAdapter.notifyDataSetChanged();
             layout_points.setVisibility(View.GONE);

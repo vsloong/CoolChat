@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -179,7 +178,7 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.fab_invite_friend:
                 fam.close(true);
-                startActivity(new Intent(MainActivity.this, AddFriendsActivity.class));
+                startActivity(new Intent(MainActivity.this, FriendSearchActivity.class));
                 break;
             case R.id.fab_new_chat:
                 fam.close(true);
@@ -349,7 +348,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        startActivity(new Intent(MainActivity.this, AddFriendsActivity.class));
+        startActivity(new Intent(MainActivity.this, FriendSearchActivity.class));
         return super.onOptionsItemSelected(item);
     }
 }

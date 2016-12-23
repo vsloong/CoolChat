@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
-import com.cooloongwu.coolchat.activity.AddFriendsActivity;
+import com.cooloongwu.coolchat.activity.FriendSearchActivity;
 import com.cooloongwu.coolchat.activity.GroupActivity;
 import com.cooloongwu.coolchat.adapter.ContactAdapter;
 import com.cooloongwu.coolchat.base.BaseFragment;
@@ -97,7 +97,7 @@ public class ContactFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.text_addfriend:
-                getActivity().startActivity(new Intent(getActivity(), AddFriendsActivity.class));
+                getActivity().startActivity(new Intent(getActivity(), FriendSearchActivity.class));
                 break;
             case R.id.text_group:
                 getActivity().startActivity(new Intent(getActivity(), GroupActivity.class));
