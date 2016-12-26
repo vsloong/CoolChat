@@ -15,6 +15,7 @@ public class Api {
     private static final String URL_LOGIN = "login";
     private static final String URL_FRIENDS = "friends";
     private static final String URL_GROUPS = "groups";
+    private static final String URL_GROUP_USERS = "groupUsers";
 
     /**
      * 登陆的接口
@@ -55,5 +56,18 @@ public class Api {
         RequestParams params = new RequestParams();
         params.add("userId", String.valueOf(userId));
         AsyncHttpClientUtils.post(context, URL_GROUPS, params, handler);
+    }
+
+    /**
+     * 得到群组用户列表
+     *
+     * @param context 上下文
+     * @param groupId 群组ID
+     * @param handler 处理
+     */
+    public static void getGroupUsersList(Context context, int groupId, JsonHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.add("groupId", String.valueOf(groupId));
+        AsyncHttpClientUtils.post(context, URL_GROUP_USERS, params, handler);
     }
 }

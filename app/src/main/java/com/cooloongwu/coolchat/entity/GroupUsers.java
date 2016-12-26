@@ -17,13 +17,16 @@ public class GroupUsers {
     private int userId;                //用户ID
     private String userName;           //用户名
     private String userAvatar;         //用户头像的url
+    private String userSex;         //用户头像的url
 
-    @Generated(hash = 1531074880)
-    public GroupUsers(Long id, int userId, String userName, String userAvatar) {
+    @Generated(hash = 1754621901)
+    public GroupUsers(Long id, int userId, String userName, String userAvatar,
+                      String userSex) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
         this.userAvatar = userAvatar;
+        this.userSex = userSex;
     }
 
     @Generated(hash = 1096481961)
@@ -60,5 +63,13 @@ public class GroupUsers {
 
     public void setUserAvatar(String userAvatar) {
         this.userAvatar = userAvatar;
+    }
+
+    public String getUserSex() {
+        return this.userSex;
+    }
+
+    public void setUserSex(String userSex) {
+        this.userSex = userSex;
     }
 }

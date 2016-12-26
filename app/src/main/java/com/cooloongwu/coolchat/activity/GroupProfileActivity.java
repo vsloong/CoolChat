@@ -1,8 +1,8 @@
 package com.cooloongwu.coolchat.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,19 +15,31 @@ import android.widget.TextView;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.GroupUsersAdapter;
+import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.entity.GroupUsers;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.greendao.gen.GroupDao;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class GroupProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String groupName;
     private String groupAvatar;
+    private int groupId;
+
+    private ArrayList<GroupUsers> listData = new ArrayList<>();
+    private GroupUsersAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,7 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
         initToolbar();
         initData();
         initViews();
+        getGroupUsersList();
     }
 
     private void initToolbar() {
@@ -58,16 +71,8 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
         LinearLayout layout_change_name = (LinearLayout) findViewById(R.id.layout_change_name);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(GroupProfileActivity.this, 4));
-        ArrayList<GroupUsers> listData = new ArrayList<>();
-        List<GroupUsers> groupUserses = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            GroupUsers groupUsers = new GroupUsers();
-            groupUsers.setUserName("用户" + i);
-            groupUsers.setUserAvatar("http://a.hiphotos.baidu.com/zhidao/wh%3D450%2C600/sign=91f6df96f503738dde1f0426862b9c67/6609c93d70cf3bc7b7ca6ddad200baa1cd112a39.jpg");
-            groupUserses.add(groupUsers);
-        }
-        listData.addAll(groupUserses);
-        GroupUsersAdapter adapter = new GroupUsersAdapter(this, listData);
+
+        adapter = new GroupUsersAdapter(this, listData);
         recyclerView.setAdapter(adapter);
 
         layout_change_name.setOnClickListener(this);
@@ -81,7 +86,7 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
 
     private void initData() {
         Intent intent = getIntent();
-        int groupId = intent.getIntExtra("id", 0);
+        groupId = intent.getIntExtra("id", 0);
 
         GroupDao groupDao = GreenDAOUtils.getInstance(this).getGroupDao();
         Group group = groupDao.queryBuilder()
@@ -91,6 +96,39 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
 
         groupName = group.getGroupName();
         groupAvatar = group.getGroupAvatar();
+    }
+
+    private void getGroupUsersList() {
+        Api.getGroupUsersList(GroupProfileActivity.this, groupId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                LogUtils.e("群组用户的数据：" + response.toString());
+
+                try {
+                    JSONArray users = response.getJSONArray("users");
+                    List<GroupUsers> groupUserses = new ArrayList<>();
+                    for (int i = 0; i < users.length(); i++) {
+                        JSONObject user = users.getJSONObject(i);
+                        GroupUsers groupUsers = new GroupUsers();
+                        groupUsers.setUserId(user.getInt("id"));
+                        groupUsers.setUserName(user.getString("name"));
+                        groupUsers.setUserAvatar(user.getString("avatar"));
+                        groupUsers.setUserSex(user.getString("sex"));
+                        groupUserses.add(groupUsers);
+                    }
+                    listData.addAll(groupUserses);
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
     @Override
