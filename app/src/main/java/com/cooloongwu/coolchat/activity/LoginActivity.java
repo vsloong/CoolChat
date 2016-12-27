@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.Api;
@@ -14,6 +13,7 @@ import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.base.UserConfig;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String password = edit_password.getText().toString().trim();
 
         if (phone.isEmpty() || password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "手机号或者密码不可为空", Toast.LENGTH_SHORT).show();
+            showToast("手机号或者密码不可为空");
             return;
         }
 
@@ -148,6 +148,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void showToast(String msg) {
-        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+        ToastUtils.showShort(getApplicationContext(), msg);
     }
 }

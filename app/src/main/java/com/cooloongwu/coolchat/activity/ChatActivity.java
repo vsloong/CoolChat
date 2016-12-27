@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
@@ -37,6 +36,7 @@ import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
@@ -255,7 +255,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             chatListData.addAll(0, chats);
             adapter.notifyDataSetChanged();
         } else {
-            Toast.makeText(ChatActivity.this, "没有更多数据了", Toast.LENGTH_SHORT).show();
+            ToastUtils.showShort(getApplicationContext(), "没有更多数据了");
         }
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -560,7 +560,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.imgbtn_emoji_keyboard:
                 //如果是“展示表情”的状态，那么点击后展示表情，按钮状态改变为“显示键盘”，并关闭键盘
                 if (isEmoji) {
-                    Toast.makeText(ChatActivity.this, "展示表情,隐藏键盘", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShort(getApplicationContext(), "展示表情,隐藏键盘");
                     imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_keyboard);
                     isEmoji = false;
                     isKeyboard = true;
@@ -569,7 +569,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 //如果是“展示键盘”的状态，那么点击后展示键盘，按钮状态改为“展示表情”，并展示键盘
                 if (isKeyboard) {
-                    Toast.makeText(ChatActivity.this, "展示键盘，隐藏表情", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShort(getApplicationContext(), "展示键盘，隐藏表情");
                     imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_emoji);
                     isKeyboard = false;
                     isEmoji = true;
@@ -586,7 +586,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.imgbtn_more_send_close:
                 //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
                 if (isMore) {
-                    Toast.makeText(ChatActivity.this, "展示更多", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShort(getApplicationContext(), "展示更多");
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_close);
                     isMore = false;
                     isClose = true;
@@ -597,7 +597,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
                 if (isClose) {
-                    Toast.makeText(ChatActivity.this, "关闭更多", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShort(getApplicationContext(), "关闭更多");
                     imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isClose = false;
                     isMore = true;
@@ -617,7 +617,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
             case R.id.btn_audio:
-                Toast.makeText(ChatActivity.this, "点击了按钮", Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(getApplicationContext(), "点击了录音按钮");
                 break;
             case R.id.text_unread_msg:
                 text_unread_msg.setVisibility(View.GONE);
@@ -693,7 +693,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 String thumbnails[] = result.getThumbnail();
                 result.getDuration();
 
-                //Toast.makeText(this, "视频路径:" + videoPath + "图片路径:" + thumbnails[0], Toast.LENGTH_SHORT).show();
                 startUpload(videoPath, thumbnails[0]);
 
                 /**
@@ -721,18 +720,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     float endX = motionEvent.getX();
                     if (endX - startX > 150) {
                         audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                        Toast.makeText(ChatActivity.this, "录音已取消", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShort(getApplicationContext(), "录音已取消");
                     } else {
                         long endTime = System.currentTimeMillis();
                         long audioLength = endTime - startTime;
                         if (audioLength < 1000) {
                             //如果录制时间大于1秒可以发送
                             audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                            Toast.makeText(ChatActivity.this, "录音时间不得少于1秒", Toast.LENGTH_SHORT).show();
+                            ToastUtils.showShort(getApplicationContext(), "录音时间不得少于1秒");
                         } else if (audioLength > 1000 * 60) {
                             //如果录制时间大于一分钟禁止发送
                             audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                            Toast.makeText(ChatActivity.this, "录音时间不得多于1分钟", Toast.LENGTH_SHORT).show();
+                            ToastUtils.showShort(getApplicationContext(), "录音时间不得多于1分钟");
                         } else {
                             audioRecorderUtils.stopRecord();        //结束录音（保存录音文件），并发送
                         }
@@ -776,7 +775,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         String otherMsg = bundle.getString("otherMsg");
                         text_unread_msg.setVisibility(View.VISIBLE);
                         text_unread_msg.setText(otherMsg);
-                        //Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
                         text_unread_msg.setVisibility(View.GONE);
@@ -804,7 +802,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 case 1:
                     Bundle bundle = msg.getData();
                     String otherMsg = bundle.getString("otherMsg");
-                    Toast.makeText(ChatActivity.this, otherMsg, Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -899,7 +896,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private void openRecordPage() {
         QupaiService qupaiService = QupaiManager.getQupaiService(this);
         if (qupaiService == null) {
-            Toast.makeText(this, "插件没有初始化，无法获取 QupaiService", Toast.LENGTH_LONG).show();
+            ToastUtils.showShort(getApplicationContext(), "插件没有初始化，无法获取 QupaiService");
             return;
         }
         qupaiService.showRecordPage(this, REQUEST_VIDEO, true);

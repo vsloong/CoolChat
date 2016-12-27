@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
@@ -22,6 +21,7 @@ import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.utils.DialogUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.IMyDialogListener;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.squareup.picasso.Picasso;
@@ -147,12 +147,12 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onNegative(DialogInterface dialog) {
-                        Toast.makeText(UserProfileActivity.this, "取消", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShort(getApplicationContext(), "取消");
                     }
 
                     @Override
                     public void onNeutral(DialogInterface dialog) {
-                        Toast.makeText(UserProfileActivity.this, "3", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShort(getApplicationContext(), "Neutral");
                     }
 
                     @Override

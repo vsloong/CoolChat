@@ -11,10 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 
 /**
  * 用来起名字的，给群组起名或者修改好友的备注名
@@ -91,7 +91,8 @@ public class NameActivity extends BaseActivity {
                     int newLength = editable.length();//新字符串长度
                     if (selectEndIndex > newLength) {//如果光标结束的索引值超过新字符串长度
                         selectEndIndex = editable.length();
-                        Toast.makeText(NameActivity.this, "最多只能输入" + maxLength + "个字哦", Toast.LENGTH_SHORT).show();
+
+                        ToastUtils.showShort(getApplicationContext(), "最多只能输入" + maxLength + "个字哦");
                     }
                     Selection.setSelection(editable, selectEndIndex);//设置新光标所在的位置
                 } else {
@@ -117,7 +118,7 @@ public class NameActivity extends BaseActivity {
             case R.id.action_create:
                 String name = edit_name.getText().toString().trim();
                 if (name.isEmpty()) {
-                    Toast.makeText(NameActivity.this, "名字不可为空", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showShort(getApplicationContext(), "名字不可为空");
                 } else {
                     returnName(name);
                 }
@@ -137,7 +138,7 @@ public class NameActivity extends BaseActivity {
                 finish();
                 break;
             case "createGroup":
-                Toast.makeText(NameActivity.this, "名字为：" + name, Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(getApplicationContext(), "名字为：" + name);
                 break;
             case "changeGroupName":
                 Intent changeNameIntent = new Intent();

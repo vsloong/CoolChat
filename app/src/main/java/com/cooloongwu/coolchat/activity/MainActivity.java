@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
@@ -28,6 +27,7 @@ import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.GroupDao;
 import com.github.clans.fab.FloatingActionButton;
@@ -161,8 +161,8 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    private void showToast(String str) {
-        Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+    private void showToast(String msg) {
+        ToastUtils.showShort(getApplicationContext(), msg);
     }
 
     @Override

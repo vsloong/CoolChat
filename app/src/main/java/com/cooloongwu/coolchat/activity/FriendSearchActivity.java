@@ -8,13 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ContactAdapter;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class FriendSearchActivity extends BaseActivity {
                 .list();
 
         if (contacts.size() == 0) {
-            Toast.makeText(FriendSearchActivity.this, "本地无好友，去网络搜索", Toast.LENGTH_SHORT).show();
+            ToastUtils.showShort(getApplicationContext(), "本地无好友，去网络搜索");
         } else {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             ArrayList<Contact> listData = new ArrayList<>();
