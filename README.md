@@ -165,7 +165,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [square/picasso][4]
 - [greenrobot/EventBus][5]
 - [greenrobot/greenDAO ][6]
-- [rockerhieu/emojicon][7]
+- [w446108264/XhsEmoticonsKeyboard][7]
 - [hdodenhof/CircleImageView][8]
 - [loopj/android-async-http][9]
 - [lovetuzitong/MultiImageSelector][10]
@@ -219,7 +219,7 @@ limitations under the License.
 [4]:https://github.com/square/picasso
 [5]:https://github.com/greenrobot/EventBus
 [6]:https://github.com/greenrobot/greenDAO
-[7]:https://github.com/rockerhieu/emojicon
+[7]:https://github.com/w446108264/XhsEmoticonsKeyboard
 [8]:https://github.com/hdodenhof/CircleImageView
 [9]:https://github.com/loopj/android-async-http
 [10]:https://github.com/lovetuzitong/MultiImageSelector
