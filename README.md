@@ -165,7 +165,6 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [square/picasso][4]
 - [greenrobot/EventBus][5]
 - [greenrobot/greenDAO ][6]
-- [rockerhieu/emojicon][7]
 - [hdodenhof/CircleImageView][8]
 - [loopj/android-async-http][9]
 - [lovetuzitong/MultiImageSelector][10]
