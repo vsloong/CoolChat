@@ -156,6 +156,8 @@ public class MainActivity extends BaseActivity
                 showToast("暂未开发");
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
+
+                startActivity(new Intent(MainActivity.this, TestActivity.class));
                 break;
         }
         return true;

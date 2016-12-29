@@ -11,4 +11,9 @@
     <color name="text_bg_unread">#0192ff</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="divider">#e6e6e6</color>
+
+    <color name="edit_text">@color/black</color>
+    <color name="edit_hint_text">#ffacacac</color>
+
+    <color name="qq_bg">#ecedf1</color>
 </resources>
