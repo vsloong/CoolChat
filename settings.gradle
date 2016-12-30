@@ -1,1 +1,1 @@
-include ':app', ':Qupai', ':EmojiKeyBoard', ':reclib-qq'
+include ':app', ':Qupai'
