@@ -45,7 +45,7 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GROUP_USERS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"USER_ID\" INTEGER NOT NULL ," + // 1: userId
@@ -54,9 +54,7 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
                 "\"USER_SEX\" TEXT);"); // 4: userSex
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"GROUP_USERS\"";
         db.execSQL(sql);
@@ -65,23 +63,23 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, GroupUsers entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getUserId());
-
+ 
         String userName = entity.getUserName();
         if (userName != null) {
             stmt.bindString(3, userName);
         }
-
+ 
         String userAvatar = entity.getUserAvatar();
         if (userAvatar != null) {
             stmt.bindString(4, userAvatar);
         }
-
+ 
         String userSex = entity.getUserSex();
         if (userSex != null) {
             stmt.bindString(5, userSex);
@@ -91,23 +89,23 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, GroupUsers entity) {
         stmt.clearBindings();
-
+ 
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getUserId());
-
+ 
         String userName = entity.getUserName();
         if (userName != null) {
             stmt.bindString(3, userName);
         }
-
+ 
         String userAvatar = entity.getUserAvatar();
         if (userAvatar != null) {
             stmt.bindString(4, userAvatar);
         }
-
+ 
         String userSex = entity.getUserSex();
         if (userSex != null) {
             stmt.bindString(5, userSex);
@@ -117,7 +115,7 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public GroupUsers readEntity(Cursor cursor, int offset) {
@@ -130,7 +128,7 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
         );
         return entity;
     }
-
+     
     @Override
     public void readEntity(Cursor cursor, GroupUsers entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -138,14 +136,14 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
         entity.setUserName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setUserAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setUserSex(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-    }
-
+     }
+    
     @Override
     protected final Long updateKeyAfterInsert(GroupUsers entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(GroupUsers entity) {
         if (entity != null) {
@@ -164,5 +162,5 @@ public class GroupUsersDao extends AbstractDao<GroupUsers, Long> {
     protected final boolean isEntityUpdateable() {
         return true;
     }
-
+    
 }

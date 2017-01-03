@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
+import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 
 import java.io.File;
@@ -25,6 +26,8 @@ public class AudioRecorderUtils {
 
     private MediaRecorder mMediaRecorder;
     private static final int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
+
+    private static int[] res = {R.mipmap.icon_chat_audio};
 
     private OnAudioStatusUpdateListener audioStatusUpdateListener;
 
@@ -59,6 +62,7 @@ public class AudioRecorderUtils {
         // 开始录音
         /* ①Initial：实例化MediaRecorder对象 */
         if (mMediaRecorder == null)
+            //让程序睡眠0.5秒
             mMediaRecorder = new MediaRecorder();
         try {
             /* ②setAudioSource/setVedioSource */
@@ -83,10 +87,10 @@ public class AudioRecorderUtils {
             startTime = System.currentTimeMillis();
             updateMicStatus();
             Log.e("录音开始时间", "startTime" + startTime);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IOException e) {
             Log.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
-        } catch (IOException e) {
-            Log.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
+        } finally {
+            cancelRecord();
         }
     }
 
