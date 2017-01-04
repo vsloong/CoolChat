@@ -16,10 +16,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -33,10 +31,10 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
-import com.cooloongwu.coolchat.utils.AudioRecorderUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
+import com.cooloongwu.coolchat.view.RecordButton;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
@@ -66,12 +64,12 @@ import java.util.UUID;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageButton imgbtn_emoji_keyboard;
     private ImageButton imgbtn_more_send_close;
     private ImageButton imgbtn_voice_keyboard;
-    private Button btn_audio;
+    private RecordButton btn_audio;
     private EditText edit_input;
     private static TextView text_unread_msg;
 
@@ -89,7 +87,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private MyHandler handler = new MyHandler(ChatActivity.this);
 
     private MyService.MyBinder myBinder;
-    private AudioRecorderUtils audioRecorderUtils;
 
     private Toolbar toolbar;
     private int chatId;
@@ -164,7 +161,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         imgbtn_voice_keyboard = (ImageButton) findViewById(R.id.imgbtn_voice_keyboard);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
-        btn_audio = (Button) findViewById(R.id.btn_audio);
+        btn_audio = (RecordButton) findViewById(R.id.btn_audio);
 
         text_unread_msg.setOnClickListener(this);
         imgbtn_emoji_keyboard.setOnClickListener(this);
@@ -173,7 +170,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         imgbtn_gallery.setOnClickListener(this);
         imgbtn_video.setOnClickListener(this);
         btn_audio.setOnClickListener(this);
-        btn_audio.setOnTouchListener(this);
+        //btn_audio.setOnTouchListener(this);
+        btn_audio.setOnFinishRecordListener(new RecordButton.OnFinishedRecordListener() {
+
+            @Override
+            public void onFinishedRecord(String audioFilePath, String audioLength) {
+                LogUtils.e("录音位置完成：位置：" + audioFilePath + "；长度：" + audioLength);
+                sendAudioMessage(new File(audioFilePath), audioLength);
+            }
+
+            @Override
+            public void onCancelRecord(String msg) {
+                ToastUtils.showShort(getApplicationContext(), msg);
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -511,27 +521,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    /**
-     * 初始化语音
-     */
-    private void initAudioListener() {
-        if (audioRecorderUtils == null) {
-            audioRecorderUtils = new AudioRecorderUtils(ChatActivity.this);
-        }
-        audioRecorderUtils.setOnAudioStatusUpdateListener(new AudioRecorderUtils.OnAudioStatusUpdateListener() {
-            @Override
-            public void onUpdate(double db, long time) {
-
-            }
-
-            @Override
-            public void onStop(String filePath, String audioLength) {
-                LogUtils.e("录音结束", "文件位置：" + filePath + "\n录音长度：" + audioLength);
-                sendAudioMessage(new File(filePath), audioLength);
-            }
-        });
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -544,7 +533,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     isKeyboard = true;
                     isVoice = false;
                     hideKeyboard();
-                    initAudioListener();
+                    //initAudioListener();
                     return;
                 }
                 if (isKeyboard) {
@@ -707,40 +696,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        if (view.getId() == R.id.btn_audio) {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    audioRecorderUtils.startRecord();
-                    startTime = System.currentTimeMillis();
-                    startX = motionEvent.getX();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    float endX = motionEvent.getX();
-                    if (endX - startX > 150) {
-                        audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                        ToastUtils.showShort(getApplicationContext(), "录音已取消");
-                    } else {
-                        long endTime = System.currentTimeMillis();
-                        long audioLength = endTime - startTime;
-                        if (audioLength < 1000) {
-                            //如果录制时间大于1秒可以发送
-                            audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                            ToastUtils.showShort(getApplicationContext(), "录音时间不得少于1秒");
-                        } else if (audioLength > 1000 * 60) {
-                            //如果录制时间大于一分钟禁止发送
-                            audioRecorderUtils.cancelRecord();    //取消录音（不保存录音文件）
-                            ToastUtils.showShort(getApplicationContext(), "录音时间不得多于1分钟");
-                        } else {
-                            audioRecorderUtils.stopRecord();        //结束录音（保存录音文件），并发送
-                        }
-                    }
-                    break;
-            }
-        }
-        return true;
-    }
 
     @Override
     protected void onDestroy() {
