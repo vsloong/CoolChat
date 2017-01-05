@@ -20,7 +20,6 @@ import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.utils.DialogUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
-import com.cooloongwu.coolchat.utils.IMyDialogListener;
 import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
@@ -119,7 +118,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent, NameActivity.REQUEST_REMARKNAME);
                 break;
             case R.id.action_delete:
-                DialogUtils.showMdAlert(UserProfileActivity.this, "提醒", "确定删除该好友么？", "确定", "取消", "", true, true, new IMyDialogListener() {
+                DialogUtils.showMdAlert(UserProfileActivity.this, "提醒", "确定删除该好友么？", "确定", "取消", "", true, true, new DialogUtils.IMyDialogListener() {
                     @Override
                     public void onPositive(DialogInterface dialog) {
                         //删除会话页面的聊天信息

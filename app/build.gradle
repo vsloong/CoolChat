@@ -108,4 +108,5 @@ dependencies {
     //============================================================
     compile 'com.koushikdutta.async:androidasync:2.1.9'
     compile files('libs/logutil-1.4.2.jar')
+    compile project(':emoji')
 }

@@ -61,26 +61,21 @@
         <activity android:name=".activity.TestActivity" />
         <activity
             android:name=".activity.FriendSearchActivity"
-            android:label="@string/title_activity_add_friends"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_add_friends" />
         <activity
             android:name=".activity.GroupActivity"
-            android:label="@string/title_activity_group"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_group" />
         <activity
             android:name=".activity.NameActivity"
-            android:label="@string/title_activity_create_group"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_create_group" />
         <activity
             android:name=".activity.SettingActivity"
-            android:label="@string/title_activity_setting"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_setting" />
         <activity
             android:name=".activity.GroupProfileActivity"
             android:label="@string/title_activity_setting"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.FriendAddActivity"></activity>
+            android:launchMode="singleTask" />
+        <activity android:name=".activity.FriendAddActivity" />
     </application>
 
 </manifest>

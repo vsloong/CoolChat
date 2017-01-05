@@ -9,7 +9,8 @@
     <dimen name="app_bar_height">225dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="margin_nomal">10dp</dimen>
+    <dimen name="margin_normal">10dp</dimen>
     <dimen name="text_14">14sp</dimen>
-    <dimen name="text_nomal">@dimen/text_14</dimen>
+    <dimen name="text_normal">@dimen/text_14</dimen>
+    <dimen name="default_keyboard_height">267dp</dimen>
 </resources>

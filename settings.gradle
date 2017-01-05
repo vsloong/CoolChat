@@ -1,1 +1,1 @@
-include ':app', ':Qupai'
+include ':app', ':Qupai', ':emoji'

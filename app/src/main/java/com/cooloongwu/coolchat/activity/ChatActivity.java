@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
@@ -31,6 +32,7 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
@@ -66,17 +68,17 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageButton imgbtn_emoji_keyboard;
-    private ImageButton imgbtn_more_send_close;
+    private ImageButton imgbtn_emoji;
+    private ImageButton imgbtn_send;
+    private ImageButton imgbtn_more_close;
     private ImageButton imgbtn_voice_keyboard;
     private RecordButton btn_audio;
     private EditText edit_input;
     private static TextView text_unread_msg;
+    private LinearLayout layout_emotion;
 
-    private boolean isSend = false;
     private boolean isMore = true;
     private boolean isClose = false;
-    private boolean isEmoji = true;
     private boolean isKeyboard = false;
     private boolean isVoice = true;
 
@@ -97,9 +99,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private int otherChatId;
     private String otherChatType;
     private String otherChatName;
-
-    private long startTime = 0;
-    private float startX;
 
     private final int REQUEST_IMAGE = 0x01;
     private final int REQUEST_VIDEO = 0x02;
@@ -142,6 +141,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 finish();
             }
         });
+
     }
 
     private void initViews() {
@@ -154,23 +154,27 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         recyclerView.setAdapter(adapter);
         edit_input = (EditText) findViewById(R.id.edit_input);
         edit_input.addTextChangedListener(textWatcher);
+        edit_input.setOnClickListener(this);
         text_unread_msg = (TextView) findViewById(R.id.text_unread_msg);
 
-        imgbtn_emoji_keyboard = (ImageButton) findViewById(R.id.imgbtn_emoji_keyboard);
-        imgbtn_more_send_close = (ImageButton) findViewById(R.id.imgbtn_more_send_close);
+        layout_emotion = (LinearLayout) findViewById(R.id.layout_emotion);
+        imgbtn_emoji = (ImageButton) findViewById(R.id.imgbtn_emoji);
+        imgbtn_send = (ImageButton) findViewById(R.id.imgbtn_send);
+        imgbtn_send.setClickable(false);
+        imgbtn_more_close = (ImageButton) findViewById(R.id.imgbtn_more_close);
         imgbtn_voice_keyboard = (ImageButton) findViewById(R.id.imgbtn_voice_keyboard);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
         btn_audio = (RecordButton) findViewById(R.id.btn_audio);
 
         text_unread_msg.setOnClickListener(this);
-        imgbtn_emoji_keyboard.setOnClickListener(this);
-        imgbtn_more_send_close.setOnClickListener(this);
+        imgbtn_emoji.setOnClickListener(this);
+        imgbtn_send.setOnClickListener(this);
+        imgbtn_more_close.setOnClickListener(this);
         imgbtn_voice_keyboard.setOnClickListener(this);
         imgbtn_gallery.setOnClickListener(this);
         imgbtn_video.setOnClickListener(this);
-        btn_audio.setOnClickListener(this);
-        //btn_audio.setOnTouchListener(this);
+
         btn_audio.setOnFinishRecordListener(new RecordButton.OnFinishedRecordListener() {
 
             @Override
@@ -533,7 +537,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     isKeyboard = true;
                     isVoice = false;
                     hideKeyboard();
-                    //initAudioListener();
                     return;
                 }
                 if (isKeyboard) {
@@ -546,25 +549,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     return;
                 }
                 break;
-            case R.id.imgbtn_emoji_keyboard:
-                //如果是“展示表情”的状态，那么点击后展示表情，按钮状态改变为“显示键盘”，并关闭键盘
-                if (isEmoji) {
-                    ToastUtils.showShort(getApplicationContext(), "展示表情,隐藏键盘");
-                    imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_keyboard);
-                    isEmoji = false;
-                    isKeyboard = true;
-                    hideKeyboard();
-                    return;
-                }
-                //如果是“展示键盘”的状态，那么点击后展示键盘，按钮状态改为“展示表情”，并展示键盘
-                if (isKeyboard) {
-                    ToastUtils.showShort(getApplicationContext(), "展示键盘，隐藏表情");
-                    imgbtn_emoji_keyboard.setImageResource(R.mipmap.conversation_btn_messages_emoji);
-                    isKeyboard = false;
-                    isEmoji = true;
-                    showKeyboard();
-                    return;
-                }
+            case R.id.imgbtn_emoji:
+                ToastUtils.showShort(getApplicationContext(), "展示表情,隐藏键盘");
+                hideKeyboard();
+                showEmotionLayout();
+                break;
+            case R.id.edit_input:
+                layout_emotion.postDelayed(hideEmotionLayoutRunnable, 500);
                 break;
             case R.id.imgbtn_gallery:
                 openImageGallery();
@@ -572,41 +563,29 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             case R.id.imgbtn_video:
                 openRecordPage();
                 break;
-            case R.id.imgbtn_more_send_close:
+            case R.id.imgbtn_send:
+                sendTextMessage();
+                edit_input.setText("");
+                imgbtn_send.setClickable(false);
+                break;
+            case R.id.imgbtn_more_close:
                 //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
                 if (isMore) {
                     ToastUtils.showShort(getApplicationContext(), "展示更多");
-                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_close);
+                    imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_close);
                     isMore = false;
                     isClose = true;
-                    isSend = false;
-
                     hideKeyboard();
                     return;
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
                 if (isClose) {
                     ToastUtils.showShort(getApplicationContext(), "关闭更多");
-                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                    imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isClose = false;
                     isMore = true;
-                    isSend = false;
-
                     return;
                 }
-                //如果是“发送消息”的状态，那么点击后发送消息，按钮状态改为“展示更多”状态，不关闭键盘
-                if (isSend) {
-                    sendTextMessage();
-                    edit_input.setText("");
-                    imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                    isSend = false;
-                    isMore = true;
-                    isClose = false;
-                    return;
-                }
-                break;
-            case R.id.btn_audio:
-                ToastUtils.showShort(getApplicationContext(), "点击了录音按钮");
                 break;
             case R.id.text_unread_msg:
                 text_unread_msg.setVisibility(View.GONE);
@@ -742,30 +721,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 处理消息事件
-     * 0：刷新数据
-     * 1：提醒其他好友或群组来消息
-     */
-    /*private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    adapter.notifyDataSetChanged();
-                    recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-                    break;
-                case 1:
-                    Bundle bundle = msg.getData();
-                    String otherMsg = bundle.getString("otherMsg");
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };*/
-
-    /**
      * 显示键盘
      */
     private void showKeyboard() {
@@ -781,6 +736,41 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         imm.hideSoftInputFromWindow(edit_input.getWindowToken(), 0);
 
     }
+
+    /**
+     * 展示表情栏
+     */
+    private void showEmotionLayout() {
+        //更新表情栏高度和键盘高度相等
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_emotion.getLayoutParams();
+        if (params != null) {
+
+            DisplayUtils.init(ChatActivity.this);
+            LogUtils.e("键盘的高度：" + DisplayUtils.getKeyboardHeight(ChatActivity.this));
+
+            params.height = 554;
+            layout_emotion.setLayoutParams(params);
+        }
+
+        //显示表情栏
+        layout_emotion.removeCallbacks(hideEmotionLayoutRunnable);
+        layout_emotion.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 隐藏表情栏
+     */
+    private void hideEmotionLayout() {
+        //隐藏表情栏
+        layout_emotion.setVisibility(View.GONE);
+    }
+
+    private Runnable hideEmotionLayoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideEmotionLayout();
+        }
+    };
 
     /**
      * 监听输入框的变化，根据字数变化切换按钮
@@ -801,15 +791,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void afterTextChanged(Editable editable) {
             if (sequence.length() > 0) {
-                imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_send);
-                isSend = true;
-                isMore = false;
-                isClose = false;
+                imgbtn_send.setImageResource(R.mipmap.conversation_btn_messages_send);
+                imgbtn_send.setClickable(true);
             } else {
-                imgbtn_more_send_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isSend = false;
-                isMore = true;
-                isClose = false;
+                imgbtn_send.setImageResource(R.mipmap.conversation_btn_messages_send_disable);
+                imgbtn_send.setClickable(false);
             }
         }
     };
