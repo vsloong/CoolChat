@@ -51,19 +51,6 @@
                     android:hint="输入消息..."
                     android:textSize="16sp" />
 
-                <com.cooloongwu.coolchat.view.RecordButton
-                    android:id="@+id/btn_audio"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_ripple"
-                    android:text="长按录音（右滑取消）"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-
                 <ImageButton
                     android:id="@+id/imgbtn_send"
                     android:layout_width="55dp"
@@ -83,7 +70,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/imgbtn_voice_keyboard"
+                    android:id="@+id/imgbtn_voice"
                     android:layout_width="0dp"
                     android:layout_height="36dp"
                     android:layout_weight="1"
@@ -127,13 +114,22 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_emotion"
+                android:id="@+id/layout_multi"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <com.cooloongwu.coolchat.view.RecordButton
+                    android:id="@+id/btn_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/btn_ripple"
+                    android:text="长按录音（右滑取消）"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 

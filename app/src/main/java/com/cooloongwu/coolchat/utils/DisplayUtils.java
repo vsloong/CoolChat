@@ -23,12 +23,18 @@ public class DisplayUtils {
     private static final float ROUND_CEIL = 0.5f;
     private static DisplayMetrics displayMetrics;
     private static Resources resources;
+    private static DisplayUtils displayUtils;
 
-    public static void init(Context context) {
-        if (displayMetrics == null) {
-            resources = context.getResources();
-            displayMetrics = context.getResources().getDisplayMetrics();
+    private DisplayUtils(Context context) {
+        resources = context.getResources();
+        displayMetrics = context.getResources().getDisplayMetrics();
+    }
+
+    public static DisplayUtils init(Context context) {
+        if (displayUtils == null) {
+            displayUtils = new DisplayUtils(context);
         }
+        return displayUtils;
     }
 
     /**

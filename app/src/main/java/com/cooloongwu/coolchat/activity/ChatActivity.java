@@ -1,7 +1,6 @@
 package com.cooloongwu.coolchat.activity;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -32,8 +31,8 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
-import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.KeyboardUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.coolchat.view.RecordButton;
@@ -71,11 +70,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private ImageButton imgbtn_emoji;
     private ImageButton imgbtn_send;
     private ImageButton imgbtn_more_close;
-    private ImageButton imgbtn_voice_keyboard;
+    private ImageButton imgbtn_voice;
     private RecordButton btn_audio;
     private EditText edit_input;
     private static TextView text_unread_msg;
-    private LinearLayout layout_emotion;
+    private LinearLayout layout_multi;
 
     private boolean isMore = true;
     private boolean isClose = false;
@@ -104,6 +103,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private final int REQUEST_VIDEO = 0x02;
 
     private long latestId = 0;
+    private int keyBoardHeight = 554;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,12 +157,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         edit_input.setOnClickListener(this);
         text_unread_msg = (TextView) findViewById(R.id.text_unread_msg);
 
-        layout_emotion = (LinearLayout) findViewById(R.id.layout_emotion);
+        layout_multi = (LinearLayout) findViewById(R.id.layout_multi);
         imgbtn_emoji = (ImageButton) findViewById(R.id.imgbtn_emoji);
         imgbtn_send = (ImageButton) findViewById(R.id.imgbtn_send);
         imgbtn_send.setClickable(false);
         imgbtn_more_close = (ImageButton) findViewById(R.id.imgbtn_more_close);
-        imgbtn_voice_keyboard = (ImageButton) findViewById(R.id.imgbtn_voice_keyboard);
+        imgbtn_voice = (ImageButton) findViewById(R.id.imgbtn_voice);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
         btn_audio = (RecordButton) findViewById(R.id.btn_audio);
@@ -171,7 +171,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         imgbtn_emoji.setOnClickListener(this);
         imgbtn_send.setOnClickListener(this);
         imgbtn_more_close.setOnClickListener(this);
-        imgbtn_voice_keyboard.setOnClickListener(this);
+        imgbtn_voice.setOnClickListener(this);
         imgbtn_gallery.setOnClickListener(this);
         imgbtn_video.setOnClickListener(this);
 
@@ -528,34 +528,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.imgbtn_voice_keyboard:
-                //如果是“展示键盘”的状态，那么点击后展示录音按钮，并关闭键盘
-                if (isVoice) {
-                    imgbtn_voice_keyboard.setImageResource(R.mipmap.conversation_btn_messages_keyboard);
-                    edit_input.setVisibility(View.GONE);
-                    btn_audio.setVisibility(View.VISIBLE);
-                    isKeyboard = true;
-                    isVoice = false;
-                    hideKeyboard();
-                    return;
-                }
-                if (isKeyboard) {
-                    imgbtn_voice_keyboard.setImageResource(R.mipmap.conversation_btn_messages_voice);
-                    edit_input.setVisibility(View.VISIBLE);
-                    btn_audio.setVisibility(View.GONE);
-                    isKeyboard = false;
-                    isVoice = true;
-                    showKeyboard();
-                    return;
-                }
+            case R.id.imgbtn_voice:
+                showMultiLayout();
+                btn_audio.setVisibility(View.VISIBLE);
                 break;
+
             case R.id.imgbtn_emoji:
-                ToastUtils.showShort(getApplicationContext(), "展示表情,隐藏键盘");
-                hideKeyboard();
-                showEmotionLayout();
+                showMultiLayout();
                 break;
             case R.id.edit_input:
-                layout_emotion.postDelayed(hideEmotionLayoutRunnable, 500);
+
+                layout_multi.postDelayed(hideEmotionLayoutRunnable, 500);
+
                 break;
             case R.id.imgbtn_gallery:
                 openImageGallery();
@@ -571,19 +555,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             case R.id.imgbtn_more_close:
                 //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
                 if (isMore) {
-                    ToastUtils.showShort(getApplicationContext(), "展示更多");
                     imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_close);
                     isMore = false;
                     isClose = true;
-                    hideKeyboard();
+
+                    showMultiLayout();
                     return;
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
                 if (isClose) {
-                    ToastUtils.showShort(getApplicationContext(), "关闭更多");
                     imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
                     isClose = false;
                     isMore = true;
+
+                    hideEmotionLayout();
+                    layout_multi.postDelayed(hideEmotionLayoutRunnable, 500);
                     return;
                 }
                 break;
@@ -721,40 +707,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 显示键盘
-     */
-    private void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(edit_input, InputMethodManager.SHOW_FORCED);
-    }
-
-    /**
-     * 关闭键盘
-     */
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edit_input.getWindowToken(), 0);
-
-    }
-
-    /**
      * 展示表情栏
      */
-    private void showEmotionLayout() {
+    private void showMultiLayout() {
         //更新表情栏高度和键盘高度相等
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_emotion.getLayoutParams();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_multi.getLayoutParams();
         if (params != null) {
-
-            DisplayUtils.init(ChatActivity.this);
-            LogUtils.e("键盘的高度：" + DisplayUtils.getKeyboardHeight(ChatActivity.this));
-
             params.height = 554;
-            layout_emotion.setLayoutParams(params);
+            layout_multi.setLayoutParams(params);
         }
 
-        //显示表情栏
-        layout_emotion.removeCallbacks(hideEmotionLayoutRunnable);
-        layout_emotion.setVisibility(View.VISIBLE);
+        //显示表情栏，隐藏键盘
+        layout_multi.removeCallbacks(hideEmotionLayoutRunnable);
+        KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        layout_multi.setVisibility(View.VISIBLE);
+        KeyboardUtils.hideKeyboard(getCurrentFocus());
     }
 
     /**
@@ -762,7 +729,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
      */
     private void hideEmotionLayout() {
         //隐藏表情栏
-        layout_emotion.setVisibility(View.GONE);
+        layout_multi.setVisibility(View.GONE);
+        KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     private Runnable hideEmotionLayoutRunnable = new Runnable() {
