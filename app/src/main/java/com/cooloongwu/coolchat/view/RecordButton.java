@@ -28,7 +28,6 @@ public class RecordButton extends Button {
     private static final int MIN_LENGTH = 1000;        // 最小录音时长1000;
     private float startX;
     private OnFinishedRecordListener onFinishedRecordListener;
-    private RecordHandler recordHandler;
     private MediaRecorder recorder;
 
 
@@ -52,7 +51,7 @@ public class RecordButton extends Button {
     }
 
     private void init() {
-        recordHandler = new RecordHandler();
+        RecordHandler recordHandler = new RecordHandler();
     }
 
     @Override

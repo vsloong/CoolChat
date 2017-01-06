@@ -67,10 +67,8 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageButton imgbtn_emoji;
     private ImageButton imgbtn_send;
     private ImageButton imgbtn_more_close;
-    private ImageButton imgbtn_voice;
     private RecordButton btn_audio;
     private EditText edit_input;
     private static TextView text_unread_msg;
@@ -158,11 +156,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         text_unread_msg = (TextView) findViewById(R.id.text_unread_msg);
 
         layout_multi = (LinearLayout) findViewById(R.id.layout_multi);
-        imgbtn_emoji = (ImageButton) findViewById(R.id.imgbtn_emoji);
+        ImageButton imgbtn_emoji = (ImageButton) findViewById(R.id.imgbtn_emoji);
         imgbtn_send = (ImageButton) findViewById(R.id.imgbtn_send);
         imgbtn_send.setClickable(false);
         imgbtn_more_close = (ImageButton) findViewById(R.id.imgbtn_more_close);
-        imgbtn_voice = (ImageButton) findViewById(R.id.imgbtn_voice);
+        ImageButton imgbtn_voice = (ImageButton) findViewById(R.id.imgbtn_voice);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
         btn_audio = (RecordButton) findViewById(R.id.btn_audio);

@@ -118,18 +118,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/white"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <com.cooloongwu.coolchat.view.RecordButton
                     android:id="@+id/btn_audio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_margin="16dp"
-                    android:background="@drawable/btn_ripple"
+                    android:background="@drawable/btn_audio_ripple_blue"
                     android:text="长按录音（右滑取消）"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
 
