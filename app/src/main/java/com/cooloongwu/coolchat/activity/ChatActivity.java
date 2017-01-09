@@ -3,6 +3,7 @@ package com.cooloongwu.coolchat.activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -69,7 +70,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageButton imgbtn_send;
     private ImageButton imgbtn_more_close;
-    private RecordButton btn_audio;
     private EditText edit_input;
     private static TextView text_unread_msg;
     private LinearLayout layout_multi;
@@ -163,7 +163,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         ImageButton imgbtn_voice = (ImageButton) findViewById(R.id.imgbtn_voice);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
-        btn_audio = (RecordButton) findViewById(R.id.btn_audio);
+
 
         text_unread_msg.setOnClickListener(this);
         imgbtn_emoji.setOnClickListener(this);
@@ -172,20 +172,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         imgbtn_voice.setOnClickListener(this);
         imgbtn_gallery.setOnClickListener(this);
         imgbtn_video.setOnClickListener(this);
-
-        btn_audio.setOnFinishRecordListener(new RecordButton.OnFinishedRecordListener() {
-
-            @Override
-            public void onFinishedRecord(String audioFilePath, String audioLength) {
-                LogUtils.e("录音位置完成：位置：" + audioFilePath + "；长度：" + audioLength);
-                sendAudioMessage(new File(audioFilePath), audioLength);
-            }
-
-            @Override
-            public void onCancelRecord(String msg) {
-                ToastUtils.showShort(getApplicationContext(), msg);
-            }
-        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -528,16 +514,34 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.imgbtn_voice:
                 showMultiLayout();
-                btn_audio.setVisibility(View.VISIBLE);
+
+                RecordButton btn_audio = new RecordButton(ChatActivity.this);
+                btn_audio.setWidth(250);
+                btn_audio.setHeight(250);
+                btn_audio.setBackground(getResources().getDrawable(R.drawable.btn_audio_ripple_blue));
+                btn_audio.setTextColor(Color.WHITE);
+                btn_audio.setText("长按录音（右滑取消）");
+                btn_audio.setOnFinishRecordListener(new RecordButton.OnFinishedRecordListener() {
+
+                    @Override
+                    public void onFinishedRecord(String audioFilePath, String audioLength) {
+                        LogUtils.e("录音位置完成：位置：" + audioFilePath + "；长度：" + audioLength);
+                        sendAudioMessage(new File(audioFilePath), audioLength);
+                    }
+
+                    @Override
+                    public void onCancelRecord(String msg) {
+                        ToastUtils.showShort(getApplicationContext(), msg);
+                    }
+                });
+                layout_multi.addView(btn_audio);
                 break;
 
             case R.id.imgbtn_emoji:
                 showMultiLayout();
                 break;
             case R.id.edit_input:
-
                 layout_multi.postDelayed(hideEmotionLayoutRunnable, 500);
-
                 break;
             case R.id.imgbtn_gallery:
                 openImageGallery();
@@ -708,6 +712,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
      * 展示表情栏
      */
     private void showMultiLayout() {
+        //先删除之前所有的视图
+        layout_multi.removeAllViews();
+
         //更新表情栏高度和键盘高度相等
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_multi.getLayoutParams();
         if (params != null) {

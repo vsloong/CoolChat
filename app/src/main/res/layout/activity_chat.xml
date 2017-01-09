@@ -121,14 +121,6 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.cooloongwu.coolchat.view.RecordButton
-                    android:id="@+id/btn_audio"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="16dp"
-                    android:background="@drawable/btn_audio_ripple_blue"
-                    android:text="长按录音（右滑取消）"
-                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
 
