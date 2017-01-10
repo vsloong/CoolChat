@@ -86,6 +86,8 @@ public class MyService extends Service {
                     }
                 });
             }
+
+
         });
     }
 
@@ -151,8 +153,8 @@ public class MyService extends Service {
 
     public static class MyBinder extends Binder {
         public void sendMessage(JSONObject jsonObject) {
-            //socketConnect.write((jsonObject.toString() + "\n").getBytes());
             webSocket.send(jsonObject.toString());
+
         }
     }
 
