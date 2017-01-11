@@ -5,16 +5,11 @@ package com.cooloongwu.coolchat.utils;
  * Created by CooLoongWu on 2017-1-10 17:52.
  */
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
-import android.support.v4.net.ConnectivityManagerCompat;
 
-import com.apkfuns.logutils.LogUtils;
+import com.cooloongwu.coolchat.base.MyApplication;
 
 public class DeviceNetUtils {
     private DeviceNetUtils() {
@@ -65,72 +60,10 @@ public class DeviceNetUtils {
         return false;
     }
 
-    /**
-     * 对大数据传输时，需要调用该方法做出判断，如果流量敏感，应该提示用户
-     *
-     * @param context
-     * @return true表示流量敏感，false表示不敏感
-     */
-    public static boolean isActiveNetworkMetered(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return ConnectivityManagerCompat.isActiveNetworkMetered(cm);
-    }
-
-    public static Intent registerReceiver(Context context, ConnectivityChangeReceiver receiver) {
-        return context.registerReceiver(receiver, ConnectivityChangeReceiver.FILTER);
-    }
-
-    public static void unregisterReceiver(Context context, ConnectivityChangeReceiver receiver) {
-        context.unregisterReceiver(receiver);
-    }
-
-    public static abstract class ConnectivityChangeReceiver extends BroadcastReceiver {
-
-        public static final IntentFilter FILTER = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-
-        @Override
-        public final void onReceive(Context context, Intent intent) {
-
-            try {
-                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                NetworkInfo gprsInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-                // 判断是否是Connected事件
-                boolean wifiConnected = false;
-                boolean gprsConnected = false;
-                if (wifiInfo != null && wifiInfo.isConnected()) {
-                    wifiConnected = true;
-                }
-                if (gprsInfo != null && gprsInfo.isConnected()) {
-                    gprsConnected = true;
-                }
-                if (wifiConnected || gprsConnected) {
-                    onConnected();
-                    return;
-                }
-
-                // 判断是否是Disconnected事件，注意：处于中间状态的事件不上报给应用！上报会影响体验
-                boolean wifiDisconnected = false;
-                boolean gprsDisconnected = false;
-                if (wifiInfo == null || wifiInfo != null && wifiInfo.getState() == State.DISCONNECTED) {
-                    wifiDisconnected = true;
-                }
-                if (gprsInfo == null || gprsInfo != null && gprsInfo.getState() == State.DISCONNECTED) {
-                    gprsDisconnected = true;
-                }
-                if (wifiDisconnected && gprsDisconnected) {
-                    onDisconnected();
-                    return;
-                }
-            } catch (Exception e) {
-
-                LogUtils.e("ErrorDeviceNetUtils", "DeviceNetUtils ConnectivityChangeReceiver->onReceive->" + e.getMessage());
-            }
-        }
-
-        protected abstract void onDisconnected();
-
-        protected abstract void onConnected();
+    public static boolean hasInternet() {
+        ConnectivityManager cm = (ConnectivityManager) MyApplication.context()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return info != null && info.isAvailable() && info.isConnected();
     }
 }

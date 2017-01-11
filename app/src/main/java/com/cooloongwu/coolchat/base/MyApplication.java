@@ -1,6 +1,8 @@
 package com.cooloongwu.coolchat.base;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 
 import com.apkfuns.logutils.LogLevel;
@@ -24,9 +26,16 @@ import com.loopj.android.http.AsyncHttpClient;
 
 public class MyApplication extends Application {
 
+    static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        context = getApplicationContext();
+
+        Intent i = new Intent(context, NetService.class);
+        startService(i);
 
         LogUtils.getLogConfig()
                 .configAllowLog(true)
@@ -39,6 +48,10 @@ public class MyApplication extends Application {
         initClient();
         initQupaiAuth();
         initQupaiSetting();
+    }
+
+    public static synchronized MyApplication context() {
+        return (MyApplication) context;
     }
 
     /**

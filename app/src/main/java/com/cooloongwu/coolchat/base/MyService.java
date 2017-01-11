@@ -38,7 +38,6 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //initSocket();
         initWebSocket();
     }
 
@@ -74,6 +73,9 @@ public class MyService extends Service {
 
                 MyService.webSocket = webSocket;
                 LogUtils.e("Service WebSocket：" + "已连接");
+                LogUtils.e("isOpen：" + webSocket.isOpen());
+                LogUtils.e("isPaused：" + webSocket.isPaused());
+                LogUtils.e("isChunked：" + webSocket.isChunked());
 
                 //发送登录消息，告知服务器我上线了
                 sendLoginMsg();
@@ -85,6 +87,8 @@ public class MyService extends Service {
                         handleMsg(str);
                     }
                 });
+
+
             }
 
 
@@ -212,5 +216,6 @@ public class MyService extends Service {
         ChatDao chatDao = GreenDAOUtils.getInstance(this).getChatDao();
         chatDao.insert(chat);
     }
+
 
 }

@@ -592,8 +592,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         .build().unique();
                 conversation.setUnReadNum(0);
                 conversationDao.update(conversation);
+
                 //通知聊天列表页更新
                 EventBus.getDefault().post(new Conversation());
+                //并重新指定当前聊天的对象
+                AppConfig.setUserCurrentChatId(ChatActivity.this, chatId);
+                AppConfig.setUserCurrentChatType(ChatActivity.this, chatType);
                 break;
             default:
                 break;
