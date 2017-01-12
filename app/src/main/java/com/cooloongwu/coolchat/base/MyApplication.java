@@ -8,6 +8,7 @@ import android.hardware.Camera;
 import com.apkfuns.logutils.LogLevel;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.qupai.QupaiAuth;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.duanqu.qupai.engine.session.MovieExportOptions;
@@ -34,7 +35,7 @@ public class MyApplication extends Application {
 
         context = getApplicationContext();
 
-        Intent i = new Intent(context, NetService.class);
+        Intent i = new Intent(context, MyService.class);
         startService(i);
 
         LogUtils.getLogConfig()
@@ -120,5 +121,9 @@ public class MyApplication extends Application {
         qupaiService.initRecord(info, projectOptions, uiSettings);
 
         qupaiService.addMusic(0, "Athena", "assets://Qupai/music/Athena");
+    }
+
+    public static void showToast(String msg) {
+        ToastUtils.showShort(context, msg);
     }
 }

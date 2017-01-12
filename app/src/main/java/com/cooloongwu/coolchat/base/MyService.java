@@ -3,7 +3,12 @@ package com.cooloongwu.coolchat.base;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -14,6 +19,7 @@ import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
@@ -38,6 +44,11 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netReceiver, mFilter);
+
         initWebSocket();
     }
 
@@ -50,6 +61,7 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(netReceiver);
     }
 
     @Nullable
@@ -58,16 +70,46 @@ public class MyService extends Service {
         return myBinder;
     }
 
+    private BroadcastReceiver netReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                LogUtils.e("网络状态已经改变");
+
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+                if (info != null && info.isAvailable() && info.isConnected()) {
+                    String name = info.getTypeName();
+                    LogUtils.e("当前网络名称：" + name);
+
+                    initWebSocket();
+                } else {
+                    LogUtils.e("没有可用网络");
+                    ToastUtils.showShort(MyApplication.context, "你已进入没有网络的异次元");
+                }
+            }
+
+        }
+    };
+
     private void initWebSocket() {
-        if (asyncHttpClient != null) {
+        if (asyncHttpClient == null) {
+            LogUtils.e("asyncHttpClient为NULL");
+            asyncHttpClient = AsyncHttpClient.getDefaultInstance();
+        }
+
+        if (webSocket != null && webSocket.isOpen()) {
+            LogUtils.e("webSocket连接着呢");
             return;
         }
-        asyncHttpClient = AsyncHttpClient.getDefaultInstance();
+
         asyncHttpClient.websocket("ws://120.27.47.125:8283", "websocket", new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 if (ex != null) {
                     ex.printStackTrace();
+                    LogUtils.e("Service WebSocket：" + "连接失败");
                     return;
                 }
 
@@ -87,11 +129,7 @@ public class MyService extends Service {
                         handleMsg(str);
                     }
                 });
-
-
             }
-
-
         });
     }
 
@@ -157,8 +195,11 @@ public class MyService extends Service {
 
     public static class MyBinder extends Binder {
         public void sendMessage(JSONObject jsonObject) {
+            if (webSocket != null && !webSocket.isOpen()) {
+                ToastUtils.showShort(MyApplication.context, "你已进入没有网络的异次元");
+                return;
+            }
             webSocket.send(jsonObject.toString());
-
         }
     }
 

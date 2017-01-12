@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.apkfuns.logutils.LogUtils;
-
 /**
  * App的各种配置类
  * Created by CooLoongWu on 2016-9-14 13:50.
@@ -65,6 +63,12 @@ public class AppConfig {
 
     /**
      * 存储修改用户当前聊天对象的类型（群组还是好友）
+     */
+    private static final String HEIGHT_KEYBOARD = "height_keyboard";
+    private static final int defaultHeightKeyboard = 0;
+
+    /**
+     * 存储修改用户当前键盘的高度
      */
     private static final String USER_CURRENT_CHAT_TYPE = "user_current_chat_type";
     private static final String defaultUserCurrentChatType = "";
@@ -223,6 +227,22 @@ public class AppConfig {
     public static String getUserCurrentChatType(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(USER_CURRENT_CHAT_TYPE, defaultUserCurrentChatType);
+    }
+
+    /**
+     * 存储获取用户当前键盘高度
+     *
+     * @param context 上下文
+     * @param height  键盘高度
+     */
+    public static void setKeyboardHeight(Context context, int height) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putInt(HEIGHT_KEYBOARD, height).apply();
+    }
+
+    public static int getKeyboardHeight(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getInt(HEIGHT_KEYBOARD, defaultHeightKeyboard);
     }
 
     /**
