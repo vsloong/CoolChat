@@ -38,7 +38,6 @@ public class MyService extends Service {
 
     private static MyBinder myBinder = new MyBinder();
     private static WebSocket webSocket;
-    private static AsyncHttpClient asyncHttpClient;
 
     //只在第一次创建时调用
     @Override
@@ -49,7 +48,7 @@ public class MyService extends Service {
         mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netReceiver, mFilter);
 
-        initWebSocket();
+        //initWebSocket();
     }
 
     //startService一次则调用一次
@@ -94,16 +93,13 @@ public class MyService extends Service {
     };
 
     private void initWebSocket() {
-        if (asyncHttpClient == null) {
-            LogUtils.e("asyncHttpClient为NULL");
-            asyncHttpClient = AsyncHttpClient.getDefaultInstance();
-        }
 
         if (webSocket != null && webSocket.isOpen()) {
             LogUtils.e("webSocket连接着呢");
             return;
         }
 
+        AsyncHttpClient asyncHttpClient = AsyncHttpClient.getDefaultInstance();
         asyncHttpClient.websocket("ws://120.27.47.125:8283", "websocket", new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
@@ -116,8 +112,6 @@ public class MyService extends Service {
                 MyService.webSocket = webSocket;
                 LogUtils.e("Service WebSocket：" + "已连接");
                 LogUtils.e("isOpen：" + webSocket.isOpen());
-                LogUtils.e("isPaused：" + webSocket.isPaused());
-                LogUtils.e("isChunked：" + webSocket.isChunked());
 
                 //发送登录消息，告知服务器我上线了
                 sendLoginMsg();
@@ -125,7 +119,7 @@ public class MyService extends Service {
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     @Override
                     public void onStringAvailable(String str) {
-                        LogUtils.e("Service WebSocket字符串返回：" + str);
+                        //LogUtils.e("Service WebSocket字符串返回：" + str);
                         handleMsg(str);
                     }
                 });
@@ -195,7 +189,7 @@ public class MyService extends Service {
 
     public static class MyBinder extends Binder {
         public void sendMessage(JSONObject jsonObject) {
-            if (webSocket != null && !webSocket.isOpen()) {
+            if (null == webSocket || !webSocket.isOpen()) {
                 ToastUtils.showShort(MyApplication.context, "你已进入没有网络的异次元");
                 return;
             }
