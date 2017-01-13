@@ -38,6 +38,7 @@ public class MyService extends Service {
 
     private static MyBinder myBinder = new MyBinder();
     private static WebSocket webSocket;
+    private static AsyncHttpClient asyncHttpClient;
 
     //只在第一次创建时调用
     @Override
@@ -48,7 +49,7 @@ public class MyService extends Service {
         mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netReceiver, mFilter);
 
-        //initWebSocket();
+        initWebSocket();
     }
 
     //startService一次则调用一次
@@ -99,7 +100,7 @@ public class MyService extends Service {
             return;
         }
 
-        AsyncHttpClient asyncHttpClient = AsyncHttpClient.getDefaultInstance();
+        asyncHttpClient = AsyncHttpClient.getDefaultInstance();
         asyncHttpClient.websocket("ws://120.27.47.125:8283", "websocket", new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
