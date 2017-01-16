@@ -106,7 +106,9 @@ dependencies {
     // ExoPlayer as IMediaPlayer: optional, experimental
     //    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.6.2'
     //============================================================
-    compile 'com.koushikdutta.async:androidasync:2.1.9'
     compile files('libs/logutil-1.4.2.jar')
     compile project(':emoji')
+
+    //WebSocket所需的OkHttp插件
+    compile 'com.squareup.okhttp3:okhttp-ws:3.4.2'
 }
