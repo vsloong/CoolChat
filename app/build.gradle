@@ -78,7 +78,8 @@ dependencies {
     //以下为七牛云存储所需
     //============================================================
     compile 'com.qiniu:qiniu-android-sdk:7.2.3'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+//    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.qiniu:happy-dns:0.2.10'
     //============================================================

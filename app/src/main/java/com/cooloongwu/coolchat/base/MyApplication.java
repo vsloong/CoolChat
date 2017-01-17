@@ -9,6 +9,7 @@ import com.apkfuns.logutils.LogLevel;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
+import com.cooloongwu.coolchat.utils.WebSocketUtils;
 import com.cooloongwu.qupai.QupaiAuth;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.duanqu.qupai.engine.session.MovieExportOptions;
@@ -19,6 +20,9 @@ import com.duanqu.qupai.engine.session.VideoSessionCreateInfo;
 import com.duanqu.qupai.sdk.android.QupaiManager;
 import com.duanqu.qupai.sdk.android.QupaiService;
 import com.loopj.android.http.AsyncHttpClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 自定义Application类
@@ -49,6 +53,8 @@ public class MyApplication extends Application {
         initClient();
         initQupaiAuth();
         initQupaiSetting();
+
+        sendLoginMsg();
     }
 
     public static synchronized MyApplication context() {
@@ -125,5 +131,20 @@ public class MyApplication extends Application {
 
     public static void showToast(String msg) {
         ToastUtils.showShort(context, msg);
+    }
+
+    /**
+     * 告诉服务器我上线了
+     */
+    private void sendLoginMsg() {
+        //发送数据示例
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("fromId", AppConfig.getUserId(this));
+            jsonObject.put("toWhich", "server");
+            WebSocketUtils.getWebSocket().sendMessage(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

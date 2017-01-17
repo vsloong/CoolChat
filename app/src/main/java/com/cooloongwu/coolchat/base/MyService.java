@@ -6,14 +6,12 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.apkfuns.logutils.LogUtils;
@@ -21,24 +19,13 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
+import com.cooloongwu.coolchat.utils.WebSocketUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.ws.WebSocket;
-import okhttp3.ws.WebSocketCall;
-import okhttp3.ws.WebSocketListener;
-import okio.Buffer;
 
 /**
  * 一个Service类
@@ -48,7 +35,6 @@ import okio.Buffer;
 public class MyService extends Service {
 
     private static MyBinder myBinder = new MyBinder();
-    private static WebSocket webSocket;
 
     //只在第一次创建时调用
     @Override
@@ -59,7 +45,6 @@ public class MyService extends Service {
 //        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 //        registerReceiver(netReceiver, mFilter);
 
-        initWebSocket();
     }
 
     //startService一次则调用一次
@@ -102,45 +87,7 @@ public class MyService extends Service {
         }
     };
 
-    private void initWebSocket() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(3, TimeUnit.SECONDS)//设置读取超时时间
-                .writeTimeout(3, TimeUnit.SECONDS)//设置写的超时时间
-                .connectTimeout(3, TimeUnit.SECONDS)//设置连接超时时间
-                .build();
-        String url = "ws://120.27.47.125:8283";
 
-
-        Request request = new Request.Builder().url(url).build();
-        WebSocketCall webSocketCall = WebSocketCall.create(okHttpClient, request);
-        webSocketCall.enqueue(new WebSocketListener() {
-            @Override
-            public void onOpen(WebSocket webSocket, Response response) {
-                //LogUtils.e("WebSocket：onOpen()");
-            }
-
-            @Override
-            public void onFailure(IOException e, Response response) {
-                //LogUtils.e("WebSocket：onFailure()");
-            }
-
-            @Override
-            public void onMessage(ResponseBody message) throws IOException {
-                //LogUtils.e("WebSocket：onMessage()" + message.contentType().toString());
-                Log.e("OnMessage()", message.contentType().toString());
-            }
-
-            @Override
-            public void onPong(Buffer payload) {
-                //LogUtils.e("WebSocket：onPong()");
-            }
-
-            @Override
-            public void onClose(int code, String reason) {
-                //LogUtils.e("WebSocket：onClose()");
-            }
-        });
-    }
 
     private void handleMsg(String strJson) {
         try {
@@ -204,11 +151,8 @@ public class MyService extends Service {
 
     public static class MyBinder extends Binder {
         public void sendMessage(JSONObject jsonObject) {
-            if (null == webSocket) {
-                ToastUtils.showShort(MyApplication.context, "你已进入没有网络的异次元");
-                return;
-            }
-            //webSocket.send(jsonObject.toString());
+
+            WebSocketUtils.getWebSocket().sendMessage(jsonObject.toString());
         }
     }
 
