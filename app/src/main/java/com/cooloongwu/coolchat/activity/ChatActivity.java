@@ -401,6 +401,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //发送数据示例
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("type", "say");
             jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
             jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
             jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
@@ -434,6 +435,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         //发送数据示例
                         JSONObject jsonObject = new JSONObject();
                         try {
+                            jsonObject.put("type", "say");
                             jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
                             jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
                             jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
@@ -469,6 +471,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         //发送数据示例
                         JSONObject jsonObject = new JSONObject();
                         try {
+                            jsonObject.put("type", "say");
                             jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
                             jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
                             jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
@@ -494,6 +497,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //发送数据示例
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("type", "say");
             jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
             jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
             jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));

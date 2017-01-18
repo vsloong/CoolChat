@@ -4,12 +4,11 @@
 
 服务端采用的是[GatewayWorker][16]框架，等基本完成后会放出服务端代码。
 
-##这两天比较忙，代码都是乱的，可能暂时不能测试了，等改好可以测试后，我会在这里说明的。
 
 ##测试账户
 由于涉及到即时通讯，所以客户端需要跟服务器端建立Socket连接，服务端用的是我自己搭建的阿里云服务器，如需测试请在工作日时间
 09:00-18:00的时间段内进行测试，其他时间服务器暂时不提供Socket连接服务（也就是无法聊天），登录等服务正常提供。
-请测试新版的的用户先把之前安装的旧版卸载，再安装新版本。因为数据库表做了改动，现在还没正式完成App所以没有做兼容，出现闪退请卸载重新安装即可。
+请测试新版的的用户先把之前安装的旧版卸载，再安装新版本。因为数据库表等其他各种功能都做了较大改动，现在还没正式完成App所以没有做兼容，出现闪退请卸载重新安装即可。
 
 ###用户列表
 |用户ID|账号|用户名|密码|
@@ -172,7 +171,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [loopj/android-async-http][9]
 - [lovetuzitong/MultiImageSelector][10]
 - [Bilibili/ijkplayer][11]
-- [koush/AndroidAsync][12]
+- [crossbario/autobahn-android][12]
 - [pengwei1024/LogUtils][13]
 - [七牛云][14]
 - [趣拍云][15]
@@ -184,7 +183,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - ~~有时会导致一条消息发送多次~~
 - ~~点击了录音按钮后会闪退~~
 - ~~切换网络或者掉线时无法自动重连~~
-- 从无网络进入聊天页面时发送消息闪退
+- ~~从无网络进入聊天页面时发送消息闪退~~
 - 弹出键盘时候聊天区域无法自动向上滚动
 - 多图选择在魅蓝3手机中无法显示DCIM下的图片
 
@@ -229,7 +228,7 @@ limitations under the License.
 [9]:https://github.com/loopj/android-async-http
 [10]:https://github.com/lovetuzitong/MultiImageSelector
 [11]:https://github.com/Bilibili/ijkplayer
-[12]:https://github.com/koush/AndroidAsync
+[12]:https://github.com/crossbario/autobahn-android
 [13]:https://github.com/pengwei1024/LogUtils
 [14]:http://www.qiniu.com/
 [15]:https://www.qupaicloud.com/

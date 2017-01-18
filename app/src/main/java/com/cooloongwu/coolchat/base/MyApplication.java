@@ -9,7 +9,6 @@ import com.apkfuns.logutils.LogLevel;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.utils.AsyncHttpClientUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
-import com.cooloongwu.coolchat.utils.WebSocketUtils;
 import com.cooloongwu.qupai.QupaiAuth;
 import com.cooloongwu.qupai.QupaiSetting;
 import com.duanqu.qupai.engine.session.MovieExportOptions;
@@ -142,7 +141,7 @@ public class MyApplication extends Application {
         try {
             jsonObject.put("fromId", AppConfig.getUserId(this));
             jsonObject.put("toWhich", "server");
-            WebSocketUtils.getWebSocket().sendMessage(jsonObject.toString());
+//            WebSocketUtils.getWebSocket().sendMessage(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
