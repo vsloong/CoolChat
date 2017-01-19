@@ -8,8 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.activity.ChatActivity;
+import com.cooloongwu.coolchat.base.AppConfig;
+import com.cooloongwu.coolchat.base.MyApplication;
 
 import java.lang.reflect.Field;
 
@@ -96,8 +97,8 @@ public class DisplayUtils {
                         final Rect r = new Rect();
                         activityRootView.getWindowVisibleDisplayFrame(r);
                         int heightDiff = DisplayUtils.getScreenHeight() - (r.bottom - r.top);
-                        LogUtils.e("键盘的高度（工具类）：" + (heightDiff - getStatusBarHeight()));
-
+                        ToastUtils.showShort(MyApplication.context(), "键盘的高度（工具类）" + (heightDiff - getStatusBarHeight()));
+                        AppConfig.setKeyboardHeight(MyApplication.context(), heightDiff - getStatusBarHeight());
                         test[0] = heightDiff - getStatusBarHeight();
                     }
                 });

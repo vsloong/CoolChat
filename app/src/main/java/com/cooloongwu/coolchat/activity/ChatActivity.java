@@ -32,6 +32,7 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.KeyboardUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
@@ -101,7 +102,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private final int REQUEST_VIDEO = 0x02;
 
     private long latestId = 0;
-    private int keyBoardHeight = 554;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         getData();
         initViews();
+
+        isSetBoardHeight();
         initRecentChatData(chatType, chatId);
+    }
+
+    private void isSetBoardHeight() {
+        if (AppConfig.getKeyboardHeight(ChatActivity.this) == 0) {
+            KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            DisplayUtils.init(this);
+            DisplayUtils.getKeyboardHeight(ChatActivity.this);
+        }
     }
 
     private void getData() {
@@ -726,7 +736,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //更新表情栏高度和键盘高度相等
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_multi.getLayoutParams();
         if (params != null) {
-            params.height = 554;
+            params.height = AppConfig.getKeyboardHeight(ChatActivity.this);
+//            params.height = 554;
             layout_multi.setLayoutParams(params);
         }
 
