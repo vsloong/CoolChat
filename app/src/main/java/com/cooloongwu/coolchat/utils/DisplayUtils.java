@@ -1,5 +1,6 @@
 package com.cooloongwu.coolchat.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.MyApplication;
 
@@ -25,8 +25,10 @@ public class DisplayUtils {
     private static DisplayMetrics displayMetrics;
     private static Resources resources;
     private static DisplayUtils displayUtils;
+    private Context context;
 
     private DisplayUtils(Context context) {
+        this.context = context;
         resources = context.getResources();
         displayMetrics = context.getResources().getDisplayMetrics();
     }
@@ -43,7 +45,7 @@ public class DisplayUtils {
      *
      * @return 宽度（单位：像素）
      */
-    public static int getScreenWidth() {
+    private static int getScreenWidth() {
         return displayMetrics.widthPixels;
     }
 
@@ -52,7 +54,7 @@ public class DisplayUtils {
      *
      * @return 高度（单位：像素）
      */
-    public static int getScreenHeight() {
+    private static int getScreenHeight() {
         return displayMetrics.heightPixels;
     }
 
@@ -61,7 +63,7 @@ public class DisplayUtils {
      *
      * @return 状态栏高度
      */
-    public static int getStatusBarHeight() {
+    private static int getStatusBarHeight() {
         final int defaultHeightInDp = 19;
         int height = DisplayUtils.dp2px(defaultHeightInDp);
         try {
@@ -81,12 +83,12 @@ public class DisplayUtils {
      * @param dp dp值
      * @return 转换后的像素值
      */
-    public static int dp2px(int dp) {
+    private static int dp2px(int dp) {
         return (int) (dp * displayMetrics.density + ROUND_CEIL);
     }
 
-    public static int getKeyboardHeight(ChatActivity activity) {
-        final int[] test = new int[1];
+    public void detectKeyboardHeight() {
+        Activity activity = (Activity) context;
         final View activityRootView = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
         if (activityRootView != null) {
             ViewTreeObserver viewTreeObserver = activityRootView.getViewTreeObserver();
@@ -97,13 +99,13 @@ public class DisplayUtils {
                         final Rect r = new Rect();
                         activityRootView.getWindowVisibleDisplayFrame(r);
                         int heightDiff = DisplayUtils.getScreenHeight() - (r.bottom - r.top);
-                        ToastUtils.showShort(MyApplication.context(), "键盘的高度（工具类）" + (heightDiff - getStatusBarHeight()));
-                        AppConfig.setKeyboardHeight(MyApplication.context(), heightDiff - getStatusBarHeight());
-                        test[0] = heightDiff - getStatusBarHeight();
+                        if (heightDiff - getStatusBarHeight() > 0) {
+                            AppConfig.setKeyboardHeight(MyApplication.context(),
+                                    heightDiff - getStatusBarHeight());
+                        }
                     }
                 });
             }
         }
-        return test[0];
     }
 }

@@ -121,16 +121,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private void isSetBoardHeight() {
         if (AppConfig.getKeyboardHeight(ChatActivity.this) == 0) {
             KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-            DisplayUtils.init(this);
-            DisplayUtils.getKeyboardHeight(ChatActivity.this);
+            DisplayUtils.init(ChatActivity.this).detectKeyboardHeight();
         }
     }
 
     private void getData() {
         Intent intent = getIntent();
-        chatId = intent.getIntExtra("chatId", 0);                 //好友或者群组的ID
-        chatType = intent.getStringExtra("chatType");               //群组还是好友
-        chatName = intent.getStringExtra("chatName");        //群组名或者好友名
+        chatId = intent.getIntExtra("chatId", 0);                       //好友或者群组的ID
+        chatType = intent.getStringExtra("chatType");                   //群组还是好友
+        chatName = intent.getStringExtra("chatName");                   //群组名或者好友名
         LogUtils.e("聊天信息" + "当前在跟" + chatType + "：ID为" + chatId + "的" + chatName + "聊天");
         initToolbar(chatName);
 
