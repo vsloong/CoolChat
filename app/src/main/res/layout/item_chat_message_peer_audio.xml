@@ -29,12 +29,17 @@
             android:textSize="12sp"
             tools:text="CooLoongWu" />
 
-        <SurfaceView
-            android:id="@+id/video_view"
+        <TextView
+            android:id="@+id/text_content"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp" />
-        <!--android:background="@drawable/conversation_bkg_messages_text_peer_normal" -->
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/conversation_bkg_messages_text_self_normal"
+            android:drawablePadding="4dp"
+            android:drawableRight="@mipmap/icon_chat_audio"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            tools:text="10''" />
     </LinearLayout>
 
 

@@ -3,8 +3,6 @@ package com.cooloongwu.coolchat.view;
 import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -51,7 +49,6 @@ public class RecordButton extends Button {
     }
 
     private void init() {
-        RecordHandler recordHandler = new RecordHandler();
     }
 
     @Override
@@ -80,18 +77,20 @@ public class RecordButton extends Button {
      * 开始录音
      */
     private void startRecord() {
-        startTime = System.currentTimeMillis();
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        recorder.setOutputFile(audioFileName);
+        if (recorder == null)
+            recorder = new MediaRecorder();
         try {
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            recorder.setOutputFile(audioFileName);
             recorder.prepare();
+            recorder.start();
+            startTime = System.currentTimeMillis();
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtils.e("MediaRecorder start()报错");
         }
-        recorder.start();
     }
 
     /**
@@ -100,6 +99,7 @@ public class RecordButton extends Button {
     private void finishRecord() {
         if (recorder != null) {
             recorder.stop();
+            recorder.reset();
             recorder.release();
             recorder = null;
         }
@@ -139,14 +139,6 @@ public class RecordButton extends Button {
         if (onFinishedRecordListener != null)
             onFinishedRecordListener.onCancelRecord("录音取消");
     }
-
-    private static class RecordHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            LogUtils.e("录音中：" + msg.what);
-        }
-    }
-
 
     public interface OnFinishedRecordListener {
         void onFinishedRecord(String audioFilePath, String audioLength);

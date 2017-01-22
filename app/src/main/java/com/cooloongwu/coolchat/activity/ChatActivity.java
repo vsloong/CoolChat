@@ -32,6 +32,7 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.utils.DensityUtils;
 import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.KeyboardUtils;
@@ -529,8 +530,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 showMultiLayout();
 
                 RecordButton btn_audio = new RecordButton(ChatActivity.this);
-                btn_audio.setWidth(250);
-                btn_audio.setHeight(250);
+                btn_audio.setWidth(DensityUtils.dp2px(ChatActivity.this, 160));
+                btn_audio.setHeight(DensityUtils.dp2px(ChatActivity.this, 160));
                 btn_audio.setBackground(getResources().getDrawable(R.drawable.btn_audio_ripple_blue));
                 btn_audio.setTextColor(Color.WHITE);
                 btn_audio.setText("长按录音（右滑取消）");
@@ -553,20 +554,27 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             case R.id.imgbtn_emoji:
                 showMultiLayout();
                 break;
+
             case R.id.edit_input:
-                layout_multi.postDelayed(hideEmotionLayoutRunnable, 500);
+                layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
                 break;
+
             case R.id.imgbtn_gallery:
+                hideMultiLayout();
                 openImageGallery();
                 break;
+
             case R.id.imgbtn_video:
+                hideMultiLayout();
                 openRecordPage();
                 break;
+
             case R.id.imgbtn_send:
                 sendTextMessage();
                 edit_input.setText("");
                 imgbtn_send.setClickable(false);
                 break;
+
             case R.id.imgbtn_more_close:
                 //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
                 if (isMore) {
@@ -583,8 +591,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     isClose = false;
                     isMore = true;
 
-                    hideEmotionLayout();
-                    layout_multi.postDelayed(hideEmotionLayoutRunnable, 500);
+                    hideMultiLayout();
                     return;
                 }
                 break;
@@ -726,40 +733,39 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 展示表情栏
+     * 展示多功能布局
      */
     private void showMultiLayout() {
-        //先删除之前所有的视图
+        //删除之前的所有其他视图
         layout_multi.removeAllViews();
-
         //更新表情栏高度和键盘高度相等
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_multi.getLayoutParams();
         if (params != null) {
             params.height = AppConfig.getKeyboardHeight(ChatActivity.this);
-//            params.height = 554;
             layout_multi.setLayoutParams(params);
         }
 
-        //显示表情栏，隐藏键盘
-        layout_multi.removeCallbacks(hideEmotionLayoutRunnable);
+        //显示多功能布局，隐藏键盘
+        layout_multi.removeCallbacks(hideMultiLayoutRunnable);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         layout_multi.setVisibility(View.VISIBLE);
         KeyboardUtils.hideKeyboard(getCurrentFocus());
     }
 
     /**
-     * 隐藏表情栏
+     * 隐藏多功能布局
      */
-    private void hideEmotionLayout() {
+    private void hideMultiLayout() {
         //隐藏表情栏
+        layout_multi.removeAllViews();
         layout_multi.setVisibility(View.GONE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
-    private Runnable hideEmotionLayoutRunnable = new Runnable() {
+    private Runnable hideMultiLayoutRunnable = new Runnable() {
         @Override
         public void run() {
-            hideEmotionLayout();
+            hideMultiLayout();
         }
     };
 
