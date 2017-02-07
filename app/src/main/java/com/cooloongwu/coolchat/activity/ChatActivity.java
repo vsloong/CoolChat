@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +41,8 @@ import com.cooloongwu.coolchat.utils.KeyboardUtils;
 import com.cooloongwu.coolchat.utils.TimeUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.coolchat.view.RecordButton;
+import com.cooloongwu.coolchat.view.emoticons.ChatMoreFragment;
+import com.cooloongwu.coolchat.view.emoticons.EmojiFragment;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
@@ -104,11 +108,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private long latestId = 0;
 
+    private EmojiFragment emojiFragment;
+    private ChatMoreFragment chatMoreFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         EventBus.getDefault().register(this);
         bindMyService();
 
@@ -525,6 +531,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (view.getId()) {
             case R.id.imgbtn_voice:
                 showMultiLayout();
@@ -553,6 +561,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.imgbtn_emoji:
                 showMultiLayout();
+                if (emojiFragment == null) {
+                    emojiFragment = new EmojiFragment();
+                }
+                fragmentTransaction.replace(R.id.layout_multi, emojiFragment);
+                fragmentTransaction.commit();
                 break;
 
             case R.id.edit_input:
@@ -583,6 +596,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                     isClose = true;
 
                     showMultiLayout();
+                    //layout_multi.addView((View) getResources().getLayout(R.layout.layout_chat_more));
+                    if (chatMoreFragment == null) {
+                        chatMoreFragment = new ChatMoreFragment();
+                    }
+                    fragmentTransaction.replace(R.id.layout_multi, chatMoreFragment);
+                    fragmentTransaction.commit();
                     return;
                 }
                 //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
