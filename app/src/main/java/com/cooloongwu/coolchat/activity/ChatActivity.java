@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +35,7 @@ import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
-import com.cooloongwu.coolchat.utils.DensityUtils;
+import com.cooloongwu.emoji.utils.DensityUtils;
 import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.KeyboardUtils;
@@ -43,6 +44,8 @@ import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.coolchat.view.RecordButton;
 import com.cooloongwu.coolchat.view.emoticons.ChatMoreFragment;
 import com.cooloongwu.coolchat.view.emoticons.EmojiFragment;
+import com.cooloongwu.emoji.entity.Emoji;
+import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
@@ -72,7 +75,7 @@ import java.util.UUID;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener {
 
     private ImageButton imgbtn_send;
     private ImageButton imgbtn_more_close;
@@ -717,6 +720,55 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         //设置当前聊天对象，表示没有
         AppConfig.setUserCurrentChatId(ChatActivity.this, 0);
         AppConfig.setUserCurrentChatType(ChatActivity.this, "");
+    }
+
+    @Override
+    public void onEmojiDelete() {
+        String text = edit_input.getText().toString();
+        if (text.isEmpty()) {
+            return;
+        }
+        if ("]".equals(text.substring(text.length() - 1, text.length()))) {
+            int index = text.lastIndexOf("[");
+            if (index == -1) {
+                int action = KeyEvent.ACTION_DOWN;
+                int code = KeyEvent.KEYCODE_DEL;
+                KeyEvent event = new KeyEvent(action, code);
+                edit_input.onKeyDown(KeyEvent.KEYCODE_DEL, event);
+                displayEditTextView();
+                return;
+            }
+            edit_input.getText().delete(index, text.length());
+            displayEditTextView();
+            return;
+        }
+        int action = KeyEvent.ACTION_DOWN;
+        int code = KeyEvent.KEYCODE_DEL;
+        KeyEvent event = new KeyEvent(action, code);
+        edit_input.onKeyDown(KeyEvent.KEYCODE_DEL, event);
+    }
+
+    @Override
+    public void onEmojiClick(Emoji emoji) {
+        if (emoji != null) {
+            int index = edit_input.getSelectionStart();
+            Editable editable = edit_input.getEditableText();
+            if (index < 0) {
+                editable.append(emoji.getContent());
+            } else {
+                editable.insert(index, emoji.getContent());
+            }
+        }
+        displayEditTextView();
+    }
+
+    private void displayEditTextView() {
+        try {
+            edit_input.setText(EmojiTextUtils.getEditTextContent(edit_input.getText().toString().trim(), ChatActivity.this, edit_input));
+            edit_input.setSelection(edit_input.getText().length());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static class MyHandler extends Handler {

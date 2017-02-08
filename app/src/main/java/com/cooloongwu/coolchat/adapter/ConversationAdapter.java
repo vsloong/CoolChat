@@ -15,6 +15,7 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Conversation;
+import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.squareup.picasso.Picasso;
 
@@ -54,7 +55,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         } else if ("video".equals(listData.get(position).getContentType())) {
             holder.content.setText("[视频]");
         } else {
-            holder.content.setText(listData.get(position).getContent());
+            //正则匹配下，如果有表情则显示表情
+            holder.content.setText(EmojiTextUtils.getEditTextContent(
+                    listData.get(position).getContent(),
+                    context,
+                    holder.content)
+            );
         }
         holder.time.setText(listData.get(position).getTime().substring(11, 16));
         int unRead = listData.get(position).getUnReadNum();

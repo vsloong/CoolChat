@@ -1,5 +1,6 @@
 package com.cooloongwu.coolchat.view.emoticons;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,7 @@ import android.widget.ImageView;
 
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.emoji.entity.Emoji;
-import com.cooloongwu.emoji.entity.EmoticonsUtils;
+import com.cooloongwu.emoji.utils.EmoticonsUtils;
 import com.cooloongwu.emoji.view.EmojiIndicatorView;
 
 import java.util.ArrayList;
@@ -37,6 +38,14 @@ public class EmojiFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         emojiArrayList = EmoticonsUtils.getEmojiList();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnEmojiClickListener) {
+            this.listener = (OnEmojiClickListener) activity;
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.Chat;
+import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -119,12 +120,21 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof PeerTextViewHolder) {
             //朋友或者其他发送的 文字
             ((PeerTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            ((PeerTextViewHolder) holder).text_content.setText(listData.get(position).getContent());
+            //正则匹配下，如果有表情则显示表情
+            ((PeerTextViewHolder) holder).text_content.setText(EmojiTextUtils.getEditTextContent(
+                    listData.get(position).getContent(),
+                    context,
+                    ((PeerTextViewHolder) holder).text_content)
+            );
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerTextViewHolder) holder).img_avatar);
         } else if (holder instanceof SelfTextViewHolder) {
             //自己发送的 文字
             ((SelfTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            ((SelfTextViewHolder) holder).text_content.setText(listData.get(position).getContent());
+            //正则匹配下，如果有表情则显示表情
+            ((SelfTextViewHolder) holder).text_content.setText(EmojiTextUtils.getEditTextContent(
+                    listData.get(position).getContent(),
+                    context,
+                    ((SelfTextViewHolder) holder).text_content));
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfTextViewHolder) holder).img_avatar);
         } else if (holder instanceof PeerImageViewHolder) {
             //朋友或者其他发送的 图片
@@ -257,7 +267,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private ImageView img_avatar;
         private TextView text_name;
-        private TextView text_content;
+        public TextView text_content;
 
         PeerTextViewHolder(View itemView) {
             super(itemView);
@@ -320,7 +330,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private ImageView img_avatar;
         private TextView text_name;
-        private TextView text_content;
+        public TextView text_content;
 
         SelfTextViewHolder(View itemView) {
             super(itemView);
@@ -378,4 +388,5 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
     }
+
 }

@@ -166,7 +166,7 @@ public class Emoticons {
      * @param emojiText [挖鼻]
      * @return Emoji的名字
      */
-    static String getEmojiName(String emojiText) {
+    public static String getEmojiName(String emojiText) {
         String emojiName = emojiMap.get(emojiText);
         if (TextUtils.isEmpty(emojiName)) {
             return "";

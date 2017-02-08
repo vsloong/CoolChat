@@ -1,4 +1,4 @@
-package com.cooloongwu.coolchat.utils;
+package com.cooloongwu.emoji.utils;
 
 import android.content.Context;
 import android.util.TypedValue;

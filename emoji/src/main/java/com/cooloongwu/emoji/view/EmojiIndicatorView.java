@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.cooloongwu.emoji.R;
-import com.cooloongwu.emoji.entity.EmoticonsUtils;
+import com.cooloongwu.emoji.utils.EmoticonsUtils;
 
 import java.util.ArrayList;
 
