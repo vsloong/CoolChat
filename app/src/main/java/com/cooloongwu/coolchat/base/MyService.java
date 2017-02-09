@@ -39,7 +39,7 @@ import de.tavendo.autobahn.WebSocketOptions;
 
 public class MyService extends Service {
 
-    private static MyBinder myBinder = new MyBinder();
+    public static MyBinder myBinder = new MyBinder();
     private BroadcastReceiver connectionReceiver;
     private static boolean isClosed = true;
     private static WebSocketConnection webSocketConnection;

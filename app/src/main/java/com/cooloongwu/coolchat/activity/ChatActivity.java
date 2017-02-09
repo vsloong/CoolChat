@@ -1,12 +1,8 @@
 package com.cooloongwu.coolchat.activity;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,17 +27,15 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.adapter.ChatAdapter;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
-import com.cooloongwu.coolchat.base.MyService;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
-import com.cooloongwu.emoji.utils.DensityUtils;
 import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.KeyboardUtils;
-import com.cooloongwu.coolchat.utils.TimeUtils;
+import com.cooloongwu.coolchat.utils.SendMessageUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
-import com.cooloongwu.coolchat.view.RecordButton;
+import com.cooloongwu.coolchat.view.RecordFragment;
 import com.cooloongwu.coolchat.view.emoticons.ChatMoreFragment;
 import com.cooloongwu.coolchat.view.emoticons.EmojiFragment;
 import com.cooloongwu.emoji.entity.Emoji;
@@ -56,9 +50,6 @@ import com.duanqu.qupai.sdk.android.QupaiManager;
 import com.duanqu.qupai.sdk.android.QupaiService;
 import com.duanqu.qupai.upload.QupaiUploadListener;
 import com.duanqu.qupai.upload.UploadService;
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UploadManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,16 +76,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private boolean isMore = true;
     private boolean isClose = false;
-    private boolean isKeyboard = false;
-    private boolean isVoice = true;
 
     private ArrayList<Chat> chatListData = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
     private static RecyclerView recyclerView;
     private static ChatAdapter adapter;
     private MyHandler handler = new MyHandler(ChatActivity.this);
-
-    private MyService.MyBinder myBinder;
 
     private Toolbar toolbar;
     private int chatId;
@@ -113,14 +100,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private EmojiFragment emojiFragment;
     private ChatMoreFragment chatMoreFragment;
+    private RecordFragment recordFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         EventBus.getDefault().register(this);
-        bindMyService();
-
         getData();
         initViews();
 
@@ -413,124 +399,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         handler.sendEmptyMessageDelayed(2, 5000);
     }
 
-    /**
-     * 发送文字消息
-     */
-    private void sendTextMessage() {
-        //发送数据示例
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("type", "say");
-            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
-            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
-            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
-            jsonObject.put("toWhich", chatType);
-            jsonObject.put("toId", chatId);
-            jsonObject.put("content", edit_input.getText().toString().trim());
-            jsonObject.put("contentType", "text");
-            jsonObject.put("time", TimeUtils.getCurrentTime());
-
-            myBinder.sendMessage(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 发送图片消息
-     */
-    private void sendImageMessage(File file) {
-        UploadManager uploadManager = new UploadManager();
-        uploadManager.put(
-                file, //文件
-                null, //文件名
-                AppConfig.getQiniuToken(ChatActivity.this),//token
-                new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo info, JSONObject res) {
-                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
-                        LogUtils.e("七牛云", key + ",\r\n " + info + ",\r\n " + res);
-
-                        //发送数据示例
-                        JSONObject jsonObject = new JSONObject();
-                        try {
-                            jsonObject.put("type", "say");
-                            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
-                            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
-                            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
-                            jsonObject.put("toWhich", chatType);
-                            jsonObject.put("toId", chatId);
-                            jsonObject.put("content", "http://oe98z0mhz.bkt.clouddn.com/" + res.getString("key"));
-                            jsonObject.put("contentType", "image");
-                            jsonObject.put("time", TimeUtils.getCurrentTime());
-
-                            myBinder.sendMessage(jsonObject);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, null);
-    }
-
-    /**
-     * 发送语音消息
-     */
-    private void sendAudioMessage(File file, final String audioLength) {
-        UploadManager uploadManager = new UploadManager();
-        uploadManager.put(
-                file, //文件
-                null, //文件名
-                AppConfig.getQiniuToken(ChatActivity.this),//token
-                new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo info, JSONObject res) {
-                        //res包含hash、key等信息，具体字段取决于上传策略的设置。res中的key就是资源的名字
-                        LogUtils.e("七牛云，语音", key + ",\r\n " + info + ",\r\n " + res);
-
-                        //发送数据示例
-                        JSONObject jsonObject = new JSONObject();
-                        try {
-                            jsonObject.put("type", "say");
-                            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
-                            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
-                            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
-                            jsonObject.put("toWhich", chatType);
-                            jsonObject.put("toId", chatId);
-                            jsonObject.put("content", "http://oe98z0mhz.bkt.clouddn.com/" + res.getString("key"));
-                            jsonObject.put("contentType", "audio");
-                            jsonObject.put("audioLength", audioLength);
-                            jsonObject.put("time", TimeUtils.getCurrentTime());
-
-                            myBinder.sendMessage(jsonObject);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, null);
-    }
-
-    /**
-     * 发送视频消息
-     */
-    private void sendVideoMessage(String videoPath) {
-        //发送数据示例
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("type", "say");
-            jsonObject.put("fromId", AppConfig.getUserId(ChatActivity.this));
-            jsonObject.put("fromName", AppConfig.getUserName(ChatActivity.this));
-            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(ChatActivity.this));
-            jsonObject.put("toWhich", chatType);
-            jsonObject.put("toId", chatId);
-            jsonObject.put("content", videoPath);
-            jsonObject.put("contentType", "video");
-            jsonObject.put("time", TimeUtils.getCurrentTime());
-
-            myBinder.sendMessage(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -540,26 +408,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.imgbtn_voice:
                 showMultiLayout();
 
-                RecordButton btn_audio = new RecordButton(ChatActivity.this);
-                btn_audio.setWidth(DensityUtils.dp2px(ChatActivity.this, 160));
-                btn_audio.setHeight(DensityUtils.dp2px(ChatActivity.this, 160));
-                btn_audio.setBackground(getResources().getDrawable(R.drawable.btn_audio_ripple_blue));
-                btn_audio.setTextColor(Color.WHITE);
-                btn_audio.setText("长按录音（右滑取消）");
-                btn_audio.setOnFinishRecordListener(new RecordButton.OnFinishedRecordListener() {
-
-                    @Override
-                    public void onFinishedRecord(String audioFilePath, String audioLength) {
-                        LogUtils.e("录音位置完成：位置：" + audioFilePath + "；长度：" + audioLength);
-                        sendAudioMessage(new File(audioFilePath), audioLength);
-                    }
-
-                    @Override
-                    public void onCancelRecord(String msg) {
-                        ToastUtils.showShort(getApplicationContext(), msg);
-                    }
-                });
-                layout_multi.addView(btn_audio);
+                if (recordFragment == null) {
+                    recordFragment = new RecordFragment();
+                }
+                fragmentTransaction.replace(R.id.layout_multi, recordFragment);
+                fragmentTransaction.commit();
                 break;
 
             case R.id.imgbtn_emoji:
@@ -586,7 +439,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
 
             case R.id.imgbtn_send:
-                sendTextMessage();
+                SendMessageUtils.sendTextMessage(ChatActivity.this, edit_input.getText().toString().trim());
                 edit_input.setText("");
                 imgbtn_send.setClickable(false);
                 break;
@@ -644,6 +497,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             default:
                 break;
         }
+
+        recyclerView.refreshDrawableState();
+        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 
     @Override
@@ -682,7 +538,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             if (resultCode == RESULT_OK) {
                 List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 for (String path : paths) {
-                    sendImageMessage(new File(path));
+                    SendMessageUtils.sendImageMessage(ChatActivity.this, new File(path));
                 }
             }
         }
@@ -714,7 +570,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        unbindService(connection);
         handler.removeCallbacksAndMessages(null);
 
         //设置当前聊天对象，表示没有
@@ -869,26 +724,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     };
 
     /**
-     * 绑定服务
-     */
-    private void bindMyService() {
-        Intent bindIntent = new Intent(ChatActivity.this, MyService.class);
-        bindService(bindIntent, connection, BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            myBinder = (MyService.MyBinder) iBinder;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
-    };
-
-    /**
      * 打开图片库
      */
     private void openImageGallery() {
@@ -941,7 +776,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 LogUtils.e("趣拍云上传成功", "视频地址：" + videoUrl);
                 LogUtils.e("趣拍云上传成功", "缩略图地址：" + imageUrl);
 
-                sendVideoMessage(videoUrl);
+                SendMessageUtils.sendVideoMessage(ChatActivity.this, videoUrl);
             }
         });
 

@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context="com.cooloongwu.coolchat.view.RecordFragment">
+
+    <com.cooloongwu.coolchat.view.RecordButton
+        android:id="@+id/btn_record"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:background="@drawable/btn_audio_ripple_blue"
+        android:text="长按录音，右滑取消"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</LinearLayout>

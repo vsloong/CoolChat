@@ -1,6 +1,5 @@
 package com.cooloongwu.coolchat.view.emoticons;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,8 +39,9 @@ public class EmojiFragment extends Fragment {
         emojiArrayList = EmoticonsUtils.getEmojiList();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         if (activity instanceof OnEmojiClickListener) {
             this.listener = (OnEmojiClickListener) activity;
@@ -92,7 +92,7 @@ public class EmojiFragment extends Fragment {
     /**
      * 根据表情数量以及GridView设置的行数和列数计算Pager数量
      *
-     * @return
+     * @return ViewPager数量
      */
     private int getPagerCount(ArrayList<Emoji> list) {
         int count = list.size();
@@ -150,7 +150,7 @@ public class EmojiFragment extends Fragment {
         // 界面列表
         private List<View> views;
 
-        public FaceVPAdapter(List<View> views) {
+        FaceVPAdapter(List<View> views) {
             this.views = views;
         }
 
