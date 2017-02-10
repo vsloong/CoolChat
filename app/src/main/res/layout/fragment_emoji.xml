@@ -1,26 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cooloongwu.coolchat.view.emoticons.EmojiFragment">
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context="com.cooloongwu.coolchat.fragment.EmojiFragment">
 
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff">
+        android:layout_height="match_parent" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <com.cooloongwu.emoji.view.EmojiIndicatorView
+        android:id="@+id/emoji_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal" />
 
-        <com.cooloongwu.emoji.view.EmojiIndicatorView
-            android:id="@+id/emoji_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal" />
 
-    </RelativeLayout>
-
-</FrameLayout>
+</RelativeLayout>

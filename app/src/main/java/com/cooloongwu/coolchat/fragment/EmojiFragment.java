@@ -1,4 +1,4 @@
-package com.cooloongwu.coolchat.view.emoticons;
+package com.cooloongwu.coolchat.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import java.util.List;
 public class EmojiFragment extends Fragment {
 
     private int columns = 7;
-    private int rows = 4;
+    private int rows = 5;
 
     private ArrayList<Emoji> emojiArrayList;
     private ArrayList<View> viewPagerItems = new ArrayList<>();

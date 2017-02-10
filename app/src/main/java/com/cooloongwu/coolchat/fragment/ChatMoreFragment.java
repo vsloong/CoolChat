@@ -1,4 +1,4 @@
-package com.cooloongwu.coolchat.view.emoticons;
+package com.cooloongwu.coolchat.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

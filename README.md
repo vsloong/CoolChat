@@ -153,12 +153,11 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 因为目前只有我一人在做，PS和AI能力也不强，所以图标素材什么的各位估计也清楚怎么来的。  
 如有侵权请告知，我会尽快删除并更换！  
 
-![image](./pictures/main_drawer.jpg)     ![image](./pictures/main_empty_conversation.jpg)
-![image](./pictures/main_empty_contact.jpg)     ![image](./pictures/main_conversation.jpg)
-![image](./pictures/main_contact.jpg)     ![image](./pictures/chat_send.jpg)
-![image](./pictures/chat_audio_image.jpg)     ![image](./pictures/chat_video.jpg)
-![image](./pictures/chat_video_edit.jpg)     ![image](./pictures/chat_video_image_audio.jpg)
-![image](./pictures/profile_me.jpg)     ![image](./pictures/profile_other.jpg)
+![image](./pictures/main_drawer.jpg) ![image](./pictures/main_empty_conversation.jpg) ![image](./pictures/main_empty_contact.jpg)
+![image](./pictures/main_conversation.jpg) ![image](./pictures/main_contact.jpg) ![image](./pictures/chat_send.jpg)
+![image](./pictures/chat_emoji.jpg) ![image](./pictures/chat_audio_image.jpg) ![image](./pictures/chat_audio.jpg)
+![image](./pictures/chat_video.jpg) ![image](./pictures/chat_video_edit.jpg) ![image](./pictures/chat_video_image_audio.jpg)
+![image](./pictures/profile_me.jpg) ![image](./pictures/profile_other.jpg)
 
 ##引用其他控件一览
 该app在开发中也引用了大量的第三方优秀控件、框架和SDK，感谢这些开源的作者

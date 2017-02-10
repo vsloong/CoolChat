@@ -1,4 +1,4 @@
-package com.cooloongwu.coolchat.view;
+package com.cooloongwu.coolchat.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.utils.SendMessageUtils;
+import com.cooloongwu.coolchat.view.RecordButton;
 
 import java.io.File;
 

@@ -33,23 +33,20 @@ import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.KeyboardUtils;
+import com.cooloongwu.coolchat.utils.QupaiUploadUtils;
 import com.cooloongwu.coolchat.utils.SendMessageUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
-import com.cooloongwu.coolchat.view.RecordFragment;
-import com.cooloongwu.coolchat.view.emoticons.ChatMoreFragment;
-import com.cooloongwu.coolchat.view.emoticons.EmojiFragment;
+import com.cooloongwu.coolchat.fragment.RecordFragment;
+import com.cooloongwu.coolchat.fragment.ChatMoreFragment;
+import com.cooloongwu.coolchat.fragment.EmojiFragment;
 import com.cooloongwu.emoji.entity.Emoji;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.cooloongwu.greendao.gen.GroupDao;
-import com.cooloongwu.qupai.QupaiSetting;
-import com.cooloongwu.qupai.QupaiUpload;
 import com.cooloongwu.qupai.RecordResult;
 import com.duanqu.qupai.sdk.android.QupaiManager;
 import com.duanqu.qupai.sdk.android.QupaiService;
-import com.duanqu.qupai.upload.QupaiUploadListener;
-import com.duanqu.qupai.upload.UploadService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,7 +58,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
@@ -407,7 +403,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         switch (view.getId()) {
             case R.id.imgbtn_voice:
                 showMultiLayout();
-
                 if (recordFragment == null) {
                     recordFragment = new RecordFragment();
                 }
@@ -425,6 +420,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
 
             case R.id.edit_input:
+                //hideMultiLayout();
                 layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
                 break;
 
@@ -452,7 +448,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     isClose = true;
 
                     showMultiLayout();
-                    //layout_multi.addView((View) getResources().getLayout(R.layout.layout_chat_more));
                     if (chatMoreFragment == null) {
                         chatMoreFragment = new ChatMoreFragment();
                     }
@@ -490,7 +485,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
                 //通知聊天列表页更新
                 EventBus.getDefault().post(new Conversation());
-                //并重新指定当前聊天的对象
+                //重新指定当前聊天的对象
                 AppConfig.setUserCurrentChatId(ChatActivity.this, chatId);
                 AppConfig.setUserCurrentChatType(ChatActivity.this, chatType);
                 break;
@@ -551,7 +546,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 String thumbnails[] = result.getThumbnail();
                 result.getDuration();
 
-                startUpload(videoPath, thumbnails[0]);
+                QupaiUploadUtils.startUpload(ChatActivity.this, videoPath, thumbnails[0]);
 
                 /**
                  * 清除草稿,草稿文件将会删除。所以在这之前我们执行拷贝move操作。
@@ -662,9 +657,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * 展示多功能布局
      */
     private void showMultiLayout() {
-        //删除之前的所有其他视图
-        layout_multi.removeAllViews();
-        //更新表情栏高度和键盘高度相等
+        //更新多功能布局的高度和键盘高度相等
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout_multi.getLayoutParams();
         if (params != null) {
             params.height = AppConfig.getKeyboardHeight(ChatActivity.this);
@@ -672,9 +665,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         //显示多功能布局，隐藏键盘
-        layout_multi.removeCallbacks(hideMultiLayoutRunnable);
-        KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         layout_multi.setVisibility(View.VISIBLE);
+        KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         KeyboardUtils.hideKeyboard(getCurrentFocus());
     }
 
@@ -682,8 +674,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * 隐藏多功能布局
      */
     private void hideMultiLayout() {
-        //隐藏表情栏
-        layout_multi.removeAllViews();
         layout_multi.setVisibility(View.GONE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
@@ -745,56 +735,4 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
         qupaiService.showRecordPage(this, REQUEST_VIDEO, true);
     }
-
-    /**
-     * 开始上传
-     */
-    private void startUpload(String videoPath, String thumbnailPath) {
-        UploadService uploadService = UploadService.getInstance();
-        uploadService.setQupaiUploadListener(new QupaiUploadListener() {
-            @Override
-            public void onUploadProgress(String uuid, long uploadedBytes, long totalBytes) {
-                int percentsProgress = (int) (uploadedBytes * 100 / totalBytes);
-                LogUtils.e("趣拍云上传进度", "uuid:" + uuid + "；进度：" + percentsProgress + "%");
-                //progress.setProgress(percentsProgress);
-            }
-
-            @Override
-            public void onUploadError(String uuid, int errorCode, String message) {
-                LogUtils.e("趣拍云上传失败", "uuid:" + uuid + "；错误信息：" + errorCode + message);
-            }
-
-            @Override
-            public void onUploadComplte(String uuid, int responseCode, String responseMessage) {
-                //http://{DOMAIN}/v/{UUID}.mp4?token={ACCESS-TOKEN}
-                //progress.setVisibility(View.GONE);
-
-                //这里返回的uuid是你创建上传任务时生成的uuid.开发者可以使用其他作为标识
-                //videoUrl返回的是上传成功的视频地址,imageUrl是上传成功的图片地址
-                String videoUrl = QupaiSetting.domain + "/v/" + responseMessage + ".mp4" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
-                String imageUrl = QupaiSetting.domain + "/v/" + responseMessage + ".jpg" + "?token=" + AppConfig.getQupaiToken(ChatActivity.this);
-                LogUtils.e("趣拍云上传成功", "视频地址：" + videoUrl);
-                LogUtils.e("趣拍云上传成功", "缩略图地址：" + imageUrl);
-
-                SendMessageUtils.sendVideoMessage(ChatActivity.this, videoUrl);
-            }
-        });
-
-        String uuid = UUID.randomUUID().toString();
-        LogUtils.e("趣拍云认证", "accessToken：" + AppConfig.getQupaiToken(ChatActivity.this) + "；space：" + AppConfig.getUserId(ChatActivity.this));
-
-        QupaiUpload.startUpload(QupaiUpload.createUploadTask(
-                this,
-                uuid,
-                new File(videoPath),
-                new File(thumbnailPath),
-                AppConfig.getQupaiToken(ChatActivity.this),
-                String.valueOf(AppConfig.getUserId(ChatActivity.this)),
-                QupaiSetting.shareType,
-                QupaiSetting.tags,
-                QupaiSetting.description)
-        );
-    }
-
-
 }
