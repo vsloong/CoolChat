@@ -1,9 +1,11 @@
 package com.cooloongwu.coolchat.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,9 +19,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
@@ -62,11 +66,14 @@ import java.util.List;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener {
 
     private ImageButton imgbtn_send;
     private ImageButton imgbtn_more_close;
     private EditText edit_input;
+
+    private RadioButton radio_btn_more;
+
     private static TextView text_unread_msg;
     private LinearLayout layout_multi;
 
@@ -165,6 +172,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
 
+        RadioButton radio_btn_audio = (RadioButton) findViewById(R.id.radio_btn_audio);
+        RadioButton radio_btn_emoji = (RadioButton) findViewById(R.id.radio_btn_emoji);
+        RadioButton radio_btn_gallery = (RadioButton) findViewById(R.id.radio_btn_gallery);
+        RadioButton radio_btn_video = (RadioButton) findViewById(R.id.radio_btn_video);
+        radio_btn_more = (RadioButton) findViewById(R.id.radio_btn_more);
+
+        radio_btn_audio.setOnCheckedChangeListener(this);
+        radio_btn_emoji.setOnCheckedChangeListener(this);
+        radio_btn_gallery.setOnCheckedChangeListener(this);
+        radio_btn_video.setOnCheckedChangeListener(this);
+        radio_btn_more.setOnCheckedChangeListener(this);
 
         text_unread_msg.setOnClickListener(this);
         imgbtn_emoji.setOnClickListener(this);
@@ -402,6 +420,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (view.getId()) {
             case R.id.imgbtn_voice:
+                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                isClose = false;
+                isMore = true;
+
                 showMultiLayout();
                 if (recordFragment == null) {
                     recordFragment = new RecordFragment();
@@ -411,6 +433,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
 
             case R.id.imgbtn_emoji:
+                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                isClose = false;
+                isMore = true;
+
                 showMultiLayout();
                 if (emojiFragment == null) {
                     emojiFragment = new EmojiFragment();
@@ -420,16 +446,28 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
 
             case R.id.edit_input:
+                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                isClose = false;
+                isMore = true;
+
                 //hideMultiLayout();
                 layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
                 break;
 
             case R.id.imgbtn_gallery:
+                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                isClose = false;
+                isMore = true;
+
                 hideMultiLayout();
                 openImageGallery();
                 break;
 
             case R.id.imgbtn_video:
+                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+                isClose = false;
+                isMore = true;
+
                 hideMultiLayout();
                 openRecordPage();
                 break;
@@ -492,9 +530,44 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             default:
                 break;
         }
+    }
 
-        recyclerView.refreshDrawableState();
-        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.radio_btn_audio:
+                if (isChecked) {
+                    ToastUtils.showShort(ChatActivity.this, "点击了录音");
+                }
+                break;
+            case R.id.radio_btn_emoji:
+                if (isChecked) {
+                    ToastUtils.showShort(ChatActivity.this, "点击了Emoji");
+                }
+                break;
+            case R.id.radio_btn_gallery:
+                if (isChecked) {
+                    ToastUtils.showShort(ChatActivity.this, "点击了图库");
+                }
+                break;
+            case R.id.radio_btn_video:
+                if (isChecked) {
+                    ToastUtils.showShort(ChatActivity.this, "点击了视频");
+                }
+                break;
+            case R.id.radio_btn_more:
+                if (isChecked) {
+                    ToastUtils.showShort(ChatActivity.this, "点击了更多");
+                    radio_btn_more.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.conversation_btn_messages_close), null, null);
+                } else {
+                    ToastUtils.showShort(ChatActivity.this, "关闭更多");
+                    radio_btn_more.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.conversation_btn_messages_more), null, null);
+                }
+                break;
+
+
+        }
     }
 
     @Override
@@ -668,6 +741,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         layout_multi.setVisibility(View.VISIBLE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         KeyboardUtils.hideKeyboard(getCurrentFocus());
+
+        //将聊天内容同时向上滚动
+        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 
     /**

@@ -61,6 +61,63 @@
 
             </LinearLayout>
 
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_btn_audio"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@mipmap/conversation_btn_messages_voice"
+                    android:padding="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_emoji"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@mipmap/conversation_btn_messages_emoji"
+                    android:padding="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_gallery"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@mipmap/conversation_btn_messages_gallery"
+                    android:padding="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_video"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@mipmap/conversation_btn_messages_video"
+                    android:padding="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn_more"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@mipmap/conversation_btn_messages_more"
+                    android:padding="8dp" />
+            </RadioGroup>
+
             <LinearLayout
                 android:id="@+id/layout_input"
                 android:layout_width="match_parent"
@@ -68,6 +125,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
 
                 <ImageButton
                     android:id="@+id/imgbtn_voice"
