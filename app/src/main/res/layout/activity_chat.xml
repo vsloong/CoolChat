@@ -62,6 +62,8 @@
             </LinearLayout>
 
             <RadioGroup
+                android:visibility="gone"
+                android:id="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:background="@color/white"

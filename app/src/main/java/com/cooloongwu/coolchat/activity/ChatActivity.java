@@ -19,11 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
@@ -34,15 +32,15 @@ import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.fragment.ChatMoreFragment;
+import com.cooloongwu.coolchat.fragment.EmojiFragment;
+import com.cooloongwu.coolchat.fragment.RecordFragment;
 import com.cooloongwu.coolchat.utils.DisplayUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.utils.KeyboardUtils;
 import com.cooloongwu.coolchat.utils.QupaiUploadUtils;
 import com.cooloongwu.coolchat.utils.SendMessageUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
-import com.cooloongwu.coolchat.fragment.RecordFragment;
-import com.cooloongwu.coolchat.fragment.ChatMoreFragment;
-import com.cooloongwu.coolchat.fragment.EmojiFragment;
 import com.cooloongwu.emoji.entity.Emoji;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
@@ -66,19 +64,16 @@ import java.util.List;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener {
 
     private ImageButton imgbtn_send;
     private ImageButton imgbtn_more_close;
     private EditText edit_input;
 
-    private RadioButton radio_btn_more;
-
     private static TextView text_unread_msg;
     private LinearLayout layout_multi;
 
     private boolean isMore = true;
-    private boolean isClose = false;
 
     private ArrayList<Chat> chatListData = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -171,18 +166,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         ImageButton imgbtn_voice = (ImageButton) findViewById(R.id.imgbtn_voice);
         ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
         ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
-
-        RadioButton radio_btn_audio = (RadioButton) findViewById(R.id.radio_btn_audio);
-        RadioButton radio_btn_emoji = (RadioButton) findViewById(R.id.radio_btn_emoji);
-        RadioButton radio_btn_gallery = (RadioButton) findViewById(R.id.radio_btn_gallery);
-        RadioButton radio_btn_video = (RadioButton) findViewById(R.id.radio_btn_video);
-        radio_btn_more = (RadioButton) findViewById(R.id.radio_btn_more);
-
-        radio_btn_audio.setOnCheckedChangeListener(this);
-        radio_btn_emoji.setOnCheckedChangeListener(this);
-        radio_btn_gallery.setOnCheckedChangeListener(this);
-        radio_btn_video.setOnCheckedChangeListener(this);
-        radio_btn_more.setOnCheckedChangeListener(this);
 
         text_unread_msg.setOnClickListener(this);
         imgbtn_emoji.setOnClickListener(this);
@@ -414,15 +397,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onClick(View view) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         switch (view.getId()) {
             case R.id.imgbtn_voice:
-                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isClose = false;
-                isMore = true;
+                showImgBtnMore();
 
                 showMultiLayout();
                 if (recordFragment == null) {
@@ -433,9 +416,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 break;
 
             case R.id.imgbtn_emoji:
-                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isClose = false;
-                isMore = true;
+                showImgBtnMore();
 
                 showMultiLayout();
                 if (emojiFragment == null) {
@@ -445,31 +426,44 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 fragmentTransaction.commit();
                 break;
 
-            case R.id.edit_input:
-                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isClose = false;
-                isMore = true;
-
-                //hideMultiLayout();
-                layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
-                break;
-
             case R.id.imgbtn_gallery:
-                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isClose = false;
-                isMore = true;
+                showImgBtnMore();
 
                 hideMultiLayout();
                 openImageGallery();
                 break;
 
             case R.id.imgbtn_video:
-                imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                isClose = false;
-                isMore = true;
+                showImgBtnMore();
 
                 hideMultiLayout();
                 openRecordPage();
+                break;
+
+            case R.id.imgbtn_more_close:
+                //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
+                if (isMore) {
+                    imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_close);
+                    isMore = false;
+                    showMultiLayout();
+                    if (chatMoreFragment == null) {
+                        chatMoreFragment = new ChatMoreFragment();
+                    }
+                    fragmentTransaction.replace(R.id.layout_multi, chatMoreFragment);
+                    fragmentTransaction.commit();
+                    return;
+                } else {
+
+                    showImgBtnMore();
+                    hideMultiLayout();
+                }
+
+                break;
+
+            case R.id.edit_input:
+                showImgBtnMore();
+                //hideMultiLayout();
+                layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
                 break;
 
             case R.id.imgbtn_send:
@@ -478,31 +472,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 imgbtn_send.setClickable(false);
                 break;
 
-            case R.id.imgbtn_more_close:
-                //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
-                if (isMore) {
-                    imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_close);
-                    isMore = false;
-                    isClose = true;
-
-                    showMultiLayout();
-                    if (chatMoreFragment == null) {
-                        chatMoreFragment = new ChatMoreFragment();
-                    }
-                    fragmentTransaction.replace(R.id.layout_multi, chatMoreFragment);
-                    fragmentTransaction.commit();
-                    return;
-                }
-                //如果是“关闭更多”的状态，那么点击后关闭更多的按钮，按钮状态改为“展示更多”
-                if (isClose) {
-                    imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-                    isClose = false;
-                    isMore = true;
-
-                    hideMultiLayout();
-                    return;
-                }
-                break;
             case R.id.text_unread_msg:
                 text_unread_msg.setVisibility(View.GONE);
                 //刷新当前页面，加载与点击的好友或者群组聊天
@@ -527,47 +496,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 AppConfig.setUserCurrentChatId(ChatActivity.this, chatId);
                 AppConfig.setUserCurrentChatType(ChatActivity.this, chatType);
                 break;
+
             default:
                 break;
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.radio_btn_audio:
-                if (isChecked) {
-                    ToastUtils.showShort(ChatActivity.this, "点击了录音");
-                }
-                break;
-            case R.id.radio_btn_emoji:
-                if (isChecked) {
-                    ToastUtils.showShort(ChatActivity.this, "点击了Emoji");
-                }
-                break;
-            case R.id.radio_btn_gallery:
-                if (isChecked) {
-                    ToastUtils.showShort(ChatActivity.this, "点击了图库");
-                }
-                break;
-            case R.id.radio_btn_video:
-                if (isChecked) {
-                    ToastUtils.showShort(ChatActivity.this, "点击了视频");
-                }
-                break;
-            case R.id.radio_btn_more:
-                if (isChecked) {
-                    ToastUtils.showShort(ChatActivity.this, "点击了更多");
-                    radio_btn_more.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.conversation_btn_messages_close), null, null);
-                } else {
-                    ToastUtils.showShort(ChatActivity.this, "关闭更多");
-                    radio_btn_more.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.conversation_btn_messages_more), null, null);
-                }
-                break;
-
-
-        }
+    private void showImgBtnMore() {
+        imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
+        isMore = true;
     }
 
     @Override
@@ -741,9 +678,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         layout_multi.setVisibility(View.VISIBLE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         KeyboardUtils.hideKeyboard(getCurrentFocus());
-
-        //将聊天内容同时向上滚动
-        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 
     /**
