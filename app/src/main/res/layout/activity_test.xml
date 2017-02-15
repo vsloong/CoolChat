@@ -35,30 +35,101 @@
             android:orientation="vertical">
 
 
-            <CheckBox
-                android:id="@+id/checkbox1"
+            <RadioGroup
+                android:id="@+id/radio_group3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="你好" />
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/checkbox2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="你好" />
+
+                <CheckBox
+                    android:id="@+id/checkbox1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="你好" />
+
+                <CheckBox
+                    android:id="@+id/checkbox2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好" />
+            </RadioGroup>
 
 
             <RadioGroup
+                android:id="@+id/radio_group1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp">
 
-                <RadioButton
-                    android:id="@+id/radio_btn"
+                <com.cooloongwu.coolchat.view.MyRadioButton
+                    android:id="@+id/radio_btn1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="不好" />
+                    android:text="哈哈" />
+
+                <com.cooloongwu.coolchat.view.MyRadioButton
+                    android:id="@+id/radio_btn2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="嘿嘿" />
             </RadioGroup>
+
+
+            <RadioGroup
+                android:id="@+id/radio_group2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp">
+
+                <RadioButton
+                    android:id="@+id/radio_btn11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="哈哈" />
+
+                <RadioButton
+                    android:id="@+id/radio_btn22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="嘿嘿" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/layout_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp">
+
+                <CheckBox
+                    android:id="@+id/checkbox111"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好1" />
+
+                <CheckBox
+                    android:id="@+id/checkbox112"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好2" />
+
+                <CheckBox
+                    android:id="@+id/checkbox113"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好3" />
+
+                <CheckBox
+                    android:id="@+id/checkbox114"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你好4" />
+            </LinearLayout>
         </LinearLayout>
+
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 
