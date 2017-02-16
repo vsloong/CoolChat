@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -64,16 +66,20 @@ import java.util.List;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener {
 
     private ImageButton imgbtn_send;
-    private ImageButton imgbtn_more_close;
     private EditText edit_input;
+
+    private CheckBox checkbox_audio;
+    private CheckBox checkbox_emoji;
+    private CheckBox checkbox_gallery;
+    private CheckBox checkbox_video;
+    private CheckBox checkbox_more;
+    private int checkedId = -1;
 
     private static TextView text_unread_msg;
     private LinearLayout layout_multi;
-
-    private boolean isMore = true;
 
     private ArrayList<Chat> chatListData = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -159,21 +165,23 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         text_unread_msg = (TextView) findViewById(R.id.text_unread_msg);
 
         layout_multi = (LinearLayout) findViewById(R.id.layout_multi);
-        ImageButton imgbtn_emoji = (ImageButton) findViewById(R.id.imgbtn_emoji);
         imgbtn_send = (ImageButton) findViewById(R.id.imgbtn_send);
         imgbtn_send.setClickable(false);
-        imgbtn_more_close = (ImageButton) findViewById(R.id.imgbtn_more_close);
-        ImageButton imgbtn_voice = (ImageButton) findViewById(R.id.imgbtn_voice);
-        ImageButton imgbtn_gallery = (ImageButton) findViewById(R.id.imgbtn_gallery);
-        ImageButton imgbtn_video = (ImageButton) findViewById(R.id.imgbtn_video);
+
+        checkbox_audio = (CheckBox) findViewById(R.id.checkbox_audio);
+        checkbox_emoji = (CheckBox) findViewById(R.id.checkbox_emoji);
+        checkbox_gallery = (CheckBox) findViewById(R.id.checkbox_gallery);
+        checkbox_video = (CheckBox) findViewById(R.id.checkbox_video);
+        checkbox_more = (CheckBox) findViewById(R.id.checkbox_more);
+
+        checkbox_audio.setOnCheckedChangeListener(this);
+        checkbox_emoji.setOnCheckedChangeListener(this);
+        checkbox_video.setOnCheckedChangeListener(this);
+        checkbox_gallery.setOnCheckedChangeListener(this);
+        checkbox_more.setOnCheckedChangeListener(this);
 
         text_unread_msg.setOnClickListener(this);
-        imgbtn_emoji.setOnClickListener(this);
         imgbtn_send.setOnClickListener(this);
-        imgbtn_more_close.setOnClickListener(this);
-        imgbtn_voice.setOnClickListener(this);
-        imgbtn_gallery.setOnClickListener(this);
-        imgbtn_video.setOnClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -400,72 +408,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         switch (view.getId()) {
-            case R.id.imgbtn_voice:
-                showImgBtnMore();
-
-                showMultiLayout();
-                if (recordFragment == null) {
-                    recordFragment = new RecordFragment();
-                }
-                fragmentTransaction.replace(R.id.layout_multi, recordFragment);
-                fragmentTransaction.commit();
-                break;
-
-            case R.id.imgbtn_emoji:
-                showImgBtnMore();
-
-                showMultiLayout();
-                if (emojiFragment == null) {
-                    emojiFragment = new EmojiFragment();
-                }
-                fragmentTransaction.replace(R.id.layout_multi, emojiFragment);
-                fragmentTransaction.commit();
-                break;
-
-            case R.id.imgbtn_gallery:
-                showImgBtnMore();
-
-                hideMultiLayout();
-                openImageGallery();
-                break;
-
-            case R.id.imgbtn_video:
-                showImgBtnMore();
-
-                hideMultiLayout();
-                openRecordPage();
-                break;
-
-            case R.id.imgbtn_more_close:
-                //如果是“展示更多”的状态，那么点击后展示更多的按钮，按钮状态改为“关闭更多”
-                if (isMore) {
-                    imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_close);
-                    isMore = false;
-                    showMultiLayout();
-                    if (chatMoreFragment == null) {
-                        chatMoreFragment = new ChatMoreFragment();
-                    }
-                    fragmentTransaction.replace(R.id.layout_multi, chatMoreFragment);
-                    fragmentTransaction.commit();
-                    return;
-                } else {
-
-                    showImgBtnMore();
-                    hideMultiLayout();
-                }
-
-                break;
-
             case R.id.edit_input:
-                showImgBtnMore();
-                //hideMultiLayout();
                 layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
                 break;
-
             case R.id.imgbtn_send:
                 SendMessageUtils.sendTextMessage(ChatActivity.this, edit_input.getText().toString().trim());
                 edit_input.setText("");
@@ -502,9 +448,61 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void showImgBtnMore() {
-        imgbtn_more_close.setImageResource(R.mipmap.conversation_btn_messages_more);
-        isMore = true;
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            checkedId = buttonView.getId();
+        } else {
+            hideMultiLayout();
+            return;
+        }
+        //把其他checkbox的选中状态取消
+        checkbox_audio.setChecked(checkbox_audio.getId() == checkedId);
+        checkbox_emoji.setChecked(checkbox_emoji.getId() == checkedId);
+        checkbox_gallery.setChecked(false);
+        checkbox_video.setChecked(false);
+        checkbox_more.setChecked(checkbox_more.getId() == checkedId);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        switch (buttonView.getId()) {
+            case R.id.checkbox_audio:
+                showMultiLayout();
+                if (recordFragment == null) {
+                    recordFragment = new RecordFragment();
+                }
+                fragmentTransaction.replace(R.id.layout_multi, recordFragment);
+                fragmentTransaction.commit();
+                break;
+            case R.id.checkbox_emoji:
+                showMultiLayout();
+                if (emojiFragment == null) {
+                    emojiFragment = new EmojiFragment();
+                }
+                fragmentTransaction.replace(R.id.layout_multi, emojiFragment);
+                fragmentTransaction.commit();
+                break;
+            case R.id.checkbox_gallery:
+                hideMultiLayout();
+                openImageGallery();
+                break;
+            case R.id.checkbox_video:
+                hideMultiLayout();
+                openRecordPage();
+                break;
+
+            case R.id.checkbox_more:
+                showMultiLayout();
+                if (chatMoreFragment == null) {
+                    chatMoreFragment = new ChatMoreFragment();
+                }
+                fragmentTransaction.replace(R.id.layout_multi, chatMoreFragment);
+                fragmentTransaction.commit();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -684,6 +682,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * 隐藏多功能布局
      */
     private void hideMultiLayout() {
+        //把其他checkbox的选中状态取消
+        if (-1 != checkedId) {
+            CheckBox box = (CheckBox) findViewById(checkedId);
+            box.setChecked(false);
+            checkedId = -1;
+        }
+
         layout_multi.setVisibility(View.GONE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }

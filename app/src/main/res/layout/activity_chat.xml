@@ -61,16 +61,15 @@
 
             </LinearLayout>
 
-            <RadioGroup
-                android:visibility="gone"
+            <LinearLayout
                 android:id="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/radio_btn_audio"
+                <CheckBox
+                    android:id="@+id/checkbox_audio"
                     android:layout_width="0dp"
                     android:layout_height="36dp"
                     android:layout_weight="1"
@@ -79,8 +78,8 @@
                     android:drawableTop="@mipmap/conversation_btn_messages_voice"
                     android:padding="8dp" />
 
-                <RadioButton
-                    android:id="@+id/radio_btn_emoji"
+                <CheckBox
+                    android:id="@+id/checkbox_emoji"
                     android:layout_width="0dp"
                     android:layout_height="36dp"
                     android:layout_weight="1"
@@ -89,88 +88,31 @@
                     android:drawableTop="@mipmap/conversation_btn_messages_emoji"
                     android:padding="8dp" />
 
-                <RadioButton
-                    android:id="@+id/radio_btn_gallery"
+                <CheckBox
+                    android:id="@+id/checkbox_gallery"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableTop="@mipmap/conversation_btn_messages_gallery" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_video"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableTop="@mipmap/conversation_btn_messages_video" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_more"
                     android:layout_width="0dp"
                     android:layout_height="36dp"
                     android:layout_weight="1"
                     android:button="@null"
                     android:checked="false"
-                    android:drawableTop="@mipmap/conversation_btn_messages_gallery"
+                    android:drawableTop="@drawable/checkbox_more"
                     android:padding="8dp" />
-
-                <RadioButton
-                    android:id="@+id/radio_btn_video"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:checked="false"
-                    android:drawableTop="@mipmap/conversation_btn_messages_video"
-                    android:padding="8dp" />
-
-                <RadioButton
-                    android:id="@+id/radio_btn_more"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:checked="false"
-                    android:drawableTop="@mipmap/conversation_btn_messages_more"
-                    android:padding="8dp" />
-            </RadioGroup>
-
-            <LinearLayout
-                android:id="@+id/layout_input"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-
-                <ImageButton
-                    android:id="@+id/imgbtn_voice"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:background="@color/transparent"
-                    android:src="@mipmap/conversation_btn_messages_voice" />
-
-
-                <ImageButton
-                    android:id="@+id/imgbtn_emoji"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:background="@color/transparent"
-                    android:src="@mipmap/conversation_btn_messages_emoji" />
-
-                <ImageButton
-                    android:id="@+id/imgbtn_gallery"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:background="@color/transparent"
-                    android:src="@mipmap/conversation_btn_messages_gallery" />
-
-                <ImageButton
-                    android:id="@+id/imgbtn_video"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:background="@color/transparent"
-                    android:src="@mipmap/conversation_btn_messages_video" />
-
-                <ImageButton
-                    android:id="@+id/imgbtn_more_close"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="@color/transparent"
-                    android:src="@mipmap/conversation_btn_messages_more" />
-
             </LinearLayout>
 
             <LinearLayout
