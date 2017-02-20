@@ -36,6 +36,7 @@
             android:layout_marginTop="4dp"
             android:background="@drawable/conversation_bkg_messages_text_peer_normal"
             android:gravity="center"
+            android:scaleType="centerCrop"
             android:src="@mipmap/avatar" />
     </LinearLayout>
 

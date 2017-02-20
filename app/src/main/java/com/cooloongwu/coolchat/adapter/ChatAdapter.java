@@ -1,6 +1,7 @@
 package com.cooloongwu.coolchat.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +14,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -140,12 +143,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //朋友或者其他发送的 图片
             ((PeerImageViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerImageViewHolder) holder).img_avatar);
-            Picasso.with(context).load(listData.get(position).getContent()).into(((PeerImageViewHolder) holder).image_content);
+            Picasso.with(context)
+                    .load(listData.get(position).getContent())
+//                    .resize(500, 500)
+                    .transform(transformation)
+                    .into(((PeerImageViewHolder) holder).image_content);
         } else if (holder instanceof SelfImageViewHolder) {
             //自己发送的 图片
             ((SelfImageViewHolder) holder).text_name.setText(listData.get(position).getFromName());
             Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfImageViewHolder) holder).img_avatar);
-            Picasso.with(context).load(listData.get(position).getContent()).into(((SelfImageViewHolder) holder).image_content);
+            Picasso.with(context)
+                    .load(listData.get(position).getContent())
+//                    .resize(500, 500)
+                    .transform(transformation)
+                    .into(((SelfImageViewHolder) holder).image_content);
         } else if (holder instanceof PeerAudioViewHolder) {
             //朋友或者其他发送的 语音
             ((PeerAudioViewHolder) holder).text_name.setText(listData.get(position).getFromName());
@@ -389,4 +400,40 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+
+    private Transformation transformation = new Transformation() {
+        @Override
+        public Bitmap transform(Bitmap source) {
+            int targetWidth = 500;
+            LogUtils.e("source.getHeight()=" + source.getHeight() + ",source.getWidth()=" + source.getWidth() + ",targetWidth=" + targetWidth);
+
+            if (source.getWidth() == 0) {
+                return source;
+            }
+
+            //如果图片小于设置的宽度，则返回原图
+            if (source.getWidth() < targetWidth) {
+                return source;
+            } else {
+                //如果图片大小大于等于设置的宽度，则按照设置的宽度比例来缩放
+                double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
+                int targetHeight = (int) (targetWidth * aspectRatio);
+                if (targetHeight != 0 && targetWidth != 0) {
+                    Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                    if (result != source) {
+                        // Same bitmap is returned if sizes are the same
+                        source.recycle();
+                    }
+                    return result;
+                } else {
+                    return source;
+                }
+            }
+        }
+
+        @Override
+        public String key() {
+            return "transformation" + " desiredWidth";
+        }
+    };
 }
