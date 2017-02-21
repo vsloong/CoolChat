@@ -31,24 +31,18 @@ public class RecordButton extends Button {
 
     public RecordButton(Context context) {
         super(context);
-        init();
     }
 
     public RecordButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public RecordButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     public void setOnFinishRecordListener(OnFinishedRecordListener onFinishRecordListener) {
         this.onFinishedRecordListener = onFinishRecordListener;
-    }
-
-    private void init() {
     }
 
     @Override
@@ -73,36 +67,48 @@ public class RecordButton extends Button {
         return true;
     }
 
+    private void init() {
+
+        //如果文件夹不创建的话那么执行到recorder.prepare()就会报错
+        File dir = new File(audioPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setMaxDuration(MAX_LENGTH);
+        recorder.setOutputFile(audioFileName);
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            LogUtils.e("MediaRecorder prepare()报错");
+        }
+    }
+
     /**
      * 开始录音
      */
     private void startRecord() {
-        if (recorder == null)
-            recorder = new MediaRecorder();
-        try {
-            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            recorder.setOutputFile(audioFileName);
-            recorder.prepare();
-            recorder.start();
-            startTime = System.currentTimeMillis();
-        } catch (IOException e) {
-            e.printStackTrace();
-            LogUtils.e("MediaRecorder start()报错");
-        }
+        init();
+        recorder.start();
+        startTime = System.currentTimeMillis();
     }
 
     /**
      * 完成录音，需要保存
      */
     private void finishRecord() {
-        if (recorder != null) {
-            recorder.stop();
-            recorder.reset();
-            recorder.release();
-            recorder = null;
+        if (null == recorder) {
+            return;
         }
+        recorder.stop();
+        recorder.reset();
+        recorder.release();
+        recorder = null;
 
         long intervalTime = System.currentTimeMillis() - startTime;
         if (intervalTime < MIN_LENGTH) {
@@ -129,11 +135,12 @@ public class RecordButton extends Button {
      * 取消录音，删除文件
      */
     private void cancelRecord() {
-        if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-            recorder = null;
+        if (null == recorder) {
+            return;
         }
+        recorder.stop();
+        recorder.release();
+        recorder = null;
         File file = new File(audioFileName);
         file.delete();
         if (onFinishedRecordListener != null)
