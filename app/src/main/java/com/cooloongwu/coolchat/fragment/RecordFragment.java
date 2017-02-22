@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.utils.SendMessageUtils;
-import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.coolchat.view.RecordButton;
 
 import java.io.File;
@@ -38,7 +37,7 @@ public class RecordFragment extends Fragment {
 
             @Override
             public void onCancelRecord(String msg) {
-                ToastUtils.showShort(getActivity(), "录音取消");
+                //ToastUtils.showShort(getActivity(), "录音取消");
                 LogUtils.e("录音取消");
             }
         });

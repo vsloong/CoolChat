@@ -3,15 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context="com.cooloongwu.coolchat.fragment.RecordFragment">
 
-    <com.cooloongwu.coolchat.view.RecordButton
-        android:id="@+id/btn_record"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/btn_audio_ripple_blue"
-        android:text="长按录音，右滑取消"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="长按录音"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_audio_play" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_audio_ripple_blue">
+
+            <com.cooloongwu.coolchat.view.RecordButton
+                android:id="@+id/btn_record"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:background="@null"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/ic_audio_record" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_audio_delete" />
+    </LinearLayout>
+
 
 </LinearLayout>
