@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void showToast(String msg) {
-        ToastUtils.showShort(getApplicationContext(), msg);
+        ToastUtils.showShort(MainActivity.this, msg);
     }
 
     @Override

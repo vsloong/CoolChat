@@ -148,6 +148,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void showToast(String msg) {
-        ToastUtils.showShort(getApplicationContext(), msg);
+        ToastUtils.showShort(LoginActivity.this, msg);
     }
 }

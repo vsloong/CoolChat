@@ -81,7 +81,7 @@ public class FriendSearchActivity extends BaseActivity {
                 .list();
 
         if (contacts.size() == 0) {
-            ToastUtils.showShort(getApplicationContext(), "本地无好友，去网络搜索");
+            ToastUtils.showShort(FriendSearchActivity.this, "本地无好友，去网络搜索");
         } else {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             ArrayList<Contact> listData = new ArrayList<>();

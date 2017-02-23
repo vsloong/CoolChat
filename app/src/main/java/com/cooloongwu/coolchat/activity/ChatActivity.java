@@ -263,7 +263,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             chatListData.addAll(0, chats);
             adapter.notifyDataSetChanged();
         } else {
-            ToastUtils.showShort(getApplicationContext(), "没有更多数据了");
+            ToastUtils.showShort(ChatActivity.this, "没有更多数据了");
         }
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -745,7 +745,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private void openRecordPage() {
         QupaiService qupaiService = QupaiManager.getQupaiService(this);
         if (qupaiService == null) {
-            ToastUtils.showShort(getApplicationContext(), "插件没有初始化，无法获取 QupaiService");
+            ToastUtils.showShort(ChatActivity.this, "插件没有初始化，无法获取 QupaiService");
             return;
         }
         qupaiService.showRecordPage(this, REQUEST_VIDEO, true);

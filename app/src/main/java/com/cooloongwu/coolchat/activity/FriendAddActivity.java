@@ -55,7 +55,7 @@ public class FriendAddActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
-                ToastUtils.showShort(getApplicationContext(), "点击了添加好友");
+                ToastUtils.showShort(FriendAddActivity.this, "点击了添加好友");
                 break;
             default:
                 break;
@@ -72,7 +72,7 @@ public class FriendAddActivity extends AppCompatActivity implements View.OnClick
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_report:
-                ToastUtils.showShort(getApplicationContext(), "点击了举报菜单");
+                ToastUtils.showShort(FriendAddActivity.this, "点击了举报菜单");
                 break;
             default:
                 break;

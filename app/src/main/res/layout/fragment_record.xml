@@ -40,8 +40,8 @@
                 android:textSize="16sp" />
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/ic_audio_record" />
         </RelativeLayout>

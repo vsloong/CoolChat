@@ -172,8 +172,10 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [Bilibili/ijkplayer][11]
 - [crossbario/autobahn-android][12]
 - [pengwei1024/LogUtils][13]
+- [Tapadoo/Alerter][17]
 - [七牛云][14]
 - [趣拍云][15]
+
 
 ##已知Bug一览（带删除线的为已修复）
 - ~~自己发消息超过两行，文字会超出屏幕~~
@@ -233,3 +235,4 @@ limitations under the License.
 [14]:http://www.qiniu.com/
 [15]:https://www.qupaicloud.com/
 [16]:hhttp://www.workerman.net/gatewaydoc/
+[16]:https://github.com/Tapadoo/Alerter

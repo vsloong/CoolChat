@@ -146,12 +146,12 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onNegative(DialogInterface dialog) {
-                        ToastUtils.showShort(getApplicationContext(), "取消");
+                        ToastUtils.showShort(UserProfileActivity.this, "取消");
                     }
 
                     @Override
                     public void onNeutral(DialogInterface dialog) {
-                        ToastUtils.showShort(getApplicationContext(), "Neutral");
+                        ToastUtils.showShort(UserProfileActivity.this, "Neutral");
                     }
 
                     @Override

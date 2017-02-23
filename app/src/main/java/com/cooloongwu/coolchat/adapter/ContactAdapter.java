@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.UserProfileActivity;
 import com.cooloongwu.coolchat.entity.Contact;
-import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -64,8 +63,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ToastUtils.showShort(context, "长按了这一项");
-                //return true 后就不会再触发setOnClickListener事件
                 return true;
             }
         });

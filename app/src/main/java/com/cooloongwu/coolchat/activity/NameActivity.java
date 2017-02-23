@@ -92,7 +92,7 @@ public class NameActivity extends BaseActivity {
                     if (selectEndIndex > newLength) {//如果光标结束的索引值超过新字符串长度
                         selectEndIndex = editable.length();
 
-                        ToastUtils.showShort(getApplicationContext(), "最多只能输入" + maxLength + "个字哦");
+                        ToastUtils.showShort(NameActivity.this, "最多只能输入" + maxLength + "个字哦");
                     }
                     Selection.setSelection(editable, selectEndIndex);//设置新光标所在的位置
                 } else {
@@ -118,7 +118,7 @@ public class NameActivity extends BaseActivity {
             case R.id.action_create:
                 String name = edit_name.getText().toString().trim();
                 if (name.isEmpty()) {
-                    ToastUtils.showShort(getApplicationContext(), "名字不可为空");
+                    ToastUtils.showShort(NameActivity.this, "名字不可为空");
                 } else {
                     returnName(name);
                 }
@@ -138,7 +138,7 @@ public class NameActivity extends BaseActivity {
                 finish();
                 break;
             case "createGroup":
-                ToastUtils.showShort(getApplicationContext(), "名字为：" + name);
+                ToastUtils.showShort(NameActivity.this, "名字为：" + name);
                 break;
             case "changeGroupName":
                 Intent changeNameIntent = new Intent();
