@@ -110,5 +110,6 @@ dependencies {
     compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.6.2'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.tapadoo.android:alerter:1.0.3'
+    compile 'com.github.florent37:expectanim:1.0.0'
     testCompile 'junit:junit:4.12'
 }
