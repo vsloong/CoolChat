@@ -5,13 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.utils.SendMessageUtils;
 import com.cooloongwu.coolchat.view.RecordButton;
+import com.github.florent37.expectanim.ExpectAnim;
 
 import java.io.File;
+
+import static com.github.florent37.expectanim.core.Expectations.width;
 
 public class RecordFragment extends Fragment {
 
@@ -27,6 +31,17 @@ public class RecordFragment extends Fragment {
 
     private void initViews(View rootView) {
         RecordButton recordButton = (RecordButton) rootView.findViewById(R.id.btn_record);
+        ImageView img_play = (ImageView) rootView.findViewById(R.id.img_play);
+        ExpectAnim expectAnim = new ExpectAnim()
+                .expect(img_play)
+                .toBe(
+                        width(180).toDp().keepRatio()
+                )
+                .toAnimation()
+                .setDuration(250)
+                .start();
+        expectAnim.reset();
+
         recordButton.setOnFinishRecordListener(new RecordButton.OnFinishedRecordListener() {
 
             @Override

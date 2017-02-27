@@ -20,6 +20,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/img_play"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"

@@ -51,6 +51,7 @@ public class RecordButton extends Button {
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
                 startRecord();
+
                 break;
             case MotionEvent.ACTION_UP:
                 float endX = event.getX();

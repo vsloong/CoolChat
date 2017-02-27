@@ -24,16 +24,17 @@ public class TestActivity extends BaseActivity {
 
     private void initView() {
         ImageView img = (ImageView) findViewById(R.id.img_avatar);
-        new ExpectAnim()
+        ExpectAnim anim = new ExpectAnim()
                 .expect(img)
                 .toBe(
                         bottomOfParent().withMarginDp(16),
                         leftOfParent().withMarginDp(16),
                         width(40).toDp().keepRatio()
-                ).toAnimation()
+                )
+                .toAnimation()
+                .setDuration(2000)
                 .start();
-
-
+        anim.setPercent(20);
     }
 
 }
