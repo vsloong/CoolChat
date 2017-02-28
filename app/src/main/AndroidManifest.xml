@@ -77,6 +77,8 @@
             android:label="@string/title_activity_setting"
             android:launchMode="singleTask" />
         <activity android:name=".activity.FriendAddActivity" />
+        <!--android:label="@string/title_activity_add_friends" -->
+
     </application>
 
 </manifest>
