@@ -110,6 +110,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+//        全屏状态下，adjustResize和adjustPan没有作用，点击输入框都会将页面挤上去（在别的项目中研究了半天，日了狗了。。。。。）
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         EventBus.getDefault().register(this);
         getData();
         initViews();
