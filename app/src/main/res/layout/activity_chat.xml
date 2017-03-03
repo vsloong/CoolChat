@@ -160,5 +160,11 @@
                 android:visibility="gone" />
 
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_all"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

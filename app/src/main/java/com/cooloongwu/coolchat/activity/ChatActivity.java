@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -24,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
@@ -66,7 +68,7 @@ import java.util.List;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener, View.OnTouchListener {
 
     private ImageButton imgbtn_send;
     private EditText edit_input;
@@ -156,6 +158,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
+        RelativeLayout layout_all = (RelativeLayout) findViewById(R.id.layout_all);
+        layout_all.setOnTouchListener(this);
+
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
@@ -631,6 +636,13 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        //可以在这里判断键盘外的点击事件
+        LogUtils.e("点击事件" + event.getY());
+        return false;
     }
 
     private static class MyHandler extends Handler {
