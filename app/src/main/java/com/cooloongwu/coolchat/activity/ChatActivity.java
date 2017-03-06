@@ -108,6 +108,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private ChatMoreFragment chatMoreFragment;
     private RecordFragment recordFragment;
 
+    private boolean isKeyboardShowing = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +128,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private void isSetBoardHeight() {
         if (AppConfig.getKeyboardHeight(ChatActivity.this) == 0) {
-            KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             DisplayUtils.init(ChatActivity.this).detectKeyboardHeight();
         }
     }
@@ -420,6 +421,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         switch (view.getId()) {
             case R.id.edit_input:
                 layout_multi.postDelayed(hideMultiLayoutRunnable, 500);
+                isKeyboardShowing = true;
                 break;
             case R.id.imgbtn_send:
                 SendMessageUtils.sendTextMessage(ChatActivity.this, edit_input.getText().toString().trim());
@@ -640,8 +642,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        //可以在这里判断键盘外的点击事件
-        LogUtils.e("点击事件" + event.getY());
+        //可以在这里判断键盘外的点击事件（-的60是输入区域的高度）
+        LogUtils.e("点击事件" + "，当前点击高度" + event.getY());
+        LogUtils.e("点击事件" + "，屏幕高" + DisplayUtils.init(this).getScreenHeight());
+        LogUtils.e("点击事件" + "，状态栏高" + DisplayUtils.init(this).getStatusBarHeight());
+        LogUtils.e("点击事件" + "，键盘高" + AppConfig.getKeyboardHeight(this));
+        LogUtils.e("点击事件" + "，输入区域高" + DisplayUtils.init(this).dp2px(60));
+
+        if (event.getY() < DisplayUtils.init(this).getScreenHeight() - AppConfig.getKeyboardHeight(this) - DisplayUtils.init(this).getStatusBarHeight() - DisplayUtils.init(this).dp2px(120)) {
+            if (isKeyboardShowing) {
+                LogUtils.e("点击事件" + "键盘在展示，要隐藏");
+                KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+                KeyboardUtils.hideKeyboard(getCurrentFocus());
+            }
+        }
         return false;
     }
 
@@ -692,6 +706,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         layout_multi.setVisibility(View.VISIBLE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         KeyboardUtils.hideKeyboard(getCurrentFocus());
+        isKeyboardShowing = false;
     }
 
     /**

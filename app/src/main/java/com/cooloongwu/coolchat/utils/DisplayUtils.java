@@ -54,7 +54,7 @@ public class DisplayUtils {
      *
      * @return 高度（单位：像素）
      */
-    private static int getScreenHeight() {
+    public static int getScreenHeight() {
         return displayMetrics.heightPixels;
     }
 
@@ -63,7 +63,7 @@ public class DisplayUtils {
      *
      * @return 状态栏高度
      */
-    private static int getStatusBarHeight() {
+    public static int getStatusBarHeight() {
         final int defaultHeightInDp = 19;
         int height = DisplayUtils.dp2px(defaultHeightInDp);
         try {
@@ -83,7 +83,7 @@ public class DisplayUtils {
      * @param dp dp值
      * @return 转换后的像素值
      */
-    private static int dp2px(int dp) {
+    public static int dp2px(int dp) {
         return (int) (dp * displayMetrics.density + ROUND_CEIL);
     }
 
