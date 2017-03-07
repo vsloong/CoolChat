@@ -25,7 +25,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
@@ -68,7 +67,7 @@ import java.util.List;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener, View.OnTouchListener {
+public class ChatActivity extends BaseActivity implements View.OnClickListener, EmojiFragment.OnEmojiClickListener, CompoundButton.OnCheckedChangeListener {
 
     private ImageButton imgbtn_send;
     private EditText edit_input;
@@ -109,6 +108,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     private RecordFragment recordFragment;
 
     private boolean isKeyboardShowing = false;
+    private boolean isMultiLayoutShowing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +128,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
     private void isSetBoardHeight() {
         if (AppConfig.getKeyboardHeight(ChatActivity.this) == 0) {
-            DisplayUtils.init(ChatActivity.this).detectKeyboardHeight();
+            DisplayUtils.detectKeyboardHeight(ChatActivity.this);
         }
     }
 
@@ -159,9 +159,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
-        RelativeLayout layout_all = (RelativeLayout) findViewById(R.id.layout_all);
-        layout_all.setOnTouchListener(this);
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
@@ -485,6 +482,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 fragmentTransaction.replace(R.id.layout_multi, recordFragment);
                 fragmentTransaction.commit();
+                isMultiLayoutShowing = true;
                 break;
             case R.id.checkbox_emoji:
                 showMultiLayout();
@@ -493,6 +491,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 fragmentTransaction.replace(R.id.layout_multi, emojiFragment);
                 fragmentTransaction.commit();
+                isMultiLayoutShowing = true;
                 break;
             case R.id.checkbox_gallery:
                 hideMultiLayout();
@@ -502,7 +501,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 hideMultiLayout();
                 openRecordPage();
                 break;
-
             case R.id.checkbox_more:
                 showMultiLayout();
                 if (chatMoreFragment == null) {
@@ -510,6 +508,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 fragmentTransaction.replace(R.id.layout_multi, chatMoreFragment);
                 fragmentTransaction.commit();
+                isMultiLayoutShowing = true;
                 break;
             default:
                 break;
@@ -641,22 +640,20 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        //可以在这里判断键盘外的点击事件（-的60是输入区域的高度）
-        LogUtils.e("点击事件" + "，当前点击高度" + event.getY());
-        LogUtils.e("点击事件" + "，屏幕高" + DisplayUtils.init(this).getScreenHeight());
-        LogUtils.e("点击事件" + "，状态栏高" + DisplayUtils.init(this).getStatusBarHeight());
-        LogUtils.e("点击事件" + "，键盘高" + AppConfig.getKeyboardHeight(this));
-        LogUtils.e("点击事件" + "，输入区域高" + DisplayUtils.init(this).dp2px(60));
-
-        if (event.getY() < DisplayUtils.init(this).getScreenHeight() - AppConfig.getKeyboardHeight(this) - DisplayUtils.init(this).getStatusBarHeight() - DisplayUtils.init(this).dp2px(120)) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        LogUtils.e("dispatchTouchEvent" + "，当前点击高度" + ev.getY());
+        LogUtils.e("dispatchTouchEvent" + "，当前无效区域高度" + (DisplayUtils.getScreenHeight(this) - DisplayUtils.dp2px(this, 120)));
+        if (ev.getY() < DisplayUtils.getScreenHeight(this) - AppConfig.getKeyboardHeight(this) - DisplayUtils.dp2px(this, 120)) {
             if (isKeyboardShowing) {
                 LogUtils.e("点击事件" + "键盘在展示，要隐藏");
                 KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
                 KeyboardUtils.hideKeyboard(getCurrentFocus());
             }
+            if (isMultiLayoutShowing) {
+                hideMultiLayout();
+            }
         }
-        return false;
+        return super.dispatchTouchEvent(ev);
     }
 
     private static class MyHandler extends Handler {
@@ -707,6 +704,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         KeyboardUtils.hideKeyboard(getCurrentFocus());
         isKeyboardShowing = false;
+        isMultiLayoutShowing = true;
     }
 
     /**
@@ -722,6 +720,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
 
         layout_multi.setVisibility(View.GONE);
         KeyboardUtils.updateSoftInputMethod(this, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        isMultiLayoutShowing = false;
     }
 
     private Runnable hideMultiLayoutRunnable = new Runnable() {

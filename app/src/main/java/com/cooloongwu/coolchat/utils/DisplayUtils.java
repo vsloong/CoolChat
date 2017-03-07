@@ -2,9 +2,8 @@ package com.cooloongwu.coolchat.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
-import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -22,31 +21,14 @@ import java.lang.reflect.Field;
 public class DisplayUtils {
 
     private static final float ROUND_CEIL = 0.5f;
-    private static DisplayMetrics displayMetrics;
-    private static Resources resources;
-    private static DisplayUtils displayUtils;
-    private Context context;
-
-    private DisplayUtils(Context context) {
-        this.context = context;
-        resources = context.getResources();
-        displayMetrics = context.getResources().getDisplayMetrics();
-    }
-
-    public static DisplayUtils init(Context context) {
-        if (displayUtils == null) {
-            displayUtils = new DisplayUtils(context);
-        }
-        return displayUtils;
-    }
 
     /**
      * 获取屏幕宽度
      *
      * @return 宽度（单位：像素）
      */
-    private static int getScreenWidth() {
-        return displayMetrics.widthPixels;
+    public static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
     }
 
     /**
@@ -54,8 +36,8 @@ public class DisplayUtils {
      *
      * @return 高度（单位：像素）
      */
-    public static int getScreenHeight() {
-        return displayMetrics.heightPixels;
+    public static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
     }
 
     /**
@@ -63,14 +45,14 @@ public class DisplayUtils {
      *
      * @return 状态栏高度
      */
-    public static int getStatusBarHeight() {
+    public static int getStatusBarHeight(Context context) {
         final int defaultHeightInDp = 19;
-        int height = DisplayUtils.dp2px(defaultHeightInDp);
+        int height = DisplayUtils.dp2px(context, defaultHeightInDp);
         try {
             Class<?> c = Class.forName("com.android.internal.R$dimen");
             Object obj = c.newInstance();
             Field field = c.getField("status_bar_height");
-            height = resources.getDimensionPixelSize(Integer.parseInt(field.get(obj).toString()));
+            height = context.getResources().getDimensionPixelSize(Integer.parseInt(field.get(obj).toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,14 +62,15 @@ public class DisplayUtils {
     /**
      * dp 转 px
      *
-     * @param dp dp值
+     * @param dpVal dp值
      * @return 转换后的像素值
      */
-    public static int dp2px(int dp) {
-        return (int) (dp * displayMetrics.density + ROUND_CEIL);
+    public static int dp2px(Context context, int dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, context.getResources().getDisplayMetrics());
     }
 
-    public void detectKeyboardHeight() {
+    public static void detectKeyboardHeight(final Context context) {
         Activity activity = (Activity) context;
         final View activityRootView = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
         if (activityRootView != null) {
@@ -98,10 +81,10 @@ public class DisplayUtils {
                     public void onGlobalLayout() {
                         final Rect r = new Rect();
                         activityRootView.getWindowVisibleDisplayFrame(r);
-                        int heightDiff = DisplayUtils.getScreenHeight() - (r.bottom - r.top);
-                        if (heightDiff - getStatusBarHeight() > 0) {
+                        int heightDiff = DisplayUtils.getScreenHeight(context) - (r.bottom - r.top);
+                        if (heightDiff - getStatusBarHeight(context) > 0) {
                             AppConfig.setKeyboardHeight(MyApplication.context(),
-                                    heightDiff - getStatusBarHeight());
+                                    heightDiff - getStatusBarHeight(context));
                         }
                     }
                 });
