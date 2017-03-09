@@ -62,6 +62,7 @@ allprojects {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
     //compile 'com.android.support:appcompat-v7:24.2.1'
     //compile 'com.android.support:support-v4:24.2.1'
     //以下为七牛云存储所需
@@ -111,5 +112,5 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.tapadoo.android:alerter:1.0.3'
     compile 'com.github.florent37:expectanim:1.0.0'
-    testCompile 'junit:junit:4.12'
+    compile 'com.afollestad.material-dialogs:commons:0.9.3.0'
 }

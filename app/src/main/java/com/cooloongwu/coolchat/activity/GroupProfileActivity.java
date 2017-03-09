@@ -138,7 +138,7 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
                 Intent intent = new Intent(GroupProfileActivity.this, NameActivity.class);
                 intent.putExtra("type", "changeGroupName");
                 intent.putExtra("name", groupName);
-                startActivityForResult(intent, NameActivity.REQUEST_CHANGEGROUPNAME);
+                startActivityForResult(intent, NameActivity.REQUEST_CHANGE_GROUP_NAME);
                 break;
             default:
                 break;
@@ -148,7 +148,7 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NameActivity.REQUEST_CHANGEGROUPNAME && resultCode == NameActivity.REQUEST_CHANGEGROUPNAME) {
+        if (requestCode == NameActivity.REQUEST_CHANGE_GROUP_NAME && resultCode == NameActivity.REQUEST_CHANGE_GROUP_NAME) {
             if (data.hasExtra("name")) {
                 LogUtils.e("修改的后的群组名", data.getStringExtra("name"));
             }

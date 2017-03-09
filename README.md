@@ -173,6 +173,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 - [crossbario/autobahn-android][12]
 - [pengwei1024/LogUtils][13]
 - [Tapadoo/Alerter][17]
+- [afollestad/material-dialogs][18]
 - [七牛云][14]
 - [趣拍云][15]
 
@@ -235,4 +236,5 @@ limitations under the License.
 [14]:http://www.qiniu.com/
 [15]:https://www.qupaicloud.com/
 [16]:hhttp://www.workerman.net/gatewaydoc/
-[16]:https://github.com/Tapadoo/Alerter
+[17]:https://github.com/Tapadoo/Alerter
+[18]:https://github.com/afollestad/material-dialogs

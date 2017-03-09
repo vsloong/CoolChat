@@ -21,9 +21,9 @@ import com.cooloongwu.coolchat.utils.ToastUtils;
  */
 public class NameActivity extends BaseActivity {
 
-    public static int REQUEST_REMARKNAME = 0x01;
+    public static int REQUEST_REMARK_NAME = 0x01;
     public static int REQUEST_CREATEGROUP = 0x02;
-    public static int REQUEST_CHANGEGROUPNAME = 0x03;
+    public static int REQUEST_CHANGE_GROUP_NAME = 0x03;
     private EditText edit_name;
     private String type;
 
@@ -134,7 +134,7 @@ public class NameActivity extends BaseActivity {
             case "remarkName":
                 Intent intent = new Intent();
                 intent.putExtra("name", name);
-                setResult(REQUEST_REMARKNAME, intent);
+                setResult(REQUEST_REMARK_NAME, intent);
                 finish();
                 break;
             case "createGroup":
@@ -143,7 +143,7 @@ public class NameActivity extends BaseActivity {
             case "changeGroupName":
                 Intent changeNameIntent = new Intent();
                 changeNameIntent.putExtra("name", name);
-                setResult(REQUEST_CHANGEGROUPNAME, changeNameIntent);
+                setResult(REQUEST_CHANGE_GROUP_NAME, changeNameIntent);
                 finish();
                 break;
             default:

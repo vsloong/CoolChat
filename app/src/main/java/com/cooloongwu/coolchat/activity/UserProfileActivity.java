@@ -115,7 +115,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             case R.id.action_remark:
                 Intent intent = new Intent(UserProfileActivity.this, NameActivity.class);
                 intent.putExtra("type", "remarkName");
-                startActivityForResult(intent, NameActivity.REQUEST_REMARKNAME);
+                startActivityForResult(intent, NameActivity.REQUEST_REMARK_NAME);
                 break;
             case R.id.action_delete:
                 DialogUtils.showMdAlert(UserProfileActivity.this, "提醒", "确定删除该好友么？", "确定", "取消", "", true, true, new DialogUtils.IMyDialogListener() {
@@ -192,7 +192,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NameActivity.REQUEST_REMARKNAME && resultCode == NameActivity.REQUEST_REMARKNAME) {
+        if (requestCode == NameActivity.REQUEST_REMARK_NAME && resultCode == NameActivity.REQUEST_REMARK_NAME) {
             LogUtils.e("修改后的备注名为", data.getStringExtra("name"));
             String name = data.getStringExtra("name");
             contact.setRemarkName(name);
