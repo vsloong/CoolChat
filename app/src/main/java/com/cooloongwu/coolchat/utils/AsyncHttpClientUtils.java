@@ -4,11 +4,8 @@ import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
 
 /**
  * 网络请求类
@@ -63,6 +60,17 @@ public class AsyncHttpClientUtils {
      */
     public static void post(Context context, String url, RequestParams params, AsyncHttpResponseHandler handler) {
         clientGeneral.post(context, BASE_SERVER + url, params, handler);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param context 上下文
+     * @param url     地址
+     * @param handler 处理
+     */
+    public static void download(Context context, String url, FileAsyncHttpResponseHandler handler) {
+        clientGeneral.get(context, url, handler);
     }
 
 }

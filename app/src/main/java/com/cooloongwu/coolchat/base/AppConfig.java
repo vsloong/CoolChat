@@ -2,6 +2,9 @@ package com.cooloongwu.coolchat.base;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
 /**
@@ -10,6 +13,10 @@ import android.preference.PreferenceManager;
  */
 public class AppConfig {
 
+    public static final String FILE_SAVE_PATH = Environment
+            .getExternalStorageDirectory()
+            .getAbsolutePath()
+            + "/CoolChat/";
 
     private static final String defaultDB = "CoolChat";
 
@@ -243,6 +250,23 @@ public class AppConfig {
     public static int getKeyboardHeight(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getInt(HEIGHT_KEYBOARD, defaultHeightKeyboard);
+    }
+
+    /**
+     * 得到程序的版本号
+     *
+     * @param context 上下文
+     * @return 正常情况下返回版本号，出错等情况返回空
+     */
+    public static String getVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     /**
