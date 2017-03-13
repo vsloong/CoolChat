@@ -16,6 +16,7 @@ import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.AppManager;
 import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -86,6 +87,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
                     if (!versionName.equals(AppConfig.getVersionName(SettingActivity.this))) {
                         showUpdateInfo("有更新啦", description, apkUrl);
+                    } else {
+                        new MaterialDialog.Builder(SettingActivity.this)
+                                .title("温馨提示")
+                                .content("当前已是最新版本")
+                                .positiveText("确定")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -95,7 +108,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                LogUtils.e("检查更新", "失败" + statusCode);
+                ToastUtils.showShort(SettingActivity.this, "检查更新失败，稍后再试吧");
             }
 
             @Override
@@ -103,7 +116,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 super.onCancel();
                 LogUtils.e("检查更新", "取消");
             }
-
 
         });
     }
