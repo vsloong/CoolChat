@@ -20,6 +20,7 @@ import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Conversation;
 import com.cooloongwu.coolchat.utils.DialogUtils;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.ConversationDao;
@@ -73,9 +74,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             text_nickname.setText("昵称：" + nickName);
         }
 
-        if (!avatar.isEmpty()) {
-            Picasso.with(this).load(avatar).into(img_avatar);
-        }
+        Picasso.with(this).load(ImgUrlUtils.getUrl(avatar)).into(img_avatar);
     }
 
     private void initToolbar() {

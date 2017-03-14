@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +18,7 @@ import com.cooloongwu.coolchat.base.Api;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.entity.GroupUsers;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.greendao.gen.GroupDao;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -77,11 +77,9 @@ public class GroupProfileActivity extends AppCompatActivity implements View.OnCl
 
         layout_change_name.setOnClickListener(this);
         text_name.setText(groupName);
-        if (!TextUtils.isEmpty(groupAvatar)) {
             Picasso.with(this)
-                    .load(groupAvatar)
+                    .load(ImgUrlUtils.getUrl(groupAvatar))
                     .into(img_group_avatar);
-        }
     }
 
     private void initData() {

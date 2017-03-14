@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cooloongwu.coolchat.R;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
 
@@ -46,7 +47,7 @@ public class FriendAddActivity extends AppCompatActivity implements View.OnClick
         Intent intent = getIntent();
         text_name.setText(intent.getStringExtra("userName"));
         Picasso.with(this)
-                .load(intent.getStringExtra("userAvatar"))
+                .load(ImgUrlUtils.getUrl(intent.getStringExtra("userAvatar")))
                 .into(img_avatar);
         btn_add.setOnClickListener(this);
     }

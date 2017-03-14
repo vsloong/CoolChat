@@ -20,6 +20,7 @@ import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.greendao.gen.ChatDao;
 import com.squareup.picasso.Picasso;
 
@@ -279,7 +280,7 @@ public class MyService extends Service {
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID, notification);
 
-        Picasso.with(this).load(avatar)
+        Picasso.with(this).load(ImgUrlUtils.getUrl(avatar))
                 .into(remoteViews, R.id.conversation_avatar, NOTIFICATION_ID, notification);
 
     }

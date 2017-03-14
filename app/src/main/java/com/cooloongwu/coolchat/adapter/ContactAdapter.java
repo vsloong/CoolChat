@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.UserProfileActivity;
 import com.cooloongwu.coolchat.entity.Contact;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.name.setText(listData.get(position).getName());
         Picasso.with(context)
-                .load(listData.get(position).getAvatar())
+                .load(ImgUrlUtils.getUrl(listData.get(position).getAvatar()))
                 .into(holder.avatar);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

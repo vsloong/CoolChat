@@ -27,6 +27,7 @@ import com.cooloongwu.coolchat.base.BaseActivity;
 import com.cooloongwu.coolchat.entity.Contact;
 import com.cooloongwu.coolchat.entity.Group;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.greendao.gen.ContactDao;
 import com.cooloongwu.greendao.gen.GroupDao;
@@ -102,7 +103,7 @@ public class MainActivity extends BaseActivity
         TextView text_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.text_name);
         text_name.setText(AppConfig.getUserName(MainActivity.this));
         Picasso.with(MainActivity.this)
-                .load(AppConfig.getUserAvatar(MainActivity.this))
+                .load(ImgUrlUtils.getUrl(AppConfig.getUserAvatar(MainActivity.this)))
                 .into(img_avatar);
 
         imgbtn_edit.setOnClickListener(this);

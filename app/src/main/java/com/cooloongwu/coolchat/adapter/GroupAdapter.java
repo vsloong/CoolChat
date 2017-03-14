@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.entity.Group;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.name.setText(listData.get(position).getGroupName());
         Picasso.with(context)
-                .load(listData.get(position).getGroupAvatar())
+                .load(ImgUrlUtils.getUrl(listData.get(position).getGroupAvatar()))
                 .into(holder.avatar);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

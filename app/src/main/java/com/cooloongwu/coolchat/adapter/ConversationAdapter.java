@@ -15,6 +15,7 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.activity.ChatActivity;
 import com.cooloongwu.coolchat.utils.GreenDAOUtils;
 import com.cooloongwu.coolchat.entity.Conversation;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.cooloongwu.greendao.gen.ConversationDao;
 import com.squareup.picasso.Picasso;
@@ -71,11 +72,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.num.setVisibility(View.GONE);
         }
 
-        if (!listData.get(position).getAvatar().isEmpty()) {
             Picasso.with(context)
-                    .load(listData.get(position).getAvatar())
+                    .load(ImgUrlUtils.getUrl(listData.get(position).getAvatar()))
                     .into(holder.avatar);
-        }
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

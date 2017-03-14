@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.base.BaseActivity;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.squareup.picasso.Picasso;
 
 
@@ -42,7 +43,7 @@ public class MyProfileActivity extends BaseActivity {
         TextView profile_text_sex = (TextView) findViewById(R.id.profile_text_sex);
 
         Picasso.with(MyProfileActivity.this)
-                .load(AppConfig.getUserAvatar(MyProfileActivity.this))
+                .load(ImgUrlUtils.getUrl(AppConfig.getUserAvatar(MyProfileActivity.this)))
                 .into(profile_img_avatar);
         profile_text_name.setText(AppConfig.getUserName(MyProfileActivity.this));
         profile_text_sex.setText(AppConfig.getUserSex(MyProfileActivity.this));

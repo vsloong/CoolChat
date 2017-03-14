@@ -18,6 +18,7 @@ import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.Chat;
+import com.cooloongwu.coolchat.utils.ImgUrlUtils;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -129,7 +130,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     context,
                     ((PeerTextViewHolder) holder).text_content)
             );
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerTextViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((PeerTextViewHolder) holder).img_avatar);
         } else if (holder instanceof SelfTextViewHolder) {
             //自己发送的 文字
             ((SelfTextViewHolder) holder).text_name.setText(listData.get(position).getFromName());
@@ -138,22 +141,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     listData.get(position).getContent(),
                     context,
                     ((SelfTextViewHolder) holder).text_content));
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfTextViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((SelfTextViewHolder) holder).img_avatar);
         } else if (holder instanceof PeerImageViewHolder) {
             //朋友或者其他发送的 图片
             ((PeerImageViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerImageViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((PeerImageViewHolder) holder).img_avatar);
             Picasso.with(context)
-                    .load(listData.get(position).getContent())
+                    .load(ImgUrlUtils.getUrl(listData.get(position).getContent()))
 //                    .resize(500, 500)
                     .transform(transformation)
                     .into(((PeerImageViewHolder) holder).image_content);
         } else if (holder instanceof SelfImageViewHolder) {
             //自己发送的 图片
             ((SelfImageViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfImageViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((SelfImageViewHolder) holder).img_avatar);
             Picasso.with(context)
-                    .load(listData.get(position).getContent())
+                    .load(ImgUrlUtils.getUrl(listData.get(position).getContent()))
 //                    .resize(500, 500)
                     .transform(transformation)
                     .into(((SelfImageViewHolder) holder).image_content);
@@ -163,7 +172,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((PeerAudioViewHolder) holder).text_content.setText("" + listData.get(position).getAudioLength() + "''");
             int audioLength = Integer.parseInt(listData.get(position).getAudioLength()) + 4;
             ((PeerAudioViewHolder) holder).text_content.setEms(audioLength < 15 ? audioLength : 15);
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerAudioViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((PeerAudioViewHolder) holder).img_avatar);
             ((PeerAudioViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -176,7 +187,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((SelfAudioViewHolder) holder).text_content.setText("" + listData.get(position).getAudioLength() + "''");
             int audioLength = Integer.parseInt(listData.get(position).getAudioLength()) + 4;
             ((SelfAudioViewHolder) holder).text_content.setEms(audioLength < 15 ? audioLength : 15);
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfAudioViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((SelfAudioViewHolder) holder).img_avatar);
             ((SelfAudioViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -186,7 +199,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (holder instanceof PeerVideoViewHolder) {
             //朋友或者其他发送的 视频
             ((PeerVideoViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((PeerVideoViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((PeerVideoViewHolder) holder).img_avatar);
             final IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
             ijkMediaPlayer.setKeepInBackground(false);
             try {
@@ -222,7 +237,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (holder instanceof SelfVideoViewHolder) {
             //自己发送的 视频
             ((SelfVideoViewHolder) holder).text_name.setText(listData.get(position).getFromName());
-            Picasso.with(context).load(listData.get(position).getFromAvatar()).into(((SelfVideoViewHolder) holder).img_avatar);
+            Picasso.with(context).load(
+                    ImgUrlUtils.getUrl(listData.get(position).getFromAvatar()))
+                    .into(((SelfVideoViewHolder) holder).img_avatar);
             final IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
             ijkMediaPlayer.setKeepInBackground(false);
             try {
