@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -14,11 +15,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.apkfuns.logutils.LogUtils;
 import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.ImgUrlUtils;
+import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -273,6 +277,30 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
         }
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new MaterialDialog.Builder(context)
+                        .title("撤回消息")
+                        .negativeText("取消")
+                        .positiveText("确定")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ToastUtils.showShort(context, "正在开发中");
+                            }
+                        })
+                        .show();
+                return false;
+            }
+        });
     }
 
     private void playSound(String path) {
