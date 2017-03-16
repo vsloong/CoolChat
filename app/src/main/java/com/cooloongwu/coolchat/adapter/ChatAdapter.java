@@ -22,7 +22,6 @@ import com.cooloongwu.coolchat.R;
 import com.cooloongwu.coolchat.base.AppConfig;
 import com.cooloongwu.coolchat.entity.Chat;
 import com.cooloongwu.coolchat.utils.ImgUrlUtils;
-import com.cooloongwu.coolchat.utils.ToastUtils;
 import com.cooloongwu.emoji.utils.EmojiTextUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -294,7 +293,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                ToastUtils.showShort(context, "正在开发中");
+                                listData.remove(position);
+                                notifyDataSetChanged();
+                                //ToastUtils.showShort(context, "正在开发中");
                             }
                         })
                         .show();
