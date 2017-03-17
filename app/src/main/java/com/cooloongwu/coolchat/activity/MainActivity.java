@@ -142,7 +142,11 @@ public class MainActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            //使得App进入后台而不是直接finish
+            Intent launcherIntent = new Intent(Intent.ACTION_MAIN);
+            launcherIntent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(launcherIntent);
         }
     }
 
@@ -354,4 +358,5 @@ public class MainActivity extends BaseActivity
         startActivity(new Intent(MainActivity.this, FriendSearchActivity.class));
         return super.onOptionsItemSelected(item);
     }
+
 }
