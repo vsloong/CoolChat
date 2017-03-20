@@ -35,6 +35,7 @@ public class ChatDao extends AbstractDao<Chat, Long> {
         public final static Property AudioLength = new Property(8, String.class, "audioLength", false, "AUDIO_LENGTH");
         public final static Property Time = new Property(9, String.class, "time", false, "TIME");
         public final static Property IsRead = new Property(10, boolean.class, "isRead", false, "IS_READ");
+        public final static Property MsgId = new Property(11, int.class, "msgId", false, "MSG_ID");
     }
 
 
@@ -60,7 +61,8 @@ public class ChatDao extends AbstractDao<Chat, Long> {
                 "\"CONTENT_TYPE\" TEXT," + // 7: contentType
                 "\"AUDIO_LENGTH\" TEXT," + // 8: audioLength
                 "\"TIME\" TEXT," + // 9: time
-                "\"IS_READ\" INTEGER NOT NULL );"); // 10: isRead
+                "\"IS_READ\" INTEGER NOT NULL ," + // 10: isRead
+                "\"MSG_ID\" INTEGER NOT NULL );"); // 11: msgId
     }
 
     /** Drops the underlying database table. */
@@ -115,6 +117,7 @@ public class ChatDao extends AbstractDao<Chat, Long> {
             stmt.bindString(10, time);
         }
         stmt.bindLong(11, entity.getIsRead() ? 1L: 0L);
+        stmt.bindLong(12, entity.getMsgId());
     }
 
     @Override
@@ -163,6 +166,7 @@ public class ChatDao extends AbstractDao<Chat, Long> {
             stmt.bindString(10, time);
         }
         stmt.bindLong(11, entity.getIsRead() ? 1L: 0L);
+        stmt.bindLong(12, entity.getMsgId());
     }
 
     @Override
@@ -183,7 +187,8 @@ public class ChatDao extends AbstractDao<Chat, Long> {
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // contentType
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // audioLength
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // time
-            cursor.getShort(offset + 10) != 0 // isRead
+                cursor.getShort(offset + 10) != 0, // isRead
+                cursor.getInt(offset + 11) // msgId
         );
         return entity;
     }
@@ -201,6 +206,7 @@ public class ChatDao extends AbstractDao<Chat, Long> {
         entity.setAudioLength(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setTime(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
         entity.setIsRead(cursor.getShort(offset + 10) != 0);
+        entity.setMsgId(cursor.getInt(offset + 11));
      }
     
     @Override

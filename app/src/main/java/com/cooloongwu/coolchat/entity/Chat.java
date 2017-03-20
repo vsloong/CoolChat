@@ -22,11 +22,12 @@ public class Chat {
     private String audioLength;     //发送内容的类型
     private String time;            //发送时间
     private boolean isRead;         //消息是否已读
+    private int msgId;              //消息ID
 
-    @Generated(hash = 1372647985)
+    @Generated(hash = 1784022386)
     public Chat(Long id, int fromId, int toId, String chatType, String fromName,
                 String fromAvatar, String content, String contentType,
-                String audioLength, String time, boolean isRead) {
+                String audioLength, String time, boolean isRead, int msgId) {
         this.id = id;
         this.fromId = fromId;
         this.toId = toId;
@@ -38,6 +39,7 @@ public class Chat {
         this.audioLength = audioLength;
         this.time = time;
         this.isRead = isRead;
+        this.msgId = msgId;
     }
 
     @Generated(hash = 519536279)
@@ -130,6 +132,14 @@ public class Chat {
 
     public void setIsRead(boolean isRead) {
         this.isRead = isRead;
+    }
+
+    public int getMsgId() {
+        return this.msgId;
+    }
+
+    public void setMsgId(int msgId) {
+        this.msgId = msgId;
     }
 
 }

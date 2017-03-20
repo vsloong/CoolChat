@@ -139,4 +139,27 @@ public class SendMessageUtils {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 撤回消息
+     */
+    public static void sendDeleteMessage(Context context, int msgId) {
+        //发送数据示例
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("type", "say");
+            jsonObject.put("fromId", AppConfig.getUserId(context));
+            jsonObject.put("fromName", AppConfig.getUserName(context));
+            jsonObject.put("fromAvatar", AppConfig.getUserAvatar(context));
+            jsonObject.put("toWhich", AppConfig.getUserCurrentChatType(context));
+            jsonObject.put("toId", AppConfig.getUserCurrentChatId(context));
+            jsonObject.put("content", msgId);
+            jsonObject.put("contentType", "delete");
+            jsonObject.put("time", TimeUtils.getCurrentTime());
+
+            MyService.myBinder.sendMessage(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
