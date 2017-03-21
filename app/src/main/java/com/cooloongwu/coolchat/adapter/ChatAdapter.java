@@ -51,7 +51,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PEER_AUDIO,
         SELF_AUDIO,
         PEER_VIDEO,
-        SELF_VIDEO
+        SELF_VIDEO,
+        PEER_DELETE,
+        SELF_DELETE,
     }
 
     public ChatAdapter(Context context, ArrayList<Chat> listData) {
@@ -73,6 +75,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return ITEM_TYPE.SELF_AUDIO.ordinal();
             } else if ("video".equals(contentType)) {
                 return ITEM_TYPE.SELF_VIDEO.ordinal();
+            } else if ("delete".equals(contentType)) {
+                return ITEM_TYPE.SELF_DELETE.ordinal();
             } else {
                 return 0;
             }
@@ -85,6 +89,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return ITEM_TYPE.PEER_AUDIO.ordinal();
             } else if ("video".equals(contentType)) {
                 return ITEM_TYPE.PEER_VIDEO.ordinal();
+            } else if ("delete".equals(contentType)) {
+                return ITEM_TYPE.PEER_DELETE.ordinal();
             } else {
                 return 0;
             }
@@ -294,9 +300,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                listData.remove(position);
-                                notifyDataSetChanged();
-                                SendMessageUtils.sendDeleteMessage(context, 12);
+                                //listData.remove(position);
+                                //notifyDataSetChanged();
+                                SendMessageUtils.sendDeleteMessage(context, listData.get(position).getMsgId());
                                 //ToastUtils.showShort(context, "正在开发中");
                             }
                         })
@@ -445,6 +451,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             text_name = (TextView) itemView.findViewById(R.id.text_name);
             text_content = (TextView) itemView.findViewById(R.id.text_content);
 
+        }
+    }
+
+    private class DeleteViewHolder extends RecyclerView.ViewHolder {
+        private TextView text_content;
+
+        DeleteViewHolder(View itemView) {
+            super(itemView);
+            text_content = (TextView) itemView.findViewById(R.id.text_content);
         }
     }
 
