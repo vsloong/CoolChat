@@ -319,6 +319,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                             chat.setAudioLength(jsonObject.getString("audioLength"));
                         }
 
+                        if ("delete".equals(contentType)) {
+
+                        }
+
                         chats.add(chat);
                         chatListData.addAll(chats);
 

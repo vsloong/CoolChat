@@ -55,6 +55,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.content.setText("[语音]");
         } else if ("video".equals(listData.get(position).getContentType())) {
             holder.content.setText("[视频]");
+        } else if ("delete".equals(listData.get(position).getContentType())) {
+            holder.content.setText("撤回了一条消息");
         } else {
             //正则匹配下，如果有表情则显示表情
             holder.content.setText(EmojiTextUtils.getEditTextContent(

@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/bg_text_delete"
-        android:textSize="14sp"
-        android:padding="8dp"
+        android:textSize="12sp"
+        android:padding="6dp"
         tools:text="对方撤回了一条消息" />
 
 

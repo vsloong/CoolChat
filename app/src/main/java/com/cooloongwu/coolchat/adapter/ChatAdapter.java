@@ -124,6 +124,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (viewType == ITEM_TYPE.SELF_VIDEO.ordinal()) {
             itemView = layoutInflater.inflate(R.layout.item_chat_message_self_video, parent, false);
             return new SelfVideoViewHolder(itemView);
+        } else if (viewType == ITEM_TYPE.PEER_DELETE.ordinal()) {
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_delete, parent, false);
+            return new PeerDeleteViewHolder(itemView);
+        } else if (viewType == ITEM_TYPE.SELF_DELETE.ordinal()) {
+            itemView = layoutInflater.inflate(R.layout.item_chat_message_delete, parent, false);
+            return new SelfDeleteViewHolder(itemView);
         } else {
             return null;
         }
@@ -282,7 +288,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ((SelfVideoViewHolder) holder).imgbtn_play.setVisibility(View.GONE);
                 }
             });
+        } else if (holder instanceof PeerDeleteViewHolder) {
+            ((PeerDeleteViewHolder) holder).text_content.setText("对方撤回了一条消息");
+        } else if (holder instanceof SelfDeleteViewHolder) {
+            ((SelfDeleteViewHolder) holder).text_content.setText("你撤回了一条消息");
         }
+
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -300,9 +311,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                //listData.remove(position);
-                                //notifyDataSetChanged();
                                 SendMessageUtils.sendDeleteMessage(context, listData.get(position).getMsgId());
+                                listData.remove(position);
+                                notifyDataSetChanged();
                                 //ToastUtils.showShort(context, "正在开发中");
                             }
                         })
@@ -391,6 +402,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    private class PeerDeleteViewHolder extends RecyclerView.ViewHolder {
+        private TextView text_content;
+
+        PeerDeleteViewHolder(View itemView) {
+            super(itemView);
+            text_content = (TextView) itemView.findViewById(R.id.text_content);
+        }
+    }
+
+    private class SelfDeleteViewHolder extends RecyclerView.ViewHolder {
+        private TextView text_content;
+
+        SelfDeleteViewHolder(View itemView) {
+            super(itemView);
+            text_content = (TextView) itemView.findViewById(R.id.text_content);
+        }
+    }
+
     private class SelfTextViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView img_avatar;
@@ -453,16 +482,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
     }
-
-    private class DeleteViewHolder extends RecyclerView.ViewHolder {
-        private TextView text_content;
-
-        DeleteViewHolder(View itemView) {
-            super(itemView);
-            text_content = (TextView) itemView.findViewById(R.id.text_content);
-        }
-    }
-
 
     private Transformation transformation = new Transformation() {
         @Override
