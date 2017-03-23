@@ -294,10 +294,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((SelfDeleteViewHolder) holder).text_content.setText("你撤回了一条消息");
         }
 
+        holder.itemView.setOnLongClickListener(new LongClickListener(position, holder));
+    }
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
+    private class LongClickListener implements View.OnLongClickListener {
+        int position;
+        RecyclerView.ViewHolder holder;
+
+        LongClickListener(int position, RecyclerView.ViewHolder holder) {
+            this.position = position;
+            this.holder = holder;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+
+            if (holder instanceof SelfAudioViewHolder ||
+                    holder instanceof SelfImageViewHolder ||
+                    holder instanceof SelfTextViewHolder ||
+                    holder instanceof SelfVideoViewHolder) {
+
                 new MaterialDialog.Builder(context)
                         .title("撤回消息")
                         .negativeText("取消")
@@ -318,9 +334,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         })
                         .show();
-                return false;
             }
-        });
+            return false;
+        }
     }
 
     private void playSound(String path) {
