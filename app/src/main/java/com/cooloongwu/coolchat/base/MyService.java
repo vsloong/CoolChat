@@ -184,6 +184,7 @@ public class MyService extends Service {
                 String content = jsonObject.getString("content");
                 String contentType = jsonObject.getString("contentType");
                 String time = jsonObject.getString("time");
+                int msgId = jsonObject.getInt("msgId");
 
                 //把聊天数据保存
                 Chat chat = new Chat();
@@ -195,12 +196,19 @@ public class MyService extends Service {
                 chat.setContentType(contentType);
                 chat.setToId(toId);
                 chat.setTime(time);
+                chat.setMsgId(msgId);
                 //chatFriend.setIsRead(false);            //消息是否已读
                 if ("audio".equals(contentType)) {
                     chat.setAudioLength(jsonObject.getString("audioLength"));
                 }
-                //保存聊天数据到本地数据库
-                saveChatData(chat);
+
+                if ("delete".equals(contentType)) {
+                    //updateChatData(chat);
+                } else {
+                    //保存聊天数据到本地数据库
+                    saveChatData(chat);
+                }
+
 
                 //展示通知(如果不是自己发的也不是当前聊天的人或群组发的就提示)
                 if (!(fromId == AppConfig.getUserId(MyService.this)
@@ -214,6 +222,11 @@ public class MyService extends Service {
                             break;
                         case "audio":
                             showNotification(fromAvatar, fromName, "[语音]");
+                            break;
+                        case "delete":
+                            showNotification(fromAvatar, fromName, "对方撤回了一条消息");
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -290,5 +303,9 @@ public class MyService extends Service {
         chatDao.insert(chat);
     }
 
+    private void updateChatData(Chat chat) {
+        ChatDao chatDao = GreenDAOUtils.getInstance(this).getChatDao();
 
+        //chatDao.insert(chat);
+    }
 }
