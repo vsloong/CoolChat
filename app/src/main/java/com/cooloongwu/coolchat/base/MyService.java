@@ -203,7 +203,7 @@ public class MyService extends Service {
                 }
 
                 if ("delete".equals(contentType)) {
-                    //updateChatData(chat);
+                    updateChatData(Integer.parseInt(chat.getContent()));
                 } else {
                     //保存聊天数据到本地数据库
                     saveChatData(chat);
@@ -303,9 +303,13 @@ public class MyService extends Service {
         chatDao.insert(chat);
     }
 
-    private void updateChatData(Chat chat) {
+    private void updateChatData(int deleteMsgId) {
         ChatDao chatDao = GreenDAOUtils.getInstance(this).getChatDao();
-
-        //chatDao.insert(chat);
+        Chat deleteChat = chatDao.queryBuilder().where(ChatDao.Properties.MsgId.eq(deleteMsgId)).build().unique();
+        if (null != deleteChat) {
+            LogUtils.e("查到的信息：", deleteChat.getMsgId());
+            deleteChat.setContentType("delete");
+            chatDao.update(deleteChat);
+        }
     }
 }

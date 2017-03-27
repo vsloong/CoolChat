@@ -296,6 +296,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             String content = jsonObject.getString("content");
             String contentType = jsonObject.getString("contentType");
             String time = jsonObject.getString("time");
+            int msgId = jsonObject.getInt("msgId");
 
             if (chatType.equals(toWhich)) {
                 //跟当前聊天类型匹配，是群组或者好友的消息
@@ -315,20 +316,27 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         chat.setToId(toId);
                         chat.setTime(time);
                         chat.setIsRead(true);             //消息已读
+                        chat.setMsgId(msgId);           //消息已读
                         if ("audio".equals(contentType)) {
                             chat.setAudioLength(jsonObject.getString("audioLength"));
                         }
 
                         if ("delete".equals(contentType)) {
+                            for (int i = 0; i < chatListData.size(); i++) {
+                                if (chatListData.get(i).getMsgId() == Integer.parseInt(content)) {
+                                    chatListData.get(i).setContentType("delete");
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                            chats.add(chat);
+                            chatListData.addAll(chats);
 
+                            Message msg = new Message();
+                            msg.what = 0;
+                            handler.sendMessage(msg);
                         }
 
-                        chats.add(chat);
-                        chatListData.addAll(chats);
-
-                        Message msg = new Message();
-                        msg.what = 0;
-                        handler.sendMessage(msg);
                     } else {
                         //是好友信息，但不是当前聊天好友的
                         showOtherFriendMsg(fromName + "：" + content, toWhich, fromId, fromName);

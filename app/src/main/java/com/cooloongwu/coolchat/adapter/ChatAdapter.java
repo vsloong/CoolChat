@@ -327,9 +327,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
                                 SendMessageUtils.sendDeleteMessage(context, listData.get(position).getMsgId());
-                                listData.remove(position);
-                                notifyDataSetChanged();
+//                                listData.remove(position);
+//                                notifyDataSetChanged();
                                 //ToastUtils.showShort(context, "正在开发中");
                             }
                         })
