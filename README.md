@@ -144,6 +144,7 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
     -  [x] 聊天列表功能完成（实时刷新用户聊天内容）
     -  [x] 本地存储消息内容
     -  [x] 未读消息提醒
+    -  [x] 消息撤回
     -  [x] 发送程序自带表情
     -  [ ] 添加、创建群组
     -  [ ] 添加好友
@@ -166,8 +167,8 @@ Android端项目做到后面越来越觉得没有一个服务端的话简直无�
 ![image](./pictures/main_drawer.jpg) ![image](./pictures/main_empty_conversation.jpg) ![image](./pictures/main_empty_contact.jpg)
 ![image](./pictures/main_conversation.jpg) ![image](./pictures/main_contact.jpg) ![image](./pictures/chat_send.jpg)
 ![image](./pictures/chat_emoji.jpg) ![image](./pictures/chat_audio_image.jpg) ![image](./pictures/chat_audio.jpg)
-![image](./pictures/chat_video.jpg) ![image](./pictures/chat_video_edit.jpg) ![image](./pictures/chat_video_image_audio.jpg)
-![image](./pictures/profile_me.jpg) ![image](./pictures/profile_other.jpg)
+![image](./pictures/chat_video.jpg) ![image](./pictures/chat_cancel.jpg) ![image](./pictures/chat_video_edit.jpg) 
+![image](./pictures/chat_video_image_audio.jpg) ![image](./pictures/profile_me.jpg) ![image](./pictures/profile_other.jpg)
 
 ## 引用其他控件一览  
 
