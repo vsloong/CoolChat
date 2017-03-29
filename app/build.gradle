@@ -7,28 +7,28 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.0'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.1'
     }
 }
 greendao {
-    schemaVersion 1
-    daoPackage 'com.cooloongwu.greendao.gen'
-    targetGenDir 'src/main/java'
+    schemaVersion 2                             //数据库版本号
+    daoPackage 'com.cooloongwu.greendao.gen'    //设置DaoMaster、DaoSession、Dao包名
+    targetGenDir 'src/main/java'                //设置DaoMaster、DaoSession、Dao目录
 }
 //=========================GreenDao所需=========================
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.cooloongwu.coolchat"
-        minSdkVersion 16
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
-        // Enabling multidex support.
+        // Enabling multiDex support.
         multiDexEnabled true
 
     }
@@ -40,23 +40,16 @@ android {
     }
     //其它配置
     packagingOptions {
-        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
     }
 
     dexOptions {
 //        preDexLibraries = false
-        javaMaxHeapSize "4g"
-    }
-}
-
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
-allprojects {
-    repositories {
-        jcenter()
+        javaMaxHeapSize "8g"
     }
 }
 
@@ -86,7 +79,11 @@ dependencies {
     compile files('libs/logutil-1.4.2.jar')
     compile project(':emoji')
     compile files('libs/autobahn-0.5.0.jar')
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:design:25.2.0'
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v13:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile 'com.github.clans:fab:1.6.4'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -100,16 +97,12 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.qiniu:happy-dns:0.2.10'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:support-v13:24.2.1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.4'
     compile 'com.google.dagger:dagger-compiler:2.0.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile 'tv.danmaku.ijk.media:ijkplayer-java:0.6.2'
     compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.6.2'
-    compile 'com.android.support:support-v4:24.2.1'
     compile 'com.tapadoo.android:alerter:1.0.3'
     compile 'com.github.florent37:expectanim:1.0.0'
     compile 'com.afollestad.material-dialogs:commons:0.9.3.0'
