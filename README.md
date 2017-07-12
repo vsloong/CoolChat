@@ -3,7 +3,7 @@
 这是一款高仿“一块”App（英文名：yeeCall）的即时通讯的开源客户端，目前正在进行开发，并逐步完善。
 后期会将服务端等的源码也一并进行开源，敬请期待。
 
-服务端采用的是[GatewayWorker][16]框架，等基本完成后会放出服务端代码。
+服务端采用的是[GatewayWorker][16]框架，服务端代码仓库：https://github.com/CooLoongWu/CoolChatServer。
 
 ## 测试账户  
 
